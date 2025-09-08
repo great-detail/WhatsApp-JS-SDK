@@ -38,8 +38,6 @@ export type MessageRecipientType =
   | (string & NonNullable<unknown>);
 
 type BaseCreateMessageOptions<T extends { type: MessageType }> = {
-  type: T;
-
   phoneNumberID: PhoneNumberID;
 
   /**
@@ -79,7 +77,7 @@ type BaseCreateMessageOptions<T extends { type: MessageType }> = {
    */
   biz_opaque_callback_data?: string;
   // [key: string]: unknown | undefined;
-};
+} & T;
 
 export type CreateAudioMessageOptions = BaseCreateMessageOptions<{
   type: MessageType.Audio;

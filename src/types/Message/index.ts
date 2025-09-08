@@ -37,13 +37,9 @@ export type MessageRecipientType =
   | "group"
   | (string & NonNullable<unknown>);
 
-export type CreateMessageMessageBase<T extends string, O> = {
+type BaseCreateMessageOptions<T extends { type: MessageType }> = {
   type: T;
-} & {
-  [K in T]: O;
-};
 
-export type CreateMessageOptions = {
   phoneNumberID: PhoneNumberID;
 
   /**
@@ -82,30 +78,76 @@ export type CreateMessageOptions = {
    * @since November 14, 2023
    */
   biz_opaque_callback_data?: string;
-  [key: string]: unknown | undefined;
-} & (
-  | CreateMessageMessageBase<
-      MessageType.Audio,
-      Omit<CreateMessageMedia, "caption">
-    >
-  | CreateMessageMessageBase<MessageType.Contacts, CreateMessageContact[]>
-  | CreateMessageMessageBase<MessageType.Document, CreateMessageMedia>
-  | CreateMessageMessageBase<MessageType.Image, CreateMessageMedia>
-  | CreateMessageMessageBase<MessageType.Interactive, unknown> // TODO: Implement this type
-  | CreateMessageMessageBase<MessageType.Location, CreateMessageLocation>
-  | CreateMessageMessageBase<
-      MessageType.Reaction,
-      Omit<CreateMessageMedia, "caption">
-    >
-  | CreateMessageMessageBase<
-      MessageType.Sticker,
-      Omit<CreateMessageMedia, "caption">
-    >
-  | CreateMessageMessageBase<MessageType.Template, CreateMessageTemplate>
-  | CreateMessageMessageBase<MessageType.Text, CreateMessageText>
-  | CreateMessageMessageBase<MessageType.Video, CreateMessageMedia>
-  | { type: string & NonNullable<unknown> }
-);
+  // [key: string]: unknown | undefined;
+};
+
+export type CreateAudioMessageOptions = BaseCreateMessageOptions<{
+  type: MessageType.Audio;
+  [MessageType.Audio]: Omit<CreateMessageMedia, "caption">;
+}>;
+
+export type CreateContactsMessageOptions = BaseCreateMessageOptions<{
+  type: MessageType.Contacts;
+  [MessageType.Contacts]: CreateMessageContact[];
+}>;
+
+export type CreateDocumentMessageOptions = BaseCreateMessageOptions<{
+  type: MessageType.Document;
+  [MessageType.Document]: CreateMessageMedia;
+}>;
+
+export type CreateImageMessageOptions = BaseCreateMessageOptions<{
+  type: MessageType.Image;
+  [MessageType.Image]: CreateMessageMedia;
+}>;
+
+export type CreateInteractiveMessageOptions = BaseCreateMessageOptions<{
+  type: MessageType.Interactive;
+  [MessageType.Interactive]: unknown; // TODO: Implement this type
+}>;
+
+export type CreateLocationMessageOptions = BaseCreateMessageOptions<{
+  type: MessageType.Location;
+  [MessageType.Location]: CreateMessageLocation;
+}>;
+
+export type CreateReactionMessageOptions = BaseCreateMessageOptions<{
+  type: MessageType.Reaction;
+  [MessageType.Reaction]: Omit<CreateMessageMedia, "caption">;
+}>;
+
+export type CreateStickerMessageOptions = BaseCreateMessageOptions<{
+  type: MessageType.Sticker;
+  [MessageType.Sticker]: Omit<CreateMessageMedia, "caption">;
+}>;
+
+export type CreateTemplateMessageOptions = BaseCreateMessageOptions<{
+  type: MessageType.Template;
+  [MessageType.Template]: CreateMessageTemplate;
+}>;
+
+export type CreateTextMessageOptions = BaseCreateMessageOptions<{
+  type: MessageType.Text;
+  [MessageType.Text]: CreateMessageText;
+}>;
+
+export type CreateVideoMessageOptions = BaseCreateMessageOptions<{
+  type: MessageType.Video;
+  [MessageType.Video]: CreateMessageMedia;
+}>;
+
+export type CreateMessageOptions =
+  | CreateAudioMessageOptions
+  | CreateContactsMessageOptions
+  | CreateDocumentMessageOptions
+  | CreateImageMessageOptions
+  | CreateInteractiveMessageOptions
+  | CreateLocationMessageOptions
+  | CreateReactionMessageOptions
+  | CreateStickerMessageOptions
+  | CreateTemplateMessageOptions
+  | CreateTextMessageOptions
+  | CreateVideoMessageOptions;
 
 export type CreateMessagePayload = {
   messaging_product: "whatsapp";

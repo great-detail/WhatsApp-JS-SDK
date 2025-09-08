@@ -156,7 +156,7 @@ export type ListLibraryTemplatesPayload = LibraryTemplate[];
 
 export type CreateCustomTemplateOptions = {
   parameter_format: TemplateParameterFormat;
-  components: CreateTemplateComponent[];
+  components?: CreateTemplateComponent[];
 
   library_template_name?: never;
   library_template_button_inputs?: never;

@@ -206,7 +206,7 @@ export type CreateMessageTemplate = {
      *
      * @see https://developers.facebook.com/docs/whatsapp/api/messages/message-templates#language-policy-options
      */
-    policy: "deterministic";
+    policy?: "deterministic";
 
     /**
      * The code of the language or locale to use.

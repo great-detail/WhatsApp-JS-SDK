@@ -34,9 +34,10 @@ deno add npm:@great-detail/whatsapp
 
 ## Getting started
 
-The primary source of documentation (at the moment) for the usage of this SDK is
-via JSDoc comments in the source code (and editor integrations). Also see the
-[examples and snippets section](#usage) to get started using the SDK.
+The primary source of documentation for this SDK is via the TypeScript type
+definitions and JSDoc comments included in the package. The types should get you
+most of the way. Also see the [examples and snippets section](#usage) to get
+started using the SDK.
 
 ```ts
 import Client from "@great-detail/whatsapp"; // for ESM environments

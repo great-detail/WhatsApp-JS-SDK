@@ -215,6 +215,8 @@ const file = await result.arrayBuffer();
 fs.writeFileSync("<FILE_PATH>", Buffer.from(file));
 ```
 
+### Webhooks
+
 **Listen for Webhook Requests with Express**:
 
 ```ts
@@ -349,6 +351,33 @@ router.post("/path/to/webhook", async (context) => {
 });
 ```
 
+### Templates
+
+**Create a Template**:
+
+```ts
+const template = await sdk.template.create(
+  "123...809", // WABA ID
+  {
+    parameter_format: "NAMED",
+    components: [
+      {
+        type: "BODY",
+        text: "Hello, {{name}}!",
+        example: {
+          body_text_named_params: [
+            {
+              param_name: "name",
+              example: "John",
+            },
+          ],
+        },
+      },
+    ],
+  },
+);
+```
+
 ## Request Options
 
 Under the hood, this SDK uses [ky](https://github.com/sindresorhus/ky) as a
@@ -422,7 +451,7 @@ particular features by creating an issue for it.
 
 - [ ] Interactive Message Types,
 - [x] Template Message Types,
-- [ ] Template Management,
+- [x] Template Management,
 - [ ] Button Message Types,
 - [ ] Flow Message Types,
 - [ ] List Message Types,

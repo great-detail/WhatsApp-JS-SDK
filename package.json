@@ -85,11 +85,13 @@
     "provenance": true
   },
   "overrides": {
-    "tmp": "0.2.5"
+    "tmp": "0.2.5",
+    "glob": "10.5.0"
   },
   "pnpm": {
     "overrides": {
-      "tmp": "0.2.5"
+      "tmp": "0.2.5",
+      "glob": "10.5.0"
     },
     "onlyBuiltDependencies": [
       "esbuild"

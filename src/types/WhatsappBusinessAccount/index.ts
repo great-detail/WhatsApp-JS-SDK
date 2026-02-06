@@ -100,7 +100,7 @@ export type WhatsappBusinessAccount = {
     entities: {
       id: string;
       entity_type: // | "PHONE_NUMBER"
-      "WABA" | "BUSINESS" | "APP" | (string & NonNullable<unknown>);
+        "WABA" | "BUSINESS" | "APP" | (string & NonNullable<unknown>);
       can_send_message: WhatsappBusinessAccountMessageEligibility;
       additional_info?: string[];
       errors?: {

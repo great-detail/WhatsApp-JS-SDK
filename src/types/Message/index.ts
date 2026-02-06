@@ -24,6 +24,7 @@ import {
   EventNotificationMessageText,
 } from "./MessageText.js";
 import { MessageType } from "./MessageType.js";
+import { EventNotificationMessageUnsupported } from "./MessageUnsupported.js";
 
 /**
  * WhatsApp Message ID.
@@ -221,4 +222,8 @@ export type EventNotificationMessageMessage =
   | EventNotificationMessageMessageBase<
       MessageType.System,
       EventNotificationMessageSystem
+    >
+  | EventNotificationMessageMessageBase<
+      MessageType.Unsupported,
+      EventNotificationMessageUnsupported
     >;

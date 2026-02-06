@@ -16,6 +16,7 @@ import {
   CreateMessageMedia,
   EventNotificationMessageMedia,
 } from "./MessageMedia.js";
+import { EventNotificationMessageReaction } from "./MessageReaction.js";
 import { EventNotificationMessageSystem } from "./MessageSystem.js";
 import { CreateMessageTemplate } from "./MessageTemplate.js";
 import {
@@ -201,9 +202,7 @@ export type EventNotificationMessageMessage =
     >
   | EventNotificationMessageMessageBase<
       MessageType.Reaction,
-      Omit<EventNotificationMessageMedia, "caption" | "filename"> & {
-        animated: boolean;
-      }
+      EventNotificationMessageReaction
     >
   | EventNotificationMessageMessageBase<
       MessageType.Sticker,

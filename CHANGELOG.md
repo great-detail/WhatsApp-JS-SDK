@@ -1,5 +1,13 @@
 # `@great-detail/whatsapp`
 
+## 8.4.1
+
+### Patch Changes
+
+- 3a19312: Fix type for Reaction Messages
+- b93fc71: Add types for Unsupported message type
+- 2181414: Update dependencies
+
 ## 8.4.0
 
 ### Minor Changes

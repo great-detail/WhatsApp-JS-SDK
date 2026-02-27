@@ -11,6 +11,10 @@ import { WhatsappError } from "../Error.js";
 import { PhoneNumberID, PhoneNumberString } from "../PhoneNumber.js";
 import { EventNotificationMessageButton } from "./MessageButton.js";
 import { CreateMessageContact } from "./MessageContact.js";
+import {
+  CreateMessageInteractive,
+  EventNotificationMessageInteractive,
+} from "./MessageInteractive.js";
 import { CreateMessageLocation } from "./MessageLocation.js";
 import {
   CreateMessageMedia,
@@ -103,7 +107,7 @@ export type CreateImageMessageOptions = BaseCreateMessageOptions<{
 
 export type CreateInteractiveMessageOptions = BaseCreateMessageOptions<{
   type: MessageType.Interactive;
-  [MessageType.Interactive]: unknown; // TODO: Implement this type
+  [MessageType.Interactive]: CreateMessageInteractive;
 }>;
 
 export type CreateLocationMessageOptions = BaseCreateMessageOptions<{
@@ -191,7 +195,7 @@ export type EventNotificationMessageMessage =
     >
   | EventNotificationMessageMessageBase<
       MessageType.Interactive,
-      unknown // TODO: Implement this type
+      EventNotificationMessageInteractive
     >
   | EventNotificationMessageMessageBase<
       MessageType.Order,

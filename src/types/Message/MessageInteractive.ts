@@ -8,24 +8,6 @@
 
 import { CreateMessageMedia } from "./MessageMedia.js";
 
-type OneToThree<T> = [T] | [T, T] | [T, T, T];
-
-type OneToTen<T> =
-  | [T]
-  | [T, T]
-  | [T, T, T]
-  | [T, T, T, T]
-  | [T, T, T, T, T]
-  | [T, T, T, T, T, T]
-  | [T, T, T, T, T, T, T]
-  | [T, T, T, T, T, T, T, T]
-  | [T, T, T, T, T, T, T, T, T]
-  | [T, T, T, T, T, T, T, T, T, T];
-
-type TwoToTen<T> = Exclude<OneToTen<T>, [T]>;
-
-type CarouselCardIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-
 type InteractiveBody = {
   /** Max 4096 for list messages, max 1024 for button/carousel messages. */
   text: string;
@@ -93,10 +75,10 @@ export type CreateInteractiveList = {
   action: {
     /** Supports a single button. Max 20 characters. */
     button: string;
-    sections: OneToTen<{
+    sections: Array<{
       /** Max 24 characters. */
       title: string;
-      rows: OneToTen<{
+      rows: Array<{
         /** Max 200 characters. */
         id: string;
         /** Max 24 characters. */
@@ -117,19 +99,19 @@ type CreateInteractiveCarouselQuickReplyButton = {
 };
 
 type CreateInteractiveCarouselUrlCard = {
-  card_index: CarouselCardIndex;
+  card_index: number;
   type: "cta_url";
   header: InteractiveMediaHeader;
   body?: InteractiveBody;
   action:
     | InteractiveCTAUrlAction
     | {
-        buttons: OneToThree<CreateInteractiveCarouselQuickReplyButton>;
+        buttons: Array<CreateInteractiveCarouselQuickReplyButton>;
       };
 };
 
 type CreateInteractiveCarouselProductCard = {
-  card_index: CarouselCardIndex;
+  card_index: number;
   type: "product";
   action: {
     product_retailer_id: string;
@@ -141,7 +123,7 @@ export type CreateInteractiveCarousel = {
   type: "carousel";
   body: InteractiveBody;
   action: {
-    cards: TwoToTen<
+    cards: Array<
       CreateInteractiveCarouselUrlCard | CreateInteractiveCarouselProductCard
     >;
   };
@@ -153,7 +135,7 @@ export type CreateInteractiveButton = {
   body: InteractiveBody;
   footer?: InteractiveFooter;
   action: {
-    buttons: OneToThree<{
+    buttons: Array<{
       type: "reply";
       reply: {
         /** Max 256 characters. */

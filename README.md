@@ -2,9 +2,6 @@
 
 [![npm (scoped)][]][sdk-npmjs]
 
-[npm (scoped)]: https://img.shields.io/npm/v/%40great-detail/whatsapp
-[sdk-npmjs]: https://www.npmjs.com/package/@great-detail/whatsapp
-
 The unofficial SDK for Meta's WhatsApp Business Messaging APIs - Cloud API.
 Originally a fork of the
 [deprecated official SDK for Meta's WhatsApp Business Messaging APIs](https://github.com/WhatsApp/WhatsApp-Nodejs-SDK).
@@ -87,6 +84,15 @@ for updates and release notes.
 Additional NodeJS versions may also work, however, automated testing requires
 NodeJS' test suite, which was introduced in `v21`. Other versions of Deno/Bun
 may also work, regardless of NodeJS polyfill support - uses SubtleCrypto.
+
+## Migrating v8 to v9
+
+v9 of this SDK increased the minimum supported NodeJS to v22, alongside an
+update to [ky](https://github.com/sindresorhus/ky) that required this update.
+
+Some request override options may have changed in-line with the options in ky -
+see the ky v2 release changelog for more information on which options have
+changed: https://github.com/sindresorhus/ky/releases/tag/v2.0.0.
 
 ## Migrating v7 to v8
 
@@ -387,6 +393,10 @@ ky can be available to this SDK, including: retries, hooks, auto-throwing on
 HTTP errors, etc. A number of these features are used under-the-hood already,
 e.g. auto-throwing on HTTP errors.
 
+v9 of this SDK updates ky to v2 - this update has some changes to the request
+options - see the ky v2 release changelog for more information:
+https://github.com/sindresorhus/ky/releases/tag/v2.0.0.
+
 **Request Retries**:
 
 - Default retries: 3
@@ -460,3 +470,6 @@ particular features by creating an issue for it.
 - [ ] WABA Extended Credit Management,
 - [x] WABA Phone Number Management,
 - [ ] WABA System User Management?
+
+[npm (scoped)]: https://img.shields.io/npm/v/%40great-detail/whatsapp
+[sdk-npmjs]: https://www.npmjs.com/package/@great-detail/whatsapp

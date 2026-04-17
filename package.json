@@ -19,7 +19,7 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -65,7 +65,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "ky": "^1.14.3"
+    "ky": "^2.0.1"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.8",

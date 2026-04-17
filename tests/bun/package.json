@@ -1,15 +1,15 @@
 {
   "name": "bun",
-  "module": "index.ts",
   "type": "module",
   "private": true,
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
+  "module": "index.ts",
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
     "ky": "^1.8.2"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
   }
 }

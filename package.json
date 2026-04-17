@@ -18,6 +18,7 @@
     "Great Detail Ltd <info@greatdetail.com>"
   ],
   "license": "MIT",
+  "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad",
   "engines": {
     "node": ">=22"
   },
@@ -58,10 +59,10 @@
     "prerelease": "pnpm run build",
     "release": "changeset publish",
     "test": "pnpm run /^test:.*/",
-    "test:unit": "node --import tsx --test ./src/**/*.test.ts ./src/*.test.ts",
     "test:integration": "pnpm run /^test:integration:.*/",
-    "test:integration:deno": "cd tests/deno && deno test && cd -",
     "test:integration:bun": "cd tests/bun && bun test && cd -",
+    "test:integration:deno": "cd tests/deno && deno test && cd -",
+    "test:unit": "node --import tsx --test ./src/**/*.test.ts ./src/*.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -74,21 +75,22 @@
     "eslint": "^10.2.0",
     "globals": "^17.5.0",
     "prettier": "^3.8.3",
+    "prettier-plugin-pkg": "^0.22.1",
     "publint": "^0.3.18",
     "tsdown": "^0.21.9",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.58.2"
   },
+  "overrides": {
+    "flatted": "3.4.2",
+    "glob": "10.5.0",
+    "picomatch": "4.0.4",
+    "tmp": "0.2.5"
+  },
   "publishConfig": {
     "access": "public",
     "provenance": true
-  },
-  "overrides": {
-    "tmp": "0.2.5",
-    "glob": "10.5.0",
-    "picomatch": "4.0.4",
-    "flatted": "3.4.2"
   },
   "pnpm": {
     "overrides": {
@@ -100,6 +102,5 @@
     "onlyBuiltDependencies": [
       "esbuild"
     ]
-  },
-  "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad"
+  }
 }

@@ -36,6 +36,9 @@ importers:
       prettier:
         specifier: ^3.8.3
         version: 3.8.3
+      prettier-plugin-pkg:
+        specifier: ^0.22.1
+        version: 0.22.1(prettier@3.8.3)
       publint:
         specifier: ^0.3.18
         version: 0.3.18
@@ -1031,6 +1034,12 @@ packages:
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
+
+  prettier-plugin-pkg@0.22.1:
+    resolution: {integrity: sha512-l9qnxic48hgTXsvXi9yWWWzovpqkEYo/Ljf8Af7zSkDTNVmLwscXW63IEVMJXH94DyloO8YkogeLheJUzJh/ZQ==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    peerDependencies:
+      prettier: ^3.0.3
 
   prettier@2.8.8:
     resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
@@ -2216,6 +2225,10 @@ snapshots:
   pify@4.0.1: {}
 
   prelude-ls@1.2.1: {}
+
+  prettier-plugin-pkg@0.22.1(prettier@3.8.3):
+    dependencies:
+      prettier: 3.8.3
 
   prettier@2.8.8: {}
 

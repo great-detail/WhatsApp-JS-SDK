@@ -45,7 +45,7 @@
     "Cloud API"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm --minify --dts",
+    "build": "tsdown",
     "changeset": "changeset",
     "fix": "pnpm run /^fix:.*/",
     "fix:eslint": "eslint . --fix",
@@ -75,7 +75,7 @@
     "globals": "^17.3.0",
     "prettier": "^3.8.1",
     "publint": "^0.3.17",
-    "tsup": "^8.5.1",
+    "tsdown": "^0.21.9",
     "tsx": "^4.21.0",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.54.0"

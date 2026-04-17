@@ -1,0 +1,52 @@
+name: Release Reusable
+
+on:
+  workflow_call:
+    inputs:
+      snapshot:
+        description: Run a snapshot release to npm with the next tag
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+      id-token: write # to enable use of OIDC for npm provenance
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --prefer-offline --frozen-lockfile
+      - run: pnpm audit signatures
+      - uses: changesets/action@v1
+        if: ${{ !inputs.snapshot }}
+        with:
+          publish: pnpm run release
+          title: "chore(release): version packages"
+          commit: "chore(release): version packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish snapshot release
+        if: ${{ inputs.snapshot }}
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+          pnpm run build
+          pnpm changeset version --snapshot next
+          pnpm changeset publish --tag next
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

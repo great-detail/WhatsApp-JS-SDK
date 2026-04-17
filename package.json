@@ -86,12 +86,16 @@
   },
   "overrides": {
     "tmp": "0.2.5",
-    "glob": "10.5.0"
+    "glob": "10.5.0",
+    "picomatch": "4.0.4",
+    "flatted": "3.4.2"
   },
   "pnpm": {
     "overrides": {
       "tmp": "0.2.5",
-      "glob": "10.5.0"
+      "glob": "10.5.0",
+      "picomatch": "4.0.4",
+      "flatted": "3.4.2"
     },
     "onlyBuiltDependencies": [
       "esbuild"

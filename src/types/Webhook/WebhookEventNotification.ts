@@ -16,6 +16,7 @@ import type { WebhookEventNotificationMessageTemplateComponentsUpdateChanges } f
 import type { WebhookEventNotificationMessageTemplateQualityUpdateChanges } from "./WebhookEventNotificationMessageTemplateQualityUpdateChanges.js";
 import type { WebhookEventNotificationMessageTemplateStatusUpdateChanges } from "./WebhookEventNotificationMessageTemplateStatusUpdateChanges.js";
 import type { WebhookEventNotificationMessagesChanges } from "./WebhookEventNotificationMessagesChanges.js";
+import type { WebhookEventNotificationPartnerSolutionsChanges } from "./WebhookEventNotificationPartnerSolutionsChanges.js";
 import type { WebhookEventNotificationPaymentConfigurationUpdateChanges } from "./WebhookEventNotificationPaymentConfigurationUpdateChanges.js";
 import type { WebhookEventNotificationPhoneNumberNameUpdateChanges } from "./WebhookEventNotificationPhoneNumberNameUpdateChanges.js";
 import type { WebhookEventNotificationPhoneNumberQualityUpdateChanges } from "./WebhookEventNotificationPhoneNumberQualityUpdateChanges.js";
@@ -32,6 +33,7 @@ export type * from "./WebhookEventNotificationMessageTemplateComponentsUpdateCha
 export type * from "./WebhookEventNotificationMessageTemplateQualityUpdateChanges.js";
 export * from "./WebhookEventNotificationMessageTemplateStatusUpdateChanges.js";
 export type * from "./WebhookEventNotificationMessagesChanges.js";
+export type * from "./WebhookEventNotificationPartnerSolutionsChanges.js";
 export type * from "./WebhookEventNotificationPaymentConfigurationUpdateChanges.js";
 export type * from "./WebhookEventNotificationPhoneNumberNameUpdateChanges.js";
 export type * from "./WebhookEventNotificationPhoneNumberQualityUpdateChanges.js";
@@ -51,6 +53,7 @@ export type WebhookEventNotificationChange =
   | WebhookEventNotificationPhoneNumberQualityUpdateChanges
   | WebhookEventNotificationPaymentConfigurationUpdateChanges
   | WebhookEventNotificationUserPreferencesChanges
+  | WebhookEventNotificationPartnerSolutionsChanges
   | WebhookEventNotificationUserIDUpdateChanges
   | WebhookEventNotificationCallsChanges;
 

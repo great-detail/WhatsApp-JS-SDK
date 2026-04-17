@@ -10,3 +10,6 @@
  * A WhatsApp End-User Account ID.
  */
 export type AccountID = string;
+
+/** A WhatsApp End-User ID. */
+export type UserID = string;

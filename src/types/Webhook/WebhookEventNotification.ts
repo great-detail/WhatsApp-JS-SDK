@@ -6,8 +6,7 @@
  * @see    https://greatdetail.com
  */
 
-import { AccountID } from "../Account.js";
-import { WhatsappBusinessAccountID } from "../WhatsappBusinessAccount/index.js";
+import { AccountID, UserID } from "../Account.js";
 import { WhatsappError } from "../Error.js";
 import {
   EventNotificationMessageMessage,
@@ -21,6 +20,7 @@ import { TemplateButtonType } from "../Templates/TemplateButton.js";
 import { TemplateCategory } from "../Templates/TemplateCategory.js";
 import { TemplateLanguage } from "../Templates/TemplateLanguage.js";
 import { TemplateQualityScore } from "../Templates/TemplateStatus.js";
+import { WhatsappBusinessAccountID } from "../WhatsappBusinessAccount/index.js";
 
 export type ConversationType =
   | "authentication"
@@ -91,6 +91,9 @@ export type WebhookEventNotificationMessagesChanges = {
        * returned by the API as input when sending a message to the customer.
        */
       from: AccountID;
+
+      /** @todo Add Comment */
+      from_user_id?: UserID;
 
       /**
        * Context object. Only included when a user replies or interacts with one of

@@ -68,17 +68,17 @@
     "ky": "^2.0.1"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.29.8",
-    "@eslint/js": "^9.39.2",
-    "@types/node": "^25.2.1",
-    "eslint": "^9.39.2",
-    "globals": "^17.3.0",
-    "prettier": "^3.8.1",
-    "publint": "^0.3.17",
+    "@changesets/cli": "^2.30.0",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.6.0",
+    "eslint": "^10.2.0",
+    "globals": "^17.5.0",
+    "prettier": "^3.8.3",
+    "publint": "^0.3.18",
     "tsdown": "^0.21.9",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.54.0"
+    "typescript-eslint": "^8.58.2"
   },
   "publishConfig": {
     "access": "public",

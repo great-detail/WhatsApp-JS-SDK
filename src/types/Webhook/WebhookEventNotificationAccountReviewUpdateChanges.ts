@@ -9,6 +9,6 @@
 export type WebhookEventNotificationAccountReviewUpdateChanges = {
   field: "account_review_update";
   value: {
-    decision: string; // TODO: Enum?
+    decision: "APPROVED" | "REJECTED" | "PENDING" | "DEFERRED";
   };
 };

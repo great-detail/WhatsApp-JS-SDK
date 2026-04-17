@@ -12,4 +12,4 @@
 export type AccountID = string;
 
 /** A WhatsApp End-User ID. */
-export type UserID = string;
+export type BSUID = string;

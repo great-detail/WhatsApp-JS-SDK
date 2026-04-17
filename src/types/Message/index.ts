@@ -6,7 +6,7 @@
  * @see    https://greatdetail.com
  */
 
-import { AccountID } from "../Account.js";
+import { AccountID, BSUID } from "../Account.js";
 import { WhatsappError } from "../Error.js";
 import { PhoneNumberID, PhoneNumberString } from "../PhoneNumber.js";
 import { EventNotificationMessageButton } from "./MessageButton.js";
@@ -48,8 +48,20 @@ type BaseCreateMessageOptions<T extends { type: MessageType }> = {
 
   /**
    * WhatsApp ID or phone number of the customer you want to send a message to.
+   *
+   * At least one of `to` or `recipient` is required. If both are provided, `to`
+   * will be used and `recipient` will be ignored.
    */
-  to: PhoneNumberID | PhoneNumberString;
+  to?: PhoneNumberID | PhoneNumberString;
+
+  /**
+   * A BSUID is a unique user identifier that can be used to message a
+   * WhatsApp user when you don’t know their phone number.
+   *
+   * At least one of `to` or `recipient` is required. If both are provided, `to`
+   * will be used and `recipient` will be ignored.
+   */
+  recipient?: BSUID;
 
   /**
    * Currently, you can only send messages to individuals.
@@ -156,8 +168,9 @@ export type CreateMessageOptions =
 export type CreateMessagePayload = {
   messaging_product: "whatsapp";
   contacts: {
-    input: PhoneNumberString;
-    wa_id: AccountID;
+    input: PhoneNumberString | BSUID;
+    wa_id?: AccountID;
+    user_id?: BSUID;
   }[];
   messages: {
     id: MessageID;

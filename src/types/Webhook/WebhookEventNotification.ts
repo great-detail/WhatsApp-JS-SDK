@@ -6,7 +6,7 @@
  * @see    https://greatdetail.com
  */
 
-import { AccountID, UserID } from "../Account.js";
+import { AccountID, BSUID } from "../Account.js";
 import { WhatsappError } from "../Error.js";
 import {
   EventNotificationMessageMessage,
@@ -32,31 +32,39 @@ export type ConversationType =
 
 export type WebhookEventNotificationMessagesChanges = {
   /** Notification type. Value will be messages. */
-  field: "messages";
+  field: "messages" | "user_preferences" | "user_id_update";
 
   /** A value object. */
   value: {
     /**
      * Array of contact objects with information for the customer who sent a
      * message to the business.
+     *
+     * Contacts will be included for sent, delivered, and read status.
      */
-    contacts: {
+    contacts: Array<{
       /**
        * The customer's WhatsApp ID. A business can respond to a customer using
        * this ID. This ID may not match the customer's phone number, which is
        * returned by the API as input when sending a message to the customer.
        */
-      wa_id: AccountID;
+      wa_id?: PhoneNumberString;
 
       /** Additional unique, alphanumeric identifier for a WhatsApp user. */
-      user_id?: string;
+      user_id?: BSUID;
+
+      /** Only included if parent BSUIDs enabled. */
+      parent_user_id?: BSUID;
 
       /** A customer profile object. */
       profile: {
-        /** The customer's name. */
+        /** Display Name The customer's name. */
         name: string;
+
+        /** Only included if the user has enabled the username feature. */
+        username?: string;
       };
-    }[];
+    }>;
 
     /** An array of error objects describing the error. */
     errors: WhatsappError[];
@@ -72,81 +80,87 @@ export type WebhookEventNotificationMessagesChanges = {
      * Information about a message received by the business that is subscribed to
      * the webhook.
      */
-    messages?: ({
-      /**
-       * The ID for the message that was received by the business. You could use
-       * messages endpoint to mark this specific message as read.
-       */
-      id: MessageID;
-
-      /**
-       * Unix timestamp indicating when the WhatsApp server received the message
-       * from the customer.
-       */
-      timestamp: string;
-
-      /**
-       * The customer's WhatsApp ID. A business can respond to a customer using
-       * this ID. This ID may not match the customer's phone number, which is
-       * returned by the API as input when sending a message to the customer.
-       */
-      from: AccountID;
-
-      /** @todo Add Comment */
-      from_user_id?: UserID;
-
-      /**
-       * Context object. Only included when a user replies or interacts with one of
-       * your messages.
-       */
-      context?: {
-        /** Set to true if the message received by the business has been forwarded. */
-        forwarded: boolean;
-
+    messages?: Array<
+      {
         /**
-         * Set to true if the message received by the business has been forwarded
-         * more than 5 times.
+         * The ID for the message that was received by the business. You could use
+         * messages endpoint to mark this specific message as read.
          */
-        frequently_forwarded: boolean;
-
-        /** The WhatsApp ID for the customer who replied to an inbound message. */
-        from: AccountID;
-
-        /** The message ID for the sent message for an inbound reply. */
         id: MessageID;
 
         /**
-         * Referred product object describing the product the user is requesting
-         * information about. You must parse this value if you support Product
-         * Enquiry Messages.
+         * Unix timestamp indicating when the WhatsApp server received the message
+         * from the customer.
          */
-        referred_product: {
+        timestamp: string;
+
+        /**
+         * The customer's WhatsApp ID. A business can respond to a customer using
+         * this ID. This ID may not match the customer's phone number, which is
+         * returned by the API as input when sending a message to the customer.
+         *
+         * Will be set to the user's phone number if the phone number can be included.
+         */
+        from?: AccountID;
+
+        from_user_id?: BSUID;
+        from_parent_user_id?: BSUID;
+
+        group_id?: string;
+
+        /**
+         * Context object. Only included when a user replies or interacts with one of
+         * your messages.
+         */
+        context?: {
+          /** Set to true if the message received by the business has been forwarded. */
+          forwarded: boolean;
+
           /**
-           * Unique identifier of the Meta catalog linked to the WhatsApp Business
-           * Account.
+           * Set to true if the message received by the business has been forwarded
+           * more than 5 times.
            */
-          catalog_id: string;
+          frequently_forwarded: boolean;
 
-          /** Unique identifier of the product in a catalog. */
-          product_retailer_id: string;
+          /** The WhatsApp ID for the customer who replied to an inbound message. */
+          from: AccountID;
+
+          /** The message ID for the sent message for an inbound reply. */
+          id: MessageID;
+
+          /**
+           * Referred product object describing the product the user is requesting
+           * information about. You must parse this value if you support Product
+           * Enquiry Messages.
+           */
+          referred_product: {
+            /**
+             * Unique identifier of the Meta catalog linked to the WhatsApp Business
+             * Account.
+             */
+            catalog_id: string;
+
+            /** Unique identifier of the product in a catalog. */
+            product_retailer_id: string;
+          };
         };
-      };
 
-      /** An array of error objects describing the error. */
-      errors?: WhatsappError[];
+        /** An array of error objects describing the error. */
+        errors?: WhatsappError[];
 
-      /**
-       * An identity object. Webhook is triggered when a customer's phone number or
-       * profile information has been updated.
-       */
-      identity: EventNotificationMessageIdentity;
+        /**
+         * An identity object. Webhook is triggered when a customer's phone number or
+         * profile information has been updated.
+         */
+        identity: EventNotificationMessageIdentity;
 
-      /**
-       * Referral object. When a customer clicks an ad that redirects to WhatsApp,
-       * this object is included in the messages object.
-       */
-      referral?: EventNotificationMessageReferral;
-    } & EventNotificationMessageMessage)[];
+        /**
+         * Referral object. When a customer clicks an ad that redirects to WhatsApp,
+         * this object is included in the messages object.
+         */
+        referral?: EventNotificationMessageReferral;
+      } & EventNotificationMessageMessage
+    >;
 
     /**
      * A metadata object describing the business subscribed to the webhook.
@@ -162,11 +176,37 @@ export type WebhookEventNotificationMessagesChanges = {
       phone_number_id: PhoneNumberID;
     };
 
+    user_preferences?: Array<{
+      wa_id?: PhoneNumberString;
+      user_id?: BSUID;
+      parent_user_id?: BSUID;
+      category: "marketing_messages";
+      value: "stop" | "resume";
+      detail: string;
+      timestamp: number;
+    }>;
+
+    user_id_update: Array<{
+      wa_id?: PhoneNumberString;
+      detail: string;
+      user_id: {
+        previous: BSUID;
+        current: BSUID;
+      };
+
+      parent_user_id?: {
+        previous: BSUID;
+        current: BSUID;
+      };
+
+      timestamp: number;
+    }>;
+
     /**
      * Status object for a message that was sent by the business that is
      * subscribed to the webhook.
      */
-    statuses?: {
+    statuses?: Array<{
       /**
        * The ID for the message that the business that is subscribed to the
        * webhooks sent to a customer.
@@ -177,8 +217,12 @@ export type WebhookEventNotificationMessagesChanges = {
        * The customer's WhatsApp ID. A business can respond to a customer using
        * this ID. This ID may not match the customer's phone number, which is
        * returned by the API as input when sending a message to the customer.
+       *
+       * Can be Group ID.
        */
-      recipient_id: AccountID;
+      recipient_id?: PhoneNumberString;
+      recipient_user_id?: BSUID;
+      parent_recipient_user_id?: BSUID;
 
       /**
        * For a status to be read, it must have been delivered. In some scenarios,
@@ -240,7 +284,7 @@ export type WebhookEventNotificationMessagesChanges = {
 
       /** Arbitrary string included in sent message. */
       biz_opaque_callback_data?: string;
-    }[];
+    }>;
   };
 };
 

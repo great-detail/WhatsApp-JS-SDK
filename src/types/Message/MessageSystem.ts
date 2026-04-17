@@ -6,7 +6,7 @@
  * @see    https://greatdetail.com
  */
 
-import { AccountID } from "../Account.js";
+import { AccountID, BSUID } from "../Account.js";
 
 export type EventNotificationMessageSystem = {
   /**
@@ -27,7 +27,18 @@ export type EventNotificationMessageSystem = {
   /**
    * Type of system update.
    */
-  type: "customer_changed_number" | "customer_identity_changed.js";
+  type:
+    | "customer_changed_number"
+    | "user_changed_user_id"
+    | "customer_identity_changed.js";
+
+  /**
+   * New WhatsApp ID for the customer when their phone number is updated.
+   */
+  wa_id: AccountID;
+
+  user_id?: BSUID;
+  parent_user_id?: BSUID;
 
   /**
    * New WhatsApp ID for the customer when their phone number is updated.
@@ -35,9 +46,4 @@ export type EventNotificationMessageSystem = {
    * @deprecated since Webhook v11.0
    */
   new_wa_id: AccountID;
-
-  /**
-   * New WhatsApp ID for the customer when their phone number is updated.
-   */
-  wa_id: AccountID;
 };

@@ -1,5 +1,5 @@
 ---
-"@great-detail/whatsapp": minor
+"@great-detail/whatsapp": major
 ---
 
 Update `ky` to `v2`:

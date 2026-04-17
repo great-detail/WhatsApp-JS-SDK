@@ -20,6 +20,7 @@ import type { WebhookEventNotificationPartnerSolutionsChanges } from "./WebhookE
 import type { WebhookEventNotificationPaymentConfigurationUpdateChanges } from "./WebhookEventNotificationPaymentConfigurationUpdateChanges.js";
 import type { WebhookEventNotificationPhoneNumberNameUpdateChanges } from "./WebhookEventNotificationPhoneNumberNameUpdateChanges.js";
 import type { WebhookEventNotificationPhoneNumberQualityUpdateChanges } from "./WebhookEventNotificationPhoneNumberQualityUpdateChanges.js";
+import type { WebhookEventNotificationSecurityChanges } from "./WebhookEventNotificationSecurityChanges.js";
 import type { WebhookEventNotificationUserIDUpdateChanges } from "./WebhookEventNotificationUserIDUpdateChanges.js";
 import type { WebhookEventNotificationUserPreferencesChanges } from "./WebhookEventNotificationUserPreferencesChanges.js";
 
@@ -37,6 +38,7 @@ export type * from "./WebhookEventNotificationPartnerSolutionsChanges.js";
 export type * from "./WebhookEventNotificationPaymentConfigurationUpdateChanges.js";
 export type * from "./WebhookEventNotificationPhoneNumberNameUpdateChanges.js";
 export type * from "./WebhookEventNotificationPhoneNumberQualityUpdateChanges.js";
+export type * from "./WebhookEventNotificationSecurityChanges.js";
 export type * from "./WebhookEventNotificationUserIDUpdateChanges.js";
 export type * from "./WebhookEventNotificationUserPreferencesChanges.js";
 
@@ -54,6 +56,7 @@ export type WebhookEventNotificationChange =
   | WebhookEventNotificationPaymentConfigurationUpdateChanges
   | WebhookEventNotificationUserPreferencesChanges
   | WebhookEventNotificationPartnerSolutionsChanges
+  | WebhookEventNotificationSecurityChanges
   | WebhookEventNotificationUserIDUpdateChanges
   | WebhookEventNotificationCallsChanges;
 

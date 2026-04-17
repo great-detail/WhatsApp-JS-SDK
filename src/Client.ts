@@ -6,19 +6,21 @@
  * @see    https://greatdetail.com
  */
 
+import type { KyInstance, Options as KyOptions } from "ky";
 import ky from "ky";
 import BusinessProfile from "./BusinessProfile/index.js";
 import Media from "./Media/index.js";
 import Message from "./Message/index.js";
 import PhoneNumbers from "./PhoneNumbers/index.js";
 import SubscribedApps from "./SubscribedApps/index.js";
-import Webhook from "./Webhook/index.js";
 import Template from "./Template/index.js";
-import type { KyInstance, Options as KyOptions } from "ky";
+import Webhook from "./Webhook/index.js";
 import WhatsappBusinessAccount from "./WhatsappBusinessAccount/index.js";
 
 export interface Options {
+  /** @deprecated Use `baseUrl` instead */
   prefixUrl?: string;
+  baseUrl?: string;
   graphVersion?: `v${string}` | (string & NonNullable<unknown>);
   request?: Omit<KyOptions, "prefixUrl">;
 }
@@ -75,14 +77,21 @@ export default class Client {
   public whatsappBusinessAccount: WhatsappBusinessAccount;
 
   constructor({
-    prefixUrl = Client.DEFAULT_GRAPH_BASE_URL,
+    baseUrl,
+    prefixUrl,
     graphVersion = Client.DEFAULT_GRAPH_VERSION,
     request,
   }: Options = {}) {
     this._transport = ky.create({
       ...request,
       timeout: 72_000,
-      prefixUrl: prefixUrl.replace(/\/$/, "") + "/" + graphVersion,
+      baseUrl:
+        (baseUrl ?? prefixUrl ?? Client.DEFAULT_GRAPH_BASE_URL).replace(
+          /\/$/,
+          "",
+        ) +
+        "/" +
+        graphVersion,
     });
 
     this.businessProfile = new BusinessProfile(this._transport);

@@ -1,5 +1,24 @@
 # `@great-detail/whatsapp`
 
+## 9.0.0
+
+### Major Changes
+
+- 447211d: Require NodeJS v22
+- 447211d: Update `ky` to `v2`:
+  - This update requires NodeJS >v22
+  - This update may also change some of the request options used to override
+    certain parts of a request. See
+    https://github.com/sindresorhus/ky/releases/tag/v2.0.0 for more information.
+
+### Patch Changes
+
+- 3a19312: Fix type for Reaction Messages
+- ca254ce: Update `typescript` to `v6`
+- 885557b: Migrate Bundler to `tsdown` (Rolldown)
+- b93fc71: Add types for Unsupported message type
+- 2181414: Update dependencies
+
 ## 8.4.0
 
 ### Minor Changes

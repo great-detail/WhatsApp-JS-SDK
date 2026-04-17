@@ -75,7 +75,7 @@ type BaseCreateMessageOptions<T extends { type: MessageType }> = {
    * Required if replying to any message in the conversation.
    */
   context?: {
-    inReplyTo: MessageID;
+    message_id: MessageID;
   };
 
   /**

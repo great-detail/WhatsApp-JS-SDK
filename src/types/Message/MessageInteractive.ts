@@ -53,7 +53,7 @@ type InteractiveMediaHeader =
 type InteractiveCTAUrlAction = {
   name: "cta_url";
   parameters: {
-    /** Button label text. */
+    /** Button label text. At most 20 characters. */
     display_text: string;
     url: string;
   };

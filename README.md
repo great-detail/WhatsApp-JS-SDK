@@ -192,6 +192,112 @@ const message = await sdk.message.createMessage({
 });
 ```
 
+**Create an Interactive Message**:
+
+Thanks @lcneves!
+
+```ts
+const message = await sdk.message.createMessage({
+  phoneNumberID: "123...809",
+  to: "1234567890",
+  type: MessageType.Interactive,
+  interactive: {
+    type: "button",
+    body: {
+      text: "Hello",
+    },
+    action: {
+      buttons: [
+        {
+          type: "reply",
+          reply: {
+            id: "button1",
+            title: "Button 1",
+          },
+        },
+        {
+          type: "reply",
+          reply: {
+            id: "button2",
+            title: "Button 2",
+          },
+        },
+      ],
+    },
+  },
+});
+```
+
+```ts
+const message = await sdk.message.createMessage({
+  phoneNumberID: "123...809",
+  to: "1234567890",
+  type: MessageType.Interactive,
+  interactive: {
+    type: "cta_url",
+    body: {
+      text: "Hello",
+    },
+    action: {
+      name: "cta_url",
+      parameters: {
+        display_text: "Open Link",
+        url: "https://example.com",
+      },
+    },
+  },
+});
+```
+
+```ts
+const message = await sdk.message.createMessage({
+  phoneNumberID: "123...809",
+  to: "1234567890",
+  type: MessageType.Interactive,
+  interactive: {
+    type: "list",
+    body: {
+      text: "Hello",
+    },
+    action: {
+      button: "View Options",
+      sections: [
+        {
+          title: "Section 1",
+          rows: [
+            {
+              id: "option1",
+              title: "Option 1",
+              description: "This is option 1",
+            },
+            {
+              id: "option2",
+              title: "Option 2",
+              description: "This is option 2",
+            },
+          ],
+        },
+        {
+          title: "Section 2",
+          rows: [
+            {
+              id: "option3",
+              title: "Option 3",
+              description: "This is option 3",
+            },
+            {
+              id: "option4",
+              title: "Option 4",
+              description: "This is option 4",
+            },
+          ],
+        },
+      ],
+    },
+  },
+});
+```
+
 **Upload Media Files**:
 
 ```ts

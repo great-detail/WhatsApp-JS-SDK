@@ -1,5 +1,44 @@
 # `@great-detail/whatsapp`
 
+## 9.1.0
+
+### Minor Changes
+
+- de32de0: Added `decision` field enum in Account Review Update
+  (`account_review_update`) webhook event type
+- 58e4c33: Added `BSUID` and WhatsApp `username` field types
+
+  For more information on the underlying API changes, see:
+  https://developers.facebook.com/documentation/business-messaging/whatsapp/business-scoped-user-ids
+  - **Important**: `from` field in event notification message type is now
+    optional - this change reflects updates to the WhatsApp Cloud API. This may
+    require usage updates: e.g.
+    `const from = message.from ?? message.from_user_id`
+  - **Important**: Updated Webhook Event contacts object, added `user_id`,
+    `parent_user_id`, `profile.user`. `wa_id` is now optional - this change
+    relects updates to the WhatsApp Cloud API. This may require usage updates:
+    e.g. `const user = contact.wa_id ?? contact.from_user_id`
+  - Added optional `recipient` option to message creation to send messages to a
+    BSUID
+  - `to` option in message creation is now optional, to reflect the API's types
+  - Added `from_user_id`, `from_parent_user_id`, `group_id` fields to event
+    notification messages type
+  - Added types for `user_id_update` webhook event. If the `field` field in a
+    Webhook Event notification is not checked, you may also receive
+    non-`messages` events.
+
+- 96bff2d: Added types for Security (`security`) webhook event types
+- 523a8d7: Added types for Account Alert (`account_alerts`) webhook event types
+- 013870a: Added Interactive Message types - Thanks @lcneves
+- 7981d82: Added types for Partner Solutions (`partner_solutions`) webhook event
+  types
+- 58e4c33: Added types for User Preferences (`user_preferences`) webhook event
+  types
+
+### Patch Changes
+
+- 9f3136b: !408: Fix field name for reply context
+
 ## 9.0.0
 
 ### Major Changes

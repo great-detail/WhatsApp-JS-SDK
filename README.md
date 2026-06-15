@@ -128,8 +128,8 @@ const sdk = new Client({
 ## Usage
 
 See the following usage examples for usage. Included in the source code and
-editor integrations, JSDoc comments may provide additional context and
-information.
+editor integrations, TypeScript type definitions and JSDoc comments may provide
+additional context and information.
 
 ### Messaging
 

@@ -89,8 +89,11 @@
     "typescript-eslint": "^8.58.2"
   },
   "overrides": {
+    "brace-expansion@^5.0.0": "5.0.12",
     "flatted": "3.4.2",
     "glob": "10.5.0",
+    "js-yaml@^3.0.0": "3.15.2",
+    "js-yaml@^4.0.0": "4.3.2",
     "picomatch": "4.0.4",
     "tmp": "0.2.5"
   },
@@ -103,7 +106,10 @@
       "tmp": "0.2.5",
       "glob": "10.5.0",
       "picomatch": "4.0.4",
-      "flatted": "3.4.2"
+      "flatted": "3.4.2",
+      "brace-expansion@^5.0.0": "5.0.12",
+      "js-yaml@^3.0.0": "3.15.2",
+      "js-yaml@^4.0.0": "4.3.2"
     },
     "onlyBuiltDependencies": [
       "esbuild"

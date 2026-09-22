@@ -107,10 +107,5 @@ const pathsType = schemaPaths
 
 await writeFile(
   generatedIndexPath,
-  [
-    ...exportStatements,
-    "",
-    `export type paths = ${pathsType};`,
-    "",
-  ].join("\n"),
+  [...exportStatements, "", `export type paths = ${pathsType};`, ""].join("\n"),
 );

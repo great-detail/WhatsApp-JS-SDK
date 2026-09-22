@@ -1,0 +1,826 @@
+---
+openapi: 3.1.0
+info:
+  title: 'WhatsApp Cloud API - Block API'
+  version: v25.0
+  description: |
+    The Block API allows businesses to manage blocked users on WhatsApp.
+    Use this API to block users from sending messages to your business number,
+    retrieve the list of blocked users, and unblock users when needed.
+    
+    For more information, see the [Block Users Guide](https://developers.facebook.com/docs/business-messaging/whatsapp/block-users).
+  contact: { }
+servers:
+  - 
+    url: https://graph.facebook.com
+paths:
+  /{Version}/{Phone-Number-ID}/block_users:
+    get:
+      responses:
+        200:
+          $ref: '#/components/responses/GetBlockedUsersResponse'
+      summary: Get blocked users
+      description: '- Guide: [Block Users](https://developers.facebook.com/docs/business-messaging/whatsapp/block-users)\n    \n- Endpoint reference: [GET WhatsApp Buiness Phone Number > block_users](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account-to-number-current-status/block_users/#Reading)'
+      operationId: getBlockedUsers
+      tags:
+        - Block Users
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Content-Type
+          in: header
+          description: Media type of the request body
+          required: true
+          schema:
+            type: string
+            default: application/json
+            example: application/json
+            enum:
+              - application/json
+              - application/x-www-form-urlencoded
+              - multipart/form-data
+    post:
+      responses:
+        200:
+          $ref: '#/components/responses/BlockUsersResponse'
+      summary: Block user(s)
+      description: '- Guide: [Block Users](https://developers.facebook.com/docs/business-messaging/whatsapp/block-users)\n    \n- Endpoint reference: [POST WhatsApp Buiness Phone Number > block_users](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account-to-number-current-status/block_users/#Creating)'
+      operationId: blockUserS
+      tags:
+        - Block Users
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Content-Type
+          in: header
+          description: Media type of the request body
+          required: true
+          schema:
+            type: string
+            default: application/json
+            example: application/json
+            enum:
+              - application/json
+              - application/x-www-form-urlencoded
+              - multipart/form-data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                block_users:
+                  type: array
+                  example:
+                    0:
+                      user: '+16505551234'
+                  items:
+                    type: object
+                    properties:
+                      user:
+                        type: string
+                        example: '+16505551234'
+                messaging_product:
+                  type: string
+                  example: whatsapp
+            examples:
+              Block user(s):
+                value:
+                  block_users:
+                    0:
+                      user: '+16505551234'
+                  messaging_product: whatsapp
+    delete:
+      responses:
+        200:
+          $ref: '#/components/responses/UnblockUsersResponse'
+      summary: Unblock user(s)
+      description: '- Guide: [Block Users](https://developers.facebook.com/docs/business-messaging/whatsapp/block-users)\n    \n- Endpoint reference: [DELETE WhatsApp Buiness Phone Number > block_users](https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account-to-number-current-status/block_users/#Deleting)'
+      operationId: unblockUserS
+      tags:
+        - Block Users
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Content-Type
+          in: header
+          description: Media type of the request body
+          required: true
+          schema:
+            type: string
+            default: application/json
+            example: application/json
+            enum:
+              - application/json
+              - application/x-www-form-urlencoded
+              - multipart/form-data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                block_users:
+                  type: array
+                  example:
+                    0:
+                      user: '+16505551234'
+                  items:
+                    type: object
+                    properties:
+                      user:
+                        type: string
+                        example: '+16505551234'
+                messaging_product:
+                  type: string
+                  example: whatsapp
+            examples:
+              Unblock user(s):
+                value:
+                  block_users:
+                    0:
+                      user: '+16505551234'
+                  messaging_product: whatsapp
+    parameters:
+      - 
+        name: Version
+        in: path
+        required: true
+        schema:
+          type: string
+      - 
+        name: Phone-Number-ID
+        in: path
+        required: true
+        schema:
+          type: string
+components:
+  schemas:
+    BlockedUser:
+      type: object
+      properties:
+        messaging_product:
+          type: string
+          example: whatsapp
+        wa_id:
+          type: string
+          example: '16505551234'
+    PaginationCursors:
+      type: object
+      properties:
+        after:
+          type: string
+          example: >
+            eyJvZAmZAzZAXQiOjAsInZAlcnNpb25JZACI6IjE3Mzc2Nzk2ODgzODM1ODQifQZDZD
+        before:
+          type: string
+          example: >
+            eyJvZAmZAzZAXQiOjAsInZAlcnNpb25JZACI6IjE3Mzc2Nzk2ODgzODM1ODQifQZDZD
+    Paging:
+      type: object
+      properties:
+        cursors:
+          $ref: '#/components/schemas/PaginationCursors'
+    GetBlockedUsersData:
+      type: object
+      properties:
+        data:
+          type: array
+          example:
+            0:
+              messaging_product: whatsapp
+              wa_id: '16505551234'
+          items:
+            $ref: '#/components/schemas/BlockedUser'
+        paging:
+          $ref: '#/components/schemas/Paging'
+    BlockedUserOperation:
+      type: object
+      properties:
+        input:
+          type: string
+          example: '+16505551234'
+        wa_id:
+          type: string
+          example: '16505551234'
+    BlockUsersResult:
+      type: object
+      properties:
+        added_users:
+          type: array
+          example:
+            0:
+              input: '+16505551234'
+              wa_id: '16505551234'
+          items:
+            $ref: '#/components/schemas/BlockedUserOperation'
+    UnblockUsersResult:
+      type: object
+      properties:
+        removed_users:
+          type: array
+          example:
+            0:
+              input: '+16505551234'
+              wa_id: '16505551234'
+          items:
+            $ref: '#/components/schemas/BlockedUserOperation'
+    BlockUsersData:
+      type: object
+      properties:
+        block_users:
+          $ref: '#/components/schemas/BlockUsersResult'
+        messaging_product:
+          type: string
+          example: whatsapp
+    UnblockUsersData:
+      type: object
+      properties:
+        block_users:
+          $ref: '#/components/schemas/UnblockUsersResult'
+        messaging_product:
+          type: string
+          example: whatsapp
+  responses:
+    GetBlockedUsersResponse:
+      description: Get blocked users
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetBlockedUsersData'
+          examples:
+            Get blocked users:
+              value:
+                data:
+                  0:
+                    messaging_product: whatsapp
+                    wa_id: '16505551234'
+                paging:
+                  cursors:
+                    after: >
+                      eyJvZAmZAzZAXQiOjAsInZAlcnNpb25JZACI6IjE3Mzc2Nzk2ODgzODM1ODQifQZDZD
+                    before: >
+                      eyJvZAmZAzZAXQiOjAsInZAlcnNpb25JZACI6IjE3Mzc2Nzk2ODgzODM1ODQifQZDZD
+      headers:
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+            example: '*'
+          description: >
+            CORS policy allowing access from any
+            origin
+        Alt-Svc:
+          schema:
+            type: string
+            example: h3=":443"; ma=86400
+          description: >
+            Alternative service advertisement for
+            HTTP/3
+        Cache-Control:
+          schema:
+            type: string
+            example: >
+              private, no-cache, no-store,
+              must-revalidate
+          description: >
+            Cache control directives for the
+            response
+        Connection:
+          schema:
+            type: string
+            example: keep-alive
+          description: Connection management directive
+        Content-Length:
+          schema:
+            type: string
+            example: '25'
+          description: Size of the response body in bytes
+        Date:
+          schema:
+            type: string
+            example: Fri, 24 Jan 2025 00:48:41 GMT
+          description: >
+            Date and time when the response was
+            generated
+        ETag:
+          schema:
+            type: string
+            example: '"eb11a43a8f1e633acc57540de90158ed9ede1eb6"'
+          description: >
+            Entity tag for caching and conditional
+            requests
+        Expires:
+          schema:
+            type: string
+            example: Sat, 01 Jan 2000 00:00:00 GMT
+          description: Expiration date for cached responses
+        Pragma:
+          schema:
+            type: string
+            example: no-cache
+          description: Legacy cache control directive
+        Strict-Transport-Security:
+          schema:
+            type: string
+            example: max-age=15552000; preload
+          description: HSTS header enforcing HTTPS connections
+        Vary:
+          schema:
+            type: string
+            example: Accept-Encoding
+          description: >
+            Headers that affect caching and content
+            negotiation
+        X-FB-Debug:
+          schema:
+            type: string
+            example: >
+              52zkUgodnaVRhbBE+3RiGz6TnmjmDEGunwYd+vKSc4synE+Xii//dy6twB/7yKgOJiMUuV0OF248UAZ1qL3v0A==
+          description: >
+            Facebook debug information for
+            troubleshooting
+        facebook-api-version:
+          schema:
+            type: string
+            example: v22.0
+          description: >
+            Facebook Graph API version used for the
+            request
+        x-business-use-case-usage:
+          schema:
+            type: string
+            example: '{"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0},{"type":"whatsapp","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}'
+          description: >
+            Business use case usage metrics and rate
+            limiting information
+        x-fb-request-id:
+          schema:
+            type: string
+            example: AGaOBl2yM-g8gdON-dhzl5y
+          description: >
+            Unique identifier for the request for
+            debugging purposes
+        x-fb-rev:
+          schema:
+            type: string
+            example: '1019544279'
+          description: Facebook internal revision number
+        x-fb-trace-id:
+          schema:
+            type: string
+            example: E7riEe9OW2e
+          description: >
+            Facebook trace identifier for request
+            tracking
+    BlockUsersResponse:
+      description: Block user(s)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BlockUsersData'
+          examples:
+            Block user(s):
+              value:
+                block_users:
+                  added_users:
+                    0:
+                      input: '+16505551234'
+                      wa_id: '16505551234'
+                messaging_product: whatsapp
+      headers:
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+            example: '*'
+          description: >
+            CORS policy allowing access from any
+            origin
+        Alt-Svc:
+          schema:
+            type: string
+            example: h3=":443"; ma=86400
+          description: >
+            Alternative service advertisement for
+            HTTP/3
+        Cache-Control:
+          schema:
+            type: string
+            example: >
+              private, no-cache, no-store,
+              must-revalidate
+          description: >
+            Cache control directives for the
+            response
+        Connection:
+          schema:
+            type: string
+            example: keep-alive
+          description: Connection management directive
+        Content-Length:
+          schema:
+            type: string
+            example: '25'
+          description: Size of the response body in bytes
+        Date:
+          schema:
+            type: string
+            example: Fri, 24 Jan 2025 00:48:41 GMT
+          description: >
+            Date and time when the response was
+            generated
+        Expires:
+          schema:
+            type: string
+            example: Sat, 01 Jan 2000 00:00:00 GMT
+          description: Expiration date for cached responses
+        Pragma:
+          schema:
+            type: string
+            example: no-cache
+          description: Legacy cache control directive
+        Strict-Transport-Security:
+          schema:
+            type: string
+            example: max-age=15552000; preload
+          description: HSTS header enforcing HTTPS connections
+        Vary:
+          schema:
+            type: string
+            example: Accept-Encoding
+          description: >
+            Headers that affect caching and content
+            negotiation
+        X-FB-Connection-Quality:
+          schema:
+            type: string
+            example: >
+              EXCELLENT; q=0.9, rtt=7, rtx=0, c=10,
+              mss=1380, tbw=372, tp=-1, tpl=-1,
+              uplat=527, ullat=0
+          description: Facebook connection quality metrics
+        X-FB-Debug:
+          schema:
+            type: string
+            example: >
+              52zkUgodnaVRhbBE+3RiGz6TnmjmDEGunwYd+vKSc4synE+Xii//dy6twB/7yKgOJiMUuV0OF248UAZ1qL3v0A==
+          description: >
+            Facebook debug information for
+            troubleshooting
+        facebook-api-version:
+          schema:
+            type: string
+            example: v22.0
+          description: >
+            Facebook Graph API version used for the
+            request
+        x-business-use-case-usage:
+          schema:
+            type: string
+            example: '{"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0},{"type":"whatsapp","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}'
+          description: >
+            Business use case usage metrics and rate
+            limiting information
+        x-fb-request-id:
+          schema:
+            type: string
+            example: AGaOBl2yM-g8gdON-dhzl5y
+          description: >
+            Unique identifier for the request for
+            debugging purposes
+        x-fb-rev:
+          schema:
+            type: string
+            example: '1019544279'
+          description: Facebook internal revision number
+        x-fb-trace-id:
+          schema:
+            type: string
+            example: E7riEe9OW2e
+          description: >
+            Facebook trace identifier for request
+            tracking
+    UnblockUsersResponse:
+      description: Unblock user(s)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnblockUsersData'
+          examples:
+            Unblock user(s):
+              value:
+                block_users:
+                  removed_users:
+                    0:
+                      input: '+16505551234'
+                      wa_id: '16505551234'
+                messaging_product: whatsapp
+      headers:
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+            example: '*'
+          description: >
+            CORS policy allowing access from any
+            origin
+        Alt-Svc:
+          schema:
+            type: string
+            example: h3=":443"; ma=86400
+          description: >
+            Alternative service advertisement for
+            HTTP/3
+        Cache-Control:
+          schema:
+            type: string
+            example: >
+              private, no-cache, no-store,
+              must-revalidate
+          description: >
+            Cache control directives for the
+            response
+        Connection:
+          schema:
+            type: string
+            example: keep-alive
+          description: Connection management directive
+        Content-Length:
+          schema:
+            type: string
+            example: '25'
+          description: Size of the response body in bytes
+        Date:
+          schema:
+            type: string
+            example: Fri, 24 Jan 2025 00:48:41 GMT
+          description: >
+            Date and time when the response was
+            generated
+        Expires:
+          schema:
+            type: string
+            example: Sat, 01 Jan 2000 00:00:00 GMT
+          description: Expiration date for cached responses
+        Pragma:
+          schema:
+            type: string
+            example: no-cache
+          description: Legacy cache control directive
+        Strict-Transport-Security:
+          schema:
+            type: string
+            example: max-age=15552000; preload
+          description: HSTS header enforcing HTTPS connections
+        Vary:
+          schema:
+            type: string
+            example: Accept-Encoding
+          description: >
+            Headers that affect caching and content
+            negotiation
+        X-FB-Connection-Quality:
+          schema:
+            type: string
+            example: >
+              EXCELLENT; q=0.9, rtt=7, rtx=0, c=10,
+              mss=1380, tbw=372, tp=-1, tpl=-1,
+              uplat=527, ullat=0
+          description: Facebook connection quality metrics
+        X-FB-Debug:
+          schema:
+            type: string
+            example: >
+              52zkUgodnaVRhbBE+3RiGz6TnmjmDEGunwYd+vKSc4synE+Xii//dy6twB/7yKgOJiMUuV0OF248UAZ1qL3v0A==
+          description: >
+            Facebook debug information for
+            troubleshooting
+        facebook-api-version:
+          schema:
+            type: string
+            example: v22.0
+          description: >
+            Facebook Graph API version used for the
+            request
+        x-business-use-case-usage:
+          schema:
+            type: string
+            example: '{"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0},{"type":"whatsapp","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}'
+          description: >
+            Business use case usage metrics and rate
+            limiting information
+        x-fb-request-id:
+          schema:
+            type: string
+            example: AGaOBl2yM-g8gdON-dhzl5y
+          description: >
+            Unique identifier for the request for
+            debugging purposes
+        x-fb-rev:
+          schema:
+            type: string
+            example: '1019544279'
+          description: Facebook internal revision number
+        x-fb-trace-id:
+          schema:
+            type: string
+            example: E7riEe9OW2e
+          description: >
+            Facebook trace identifier for request
+            tracking
+  headers:
+    Access-Control-Allow-Origin:
+      description: >
+        CORS policy allowing access from any
+        origin
+      schema:
+        type: string
+        example: '*'
+    Alt-Svc:
+      description: >
+        Alternative service advertisement for
+        HTTP/3
+      schema:
+        type: string
+        example: h3=":443"; ma=86400
+    Cache-Control:
+      description: >
+        Cache control directives for the
+        response
+      schema:
+        type: string
+        example: >
+          private, no-cache, no-store,
+          must-revalidate
+    Connection:
+      description: Connection management directive
+      schema:
+        type: string
+        example: keep-alive
+    Content-Length:
+      description: Size of the response body in bytes
+      schema:
+        type: string
+        example: '25'
+    Date:
+      description: >
+        Date and time when the response was
+        generated
+      schema:
+        type: string
+        example: Fri, 24 Jan 2025 00:48:41 GMT
+    ETag:
+      description: >
+        Entity tag for caching and conditional
+        requests
+      schema:
+        type: string
+        example: '"eb11a43a8f1e633acc57540de90158ed9ede1eb6"'
+    Expires:
+      description: Expiration date for cached responses
+      schema:
+        type: string
+        example: Sat, 01 Jan 2000 00:00:00 GMT
+    Pragma:
+      description: Legacy cache control directive
+      schema:
+        type: string
+        example: no-cache
+    Strict-Transport-Security:
+      description: HSTS header enforcing HTTPS connections
+      schema:
+        type: string
+        example: max-age=15552000; preload
+    Vary:
+      description: >
+        Headers that affect caching and content
+        negotiation
+      schema:
+        type: string
+        example: Accept-Encoding
+    X-FB-Connection-Quality:
+      description: Facebook connection quality metrics
+      schema:
+        type: string
+        example: >
+          EXCELLENT; q=0.9, rtt=7, rtx=0, c=10,
+          mss=1380, tbw=372, tp=-1, tpl=-1,
+          uplat=527, ullat=0
+    X-FB-Debug:
+      description: >
+        Facebook debug information for
+        troubleshooting
+      schema:
+        type: string
+        example: >
+          52zkUgodnaVRhbBE+3RiGz6TnmjmDEGunwYd+vKSc4synE+Xii//dy6twB/7yKgOJiMUuV0OF248UAZ1qL3v0A==
+    facebook-api-version:
+      description: >
+        Facebook Graph API version used for the
+        request
+      schema:
+        type: string
+        example: v22.0
+    x-business-use-case-usage:
+      description: >
+        Business use case usage metrics and rate
+        limiting information
+      schema:
+        type: string
+        example: '{"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0},{"type":"whatsapp","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}'
+    x-fb-request-id:
+      description: >
+        Unique identifier for the request for
+        debugging purposes
+      schema:
+        type: string
+        example: AGaOBl2yM-g8gdON-dhzl5y
+    x-fb-rev:
+      description: Facebook internal revision number
+      schema:
+        type: string
+        example: '1019544279'
+    x-fb-trace-id:
+      description: >
+        Facebook trace identifier for request
+        tracking
+      schema:
+        type: string
+        example: E7riEe9OW2e
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

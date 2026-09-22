@@ -6,6 +6,8 @@
  * @see    https://greatdetail.com
  */
 
+import * as experimental from "./experimental/index.js";
+
 export { default as Client, default as CloudAPI, default } from "./Client.js";
 
 export type * from "./types/Account.js";
@@ -30,4 +32,4 @@ export * from "./types/Templates/index.js";
 export type * from "./types/Webhook/WebhookEventNotification.js";
 export type * from "./types/WhatsappBusinessAccount/index.js";
 
-export * as experimental from "./experimental/index.js";
+export { experimental };

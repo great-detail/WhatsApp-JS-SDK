@@ -51,6 +51,7 @@
     "fix": "pnpm run /^fix:.*/",
     "fix:eslint": "eslint . --fix",
     "fix:prettier": "prettier --write .",
+    "gen:whatsapp-types": "find schemas -name '*.openapi.yaml' -exec sh -c 'for file; do npx openapi-typescript \"$file\" -o \"src/__generated/$(basename \"$file\" .openapi.yaml)-types.ts\"; done' sh {} +",
     "lint": "pnpm run /^lint:.*/",
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier --check .",
@@ -63,8 +64,7 @@
     "test:integration:bun": "cd tests/bun && bun test && cd -",
     "test:integration:deno": "cd tests/deno && deno test && cd -",
     "test:unit": "node --import tsx --test ./src/**/*.test.ts ./src/*.test.ts",
-    "typecheck": "tsc --noEmit",
-    "gen:whatsapp-types": "find schemas -name '*.openapi.yaml' -exec sh -c 'for file; do npx openapi-typescript \"$file\" -o \"src/__generated/$(basename \"$file\" .openapi.yaml)-types.ts\"; done' sh {} +"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "ky": "^2.0.1",

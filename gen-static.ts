@@ -98,4 +98,19 @@ const exportStatements = schemaPaths.map((schemaPath) => {
   return `export * as ${getExportName(schemaPath)} from "./${generatedFileName}";`;
 });
 
-await writeFile(generatedIndexPath, [...exportStatements, ""].join("\n"));
+const pathsType = schemaPaths
+  .map(
+    (schemaPath) =>
+      `import("./${basename(schemaPath, ".openapi.yaml")}-types").paths`,
+  )
+  .join(" &\n  ");
+
+await writeFile(
+  generatedIndexPath,
+  [
+    ...exportStatements,
+    "",
+    `export type paths = ${pathsType};`,
+    "",
+  ].join("\n"),
+);

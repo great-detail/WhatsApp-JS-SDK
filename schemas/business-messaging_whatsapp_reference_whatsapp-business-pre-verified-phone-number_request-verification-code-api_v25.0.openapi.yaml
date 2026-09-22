@@ -1,0 +1,377 @@
+---
+openapi: 3.1.0
+info:
+  title: 'WhatsApp Business Pre-Verified Phone Number - Request Verification Code API'
+  version: v25.0
+  description: |
+    API for requesting verification codes for pre-verified phone numbers in WhatsApp Business Account setup.
+    This endpoint allows businesses to request verification codes (SMS or voice) for pre-verified phone numbers
+    during the WhatsApp Business Account onboarding process.
+  termsOfService: https://developers.facebook.com/terms
+  contact:
+    name: WhatsApp Business Messaging Team
+    url: https://developers.facebook.com/support
+  license:
+    name: Meta Platform Terms
+    url: https://developers.facebook.com/terms
+servers:
+  - 
+    url: https://graph.facebook.com
+    description: Production Graph API server
+tags:
+  - 
+    name: Pre-Verified Phone Numbers
+    description: >
+      APIs for managing pre-verified phone
+      number verification process
+paths:
+  /{Version}/{Pre-Verified-Phone-Number-ID}/request_code:
+    post:
+      responses:
+        200:
+          description: Successfully requested verification code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestCodeResponse'
+              examples:
+                success_response:
+                  summary: Successful code request
+                  value:
+                    success: true
+        400:
+          description: 'Bad Request - Invalid parameters or malformed request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              examples:
+                invalid_method:
+                  summary: Invalid verification method
+                  value:
+                    error:
+                      message: 'Invalid parameter: code_method must be IVR, SMS, or VOICE'
+                      type: OAuthException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                invalid_language:
+                  summary: Invalid language code
+                  value:
+                    error:
+                      message: 'Invalid parameter: language must be a valid locale identifier'
+                      type: OAuthException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions or access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              examples:
+                permission_denied:
+                  summary: >
+                    Missing whatsapp_business_management
+                    permission
+                  value:
+                    error:
+                      message: >
+                        Your app doesn't have permission to
+                        access this pre-verified phone number
+                      type: OAuthException
+                      code: 200
+                      error_subcode: 1349174
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                      error_user_title: Permission Denied
+                      error_user_msg: >
+                        Your app doesn't have permission to
+                        access this resource
+                business_access_denied:
+                  summary: No access to business
+                  value:
+                    error:
+                      message: >
+                        App does not have access to the business
+                        that owns this phone number
+                      type: OAuthException
+                      code: 200
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        404:
+          description: 'Not Found - Pre-verified phone number ID does not exist or is not accessible'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Pre-verified phone number not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description: 'Unprocessable Entity - Request parameters are valid but cannot be processed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              examples:
+                already_verified:
+                  summary: Phone number already verified
+                  value:
+                    error:
+                      message: >
+                        This phone number has already been
+                        verified
+                      type: GraphMethodException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                rate_limited:
+                  summary: Too many verification attempts
+                  value:
+                    error:
+                      message: >
+                        Too many verification code requests.
+                        Please wait before requesting another
+                        code
+                      type: GraphMethodException
+                      code: 613
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: 'Internal Server Error - Unexpected server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please
+                    retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: >
+        Request Verification Code for
+        Pre-Verified Phone Number
+      description: |
+        Request a verification code for a pre-verified phone number via SMS or voice call.
+        This is part of the WhatsApp Business Account onboarding process where pre-approved
+        phone numbers must be verified before they can be used for messaging.
+        
+        **Process Flow:**
+        1. Call this endpoint to request a verification code
+        2. User receives code via SMS or voice call
+        3. Use the verify_code endpoint to complete verification
+        4. Phone number becomes active for messaging
+        
+        **Rate Limiting:**
+        - Limited number of code requests per phone number per time period
+        - Exponential backoff recommended for retry attempts
+        - Voice calls may have additional restrictions
+        
+        **Language Support:**
+        Verification messages are sent in the specified language when available.
+        Falls back to English (en_US) if the requested language is not supported.
+        
+        **Security Considerations:**
+        - Codes expire after a short time period
+        - Limited number of verification attempts allowed
+        - Phone number must be pre-verified and owned by requesting business
+      operationId: requestPreVerifiedPhoneNumberCode
+      tags:
+        - Pre-Verified Phone Numbers
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: Pre-Verified-Phone-Number-ID
+          in: path
+          description: |
+            Your pre-verified phone number ID. This ID is provided when the phone number
+            is pre-verified and can be found in your WhatsApp Business Account settings.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestCodeRequest'
+            examples:
+              sms_request:
+                summary: Request SMS verification code
+                value:
+                  code_method: SMS
+                  language: en_US
+              voice_request:
+                summary: Request voice call verification code
+                value:
+                  code_method: VOICE
+                  language: es_ES
+              default_request:
+                summary: Standard SMS request with English
+                value:
+                  code_method: SMS
+                  language: en_US
+        description: Verification code request parameters
+        required: true
+components:
+  schemas:
+    RequestCodeRequest:
+      type: object
+      description: >
+        Request body for requesting verification
+        code
+      required:
+        - code_method
+        - language
+      properties:
+        code_method:
+          $ref: '#/components/schemas/PhoneVerificationMethodCode'
+        language:
+          type: string
+          description: |
+            Language/locale code for the verification message. Must be a valid locale identifier.
+            The verification message will be sent in this language if supported.
+            Supports various formats including xx_XX, xx-XX, and extended locale codes.
+          example: en_US
+    PhoneVerificationMethodCode:
+      type: string
+      description: >
+        Method for receiving the verification
+        code
+      example: SMS
+      enum:
+        - IVR
+        - SMS
+        - VOICE
+    RequestCodeResponse:
+      type: object
+      description: >
+        Response after successfully requesting
+        verification code
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+          description: >
+            Indicates whether the verification code
+            request was successful
+          example: true
+    GraphAPIError:
+      type: object
+      description: Standard Graph API error response
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - type
+            - code
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid parameter
+            type:
+              type: string
+              description: Error category type
+              example: OAuthException
+            code:
+              type: integer
+              description: Numeric error code
+              example: 100
+            error_subcode:
+              type: integer
+              description: >
+                More specific error subcode when
+                available
+              example: 33
+            fbtrace_id:
+              type: string
+              description: >
+                Unique identifier for debugging and
+                support requests with Meta
+              example: AXsgnV2Cm3ZMGF3dF_cfYIn
+            is_transient:
+              type: boolean
+              description: >
+                Indicates whether this error is
+                temporary and the request should be
+                retried
+              example: false
+            error_user_title:
+              type: string
+              description: >
+                User-friendly error title for display
+                purposes
+              example: Permission Denied
+            error_user_msg:
+              type: string
+              description: >
+                User-friendly error message for display
+                purposes
+              example: >
+                Your app doesn't have permission to
+                access this resource
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

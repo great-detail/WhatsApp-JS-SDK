@@ -1,0 +1,311 @@
+---
+openapi: 3.1.0
+info:
+  title: 'WhatsApp Business Management - Add Phone Numbers API'
+  version: v25.0
+  description: |
+    API for adding phone numbers to a WhatsApp Business Account.
+    This endpoint allows businesses to add phone numbers to their WhatsApp Business Account
+    for messaging purposes.
+  termsOfService: https://developers.facebook.com/terms
+  contact:
+    name: WhatsApp Business Messaging Team
+    url: https://developers.facebook.com/support
+  license:
+    name: Meta Platform Terms
+    url: https://developers.facebook.com/terms
+servers:
+  - 
+    url: https://graph.facebook.com
+    description: Production Graph API server
+tags:
+  - 
+    name: Business Phone Numbers
+    description: >
+      APIs for managing phone numbers in
+      WhatsApp Business Accounts
+paths:
+  /{Version}/{Business-ID}/add_phone_numbers:
+    post:
+      responses:
+        200:
+          description: Phone number successfully added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddPhoneNumbersResponse'
+              examples:
+                success:
+                  summary: Phone number successfully added
+                  value:
+                    id: '1234567890123456'
+        400:
+          description: 'Bad Request - Invalid parameters, malformed request, or phone number already registered'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              examples:
+                invalid_phone_number:
+                  summary: Invalid phone number
+                  value:
+                    error:
+                      message: Invalid phone number
+                      type: OAuthException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions or access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to add
+                    phone numbers to this business account
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  error_user_title: Permission Denied
+                  error_user_msg: >
+                    Your app doesn't have permission to
+                    access this resource
+        404:
+          description: 'Not Found - Business ID does not exist or is not accessible'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: WhatsApp Business Account not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description: 'Unprocessable Entity - Request parameters are valid but cannot be processed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Maximum number of phone numbers per
+                    business account exceeded
+                  type: GraphMethodException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: 'Internal Server Error - Unexpected server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please
+                    retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Add Phone Number to Business Account
+      description: |
+        Add a preverified phone number to a WhatsApp Business Account. This endpoint is used by
+        Partners to create a pool of Partner owned numbers that end clients
+        can purchase.
+        
+        **Use Cases:**
+        - Add new phone numbers to scale messaging operations
+        - Set up phone numbers for different business locations
+        - Manage phone number inventory for business messaging
+        - Configure phone numbers for specific messaging workflows
+        
+        **Rate Limiting:**
+        Standard Graph API rate limits apply. Use appropriate retry logic with exponential backoff.
+        
+        **Phone Number Requirements:**
+        - Must be in E.164 format (e.g., +1234567890)
+        - Must not be already registered to another WhatsApp Business Account
+        - Must be capable of receiving SMS for verification
+        - Must comply with WhatsApp's business messaging policies
+      operationId: addPhoneNumbers
+      tags:
+        - Business Phone Numbers
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: Business-ID
+          in: path
+          description: |
+            Your WhatsApp Business Account ID. This ID can be found in your Business Manager
+            or through business management APIs.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddPhoneNumbersRequest'
+            examples:
+              basic_phone_number:
+                summary: Add phone number with E.164 format
+                value:
+                  phone_number: '+1234567890'
+        description: >
+          Phone number to add to the business
+          account
+        required: true
+components:
+  schemas:
+    AddPhoneNumbersRequest:
+      type: object
+      description: >
+        Request payload for adding a phone
+        number to a business account
+      required:
+        - phone_number
+      properties:
+        phone_number:
+          type: string
+          description: |
+            Phone number to add to the business account. Accepts E.164 format or formatted numbers
+            with spaces, hyphens, and parentheses (e.g., +1234567890, +1 (631) 555-1000, +1-631-555-1000).
+            The phone number will be normalized and validated by the endpoint.
+          example: '+1234567890'
+    AddPhoneNumbersResponse:
+      type: object
+      description: >
+        Response containing the ID of the
+        successfully added phone number
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: >
+            Unique identifier for the preverified
+            phone number entity that was created
+          example: '1234567890123456'
+    GraphAPIError:
+      type: object
+      description: Standard Graph API error response
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - type
+            - code
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid parameter
+            type:
+              type: string
+              description: Error category type
+              example: OAuthException
+            code:
+              type: integer
+              description: Numeric error code
+              example: 100
+            error_subcode:
+              type: integer
+              description: >
+                More specific error subcode when
+                available
+              example: 33
+            fbtrace_id:
+              type: string
+              description: >
+                Unique identifier for debugging and
+                support requests with Meta
+              example: AXsgnV2Cm3ZMGF3dF_cfYIn
+            is_transient:
+              type: boolean
+              description: >
+                Indicates whether this error is
+                temporary and the request should be
+                retried
+              example: false
+            error_user_title:
+              type: string
+              description: >
+                User-friendly error title for display
+                purposes
+              example: Permission Denied
+            error_user_msg:
+              type: string
+              description: >
+                User-friendly error message for display
+                purposes
+              example: >
+                Your app doesn't have permission to
+                access this resource
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

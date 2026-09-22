@@ -1,0 +1,444 @@
+---
+openapi: 3.1.0
+info:
+  title: >
+    WhatsApp Business Pre-Verified Phone
+    Numbers API
+  version: v25.0
+  description: |
+    API for retrieving pre-verified phone numbers associated with a business.
+    This endpoint allows businesses to retrieve information about pre-verified phone numbers
+    that are available for use with their WhatsApp Business Account.
+  termsOfService: https://developers.facebook.com/terms
+  contact:
+    name: WhatsApp Business Messaging Team
+    url: https://developers.facebook.com/support
+  license:
+    name: Meta Platform Terms
+    url: https://developers.facebook.com/terms
+servers:
+  - 
+    url: https://graph.facebook.com
+    description: Production Graph API server
+tags:
+  - 
+    name: Pre-Verified Phone Numbers
+    description: >
+      APIs for managing pre-verified phone
+      numbers for WhatsApp Business messaging
+paths:
+  /{Version}/{Business-ID}/preverified_numbers:
+    get:
+      responses:
+        200:
+          description: >
+            Successfully retrieved pre-verified
+            phone numbers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreVerifiedPhoneNumbersResponse'
+              examples:
+                basic_response:
+                  summary: >
+                    Basic response with pre-verified phone
+                    numbers
+                  value:
+                    data:
+                      0:
+                        id: '1234567890123456'
+                        phone_number: '+15551234567'
+                        code_verification_status: VERIFIED
+                        code_verification_time: 1705312200
+                        verification_expiry_time: 1705398600
+                      1:
+                        id: '2345678901234567'
+                        phone_number: '+442012345678'
+                        code_verification_status: NOT_VERIFIED
+                    paging:
+                      cursors:
+                        after: QVFIUjJ5WjBpMGpJWXprYzVYaVhabW9PVks4ZD0
+                      next: >
+                        https://graph.facebook.com/v25.0/1234567890123456/preverified_numbers?after=QVFIUjJ5WjBpMGpJWXprYzVYaVhabW9PVks4ZD0
+                empty_response:
+                  summary: >
+                    Empty response when no phone numbers are
+                    available
+                  value:
+                    data: [ ]
+                    paging:
+                      cursors: { }
+        400:
+          description: 'Bad Request - Invalid parameters or malformed request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid parameter
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions or access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to
+                    access pre-verified phone numbers for
+                    this business
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  error_user_title: Permission Denied
+                  error_user_msg: >
+                    Your app doesn't have permission to
+                    access this resource
+        404:
+          description: 'Not Found - Business does not exist or is not accessible'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Business not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: 'Internal Server Error - Unexpected server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please
+                    retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Get Pre-Verified Phone Numbers
+      description: |
+        Retrieve pre-verified phone numbers available for use with the specified business.
+        This endpoint provides information about phone numbers that have been pre-verified
+        and are ready for use with WhatsApp Business messaging operations.
+        
+        **Use Cases:**
+        - Retrieve available pre-verified phone numbers for business messaging setup
+        - Check verification status of phone numbers
+        - Monitor pre-verified phone number inventory
+        - Facilitate quick business messaging setup with pre-verified numbers
+        
+        **Filtering:**
+        - Results can be filtered by phone_number or code_verification_status
+        - Cursor-based pagination is supported for large result sets
+        
+        **Rate Limiting:**
+        Standard Graph API rate limits apply. Use appropriate retry logic with exponential backoff.
+      operationId: getPreVerifiedPhoneNumbers
+      tags:
+        - Pre-Verified Phone Numbers
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: Business-ID
+          in: path
+          description: |
+            Your Business ID for which to retrieve pre-verified phone numbers.
+            This ID can be found in your Meta Business Manager or through business management APIs.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+        - 
+          name: fields
+          in: query
+          description: |
+            Comma-separated list of fields to include in the response.
+            Available fields: id, code_verification_status, code_verification_time,
+            owner_business, phone_number, verification_expiry_time
+          required: false
+          schema:
+            type: string
+          example: id,phone_number,code_verification_status
+        - 
+          name: phone_number
+          in: query
+          description: |
+            Filter results by phone number. Only pre-verified numbers matching the
+            specified phone number will be returned.
+          required: false
+          schema:
+            type: string
+          example: '+15551234567'
+        - 
+          name: code_verification_status
+          in: query
+          description: |
+            Filter results by code verification status. Only phone numbers with the
+            specified verification status will be returned.
+          required: false
+          schema:
+            $ref: '#/components/schemas/WhatsAppCodeVerificationStatus'
+          example: VERIFIED
+        - 
+          name: limit
+          in: query
+          description: |
+            Maximum number of phone numbers to return per page.
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+          example: 25
+        - 
+          name: after
+          in: query
+          description: |
+            Cursor for pagination. Use this to retrieve the next page of results.
+            This value is provided in the 'paging' object of previous responses.
+          required: false
+          schema:
+            type: string
+          example: QVFIUjJ5WjBpMGpJWXprYzVYaVhabW9PVks4ZD0
+        - 
+          name: before
+          in: query
+          description: |
+            Cursor for pagination. Use this to retrieve the previous page of results.
+            This value is provided in the 'paging' object of previous responses.
+          required: false
+          schema:
+            type: string
+          example: QVFIUmx1WTBpMGpJWXprYzVYaVhabW9PVks4ZD0
+components:
+  schemas:
+    PreVerifiedPhoneNumber:
+      type: object
+      description: Pre-verified phone number node fields
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: >
+            Unique identifier for the pre-verified
+            phone number
+          example: '1234567890123456'
+        code_verification_status:
+          $ref: '#/components/schemas/WhatsAppCodeVerificationStatus'
+        code_verification_time:
+          type: integer
+          format: int64
+          description: >
+            Unix timestamp when the verification
+            code was last verified
+          example: 1705312200
+        owner_business:
+          type: object
+          description: >
+            Business that owns this pre-verified
+            phone number
+          properties:
+            id:
+              type: string
+              description: Unique identifier for the business
+              example: '9876543210987654'
+            name:
+              type: string
+              description: Name of the business
+              example: Example Business Corp
+        phone_number:
+          type: string
+          description: The phone number in E.164 format
+          example: '+15551234567'
+        verification_expiry_time:
+          type: integer
+          format: int64
+          description: >
+            Unix timestamp when the verification
+            expires
+          example: 1705398600
+    WhatsAppCodeVerificationStatus:
+      type: string
+      description: >
+        Current verification status of the
+        pre-verified phone number
+      example: VERIFIED
+      enum:
+        - EXPIRED
+        - NOT_VERIFIED
+        - VERIFIED
+    PreVerifiedPhoneNumbersResponse:
+      type: object
+      description: >
+        Response containing list of pre-verified
+        phone numbers
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          description: List of pre-verified phone numbers
+          items:
+            $ref: '#/components/schemas/PreVerifiedPhoneNumber'
+        paging:
+          $ref: '#/components/schemas/CursorPaging'
+    CursorPaging:
+      type: object
+      description: Cursor-based pagination information
+      properties:
+        cursors:
+          type: object
+          properties:
+            before:
+              type: string
+              description: >
+                Cursor pointing to the start of the page
+                of data that has been returned
+              example: QVFIUmx1WTBpMGpJWXprYzVYaVhabW9PVks4ZD0
+            after:
+              type: string
+              description: >
+                Cursor pointing to the end of the page
+                of data that has been returned
+              example: QVFIUjJ5WjBpMGpJWXprYzVYaVhabW9PVks4ZD0
+        next:
+          type: string
+          description: >
+            Graph API endpoint URL for the next page
+            of results
+          example: >
+            https://graph.facebook.com/v25.0/1234567890123456/preverified_numbers?after=QVFIUjJ5WjBpMGpJWXprYzVYaVhabW9PVks4ZD0
+        previous:
+          type: string
+          description: >
+            Graph API endpoint URL for the previous
+            page of results
+          example: >
+            https://graph.facebook.com/v25.0/1234567890123456/preverified_numbers?before=QVFIUmx1WTBpMGpJWXprYzVYaVhabW9PVks4ZD0
+    GraphAPIError:
+      type: object
+      description: Standard Graph API error response
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - type
+            - code
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid parameter
+            type:
+              type: string
+              description: Error category type
+              example: OAuthException
+            code:
+              type: integer
+              description: Numeric error code
+              example: 100
+            error_subcode:
+              type: integer
+              description: >
+                More specific error subcode when
+                available
+              example: 33
+            fbtrace_id:
+              type: string
+              description: >
+                Unique identifier for debugging and
+                support requests with Meta
+              example: AXsgnV2Cm3ZMGF3dF_cfYIn
+            is_transient:
+              type: boolean
+              description: >
+                Indicates whether this error is
+                temporary and the request should be
+                retried
+              example: false
+            error_user_title:
+              type: string
+              description: >
+                User-friendly error title for display
+                purposes
+              example: Permission Denied
+            error_user_msg:
+              type: string
+              description: >
+                User-friendly error message for display
+                purposes
+              example: >
+                Your app doesn't have permission to
+                access this resource
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

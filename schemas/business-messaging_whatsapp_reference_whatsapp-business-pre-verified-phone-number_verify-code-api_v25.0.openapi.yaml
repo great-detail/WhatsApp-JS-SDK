@@ -1,0 +1,348 @@
+---
+openapi: 3.1.0
+info:
+  title: 'WhatsApp Business Pre-Verified Phone Number - Verify Code API'
+  version: v25.0
+  description: |
+    API for verifying OTP codes for WhatsApp Business Pre-Verified Phone Numbers.
+    This endpoint allows businesses to verify OTP codes that were sent to pre-verified phone numbers
+    during the phone number verification process.
+  termsOfService: https://developers.facebook.com/terms
+  contact:
+    name: WhatsApp Business Messaging Team
+    url: https://developers.facebook.com/support
+  license:
+    name: Meta Platform Terms
+    url: https://developers.facebook.com/terms
+servers:
+  - 
+    url: https://graph.facebook.com
+    description: Production Graph API server
+tags:
+  - 
+    name: Pre-Verified Phone Numbers
+    description: >
+      APIs for managing WhatsApp Business
+      Pre-Verified Phone Number verification
+paths:
+  /{Version}/{Pre-Verified-Phone-Number-ID}/verify_code:
+    post:
+      responses:
+        200:
+          description: Successfully verified the OTP code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyCodeResponse'
+              examples:
+                successful_verification:
+                  summary: Code verification successful
+                  value:
+                    success: true
+        400:
+          description: 'Bad Request - Invalid parameters or malformed request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              examples:
+                invalid_code_format:
+                  summary: Invalid code format
+                  value:
+                    error:
+                      message: 'Invalid parameter: code must be a numeric string'
+                      type: OAuthException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                missing_code:
+                  summary: Missing required code parameter
+                  value:
+                    error:
+                      message: 'Missing required parameter: code'
+                      type: OAuthException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions or access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to
+                    access this Pre-Verified Phone Number
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  error_user_title: Permission Denied
+                  error_user_msg: >
+                    Your app doesn't have permission to
+                    access this resource
+        404:
+          description: 'Not Found - Pre-Verified Phone Number ID does not exist or is not accessible'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Pre-Verified Phone Number not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description: 'Unprocessable Entity - Code is invalid, expired, or already used'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              examples:
+                invalid_code:
+                  summary: Invalid verification code
+                  value:
+                    error:
+                      message: The verification code is invalid
+                      type: GraphMethodException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                      error_user_title: Invalid Code
+                      error_user_msg: >
+                        The verification code you entered is
+                        incorrect
+                expired_code:
+                  summary: Expired verification code
+                  value:
+                    error:
+                      message: The verification code has expired
+                      type: GraphMethodException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                      error_user_title: Code Expired
+                      error_user_msg: >
+                        The verification code has expired.
+                        Please request a new code
+                already_verified:
+                  summary: Phone number already verified
+                  value:
+                    error:
+                      message: This phone number is already verified
+                      type: GraphMethodException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: 'Internal Server Error - Unexpected server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please
+                    retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: >
+        Verify OTP Code for Pre-Verified Phone
+        Number
+      description: |
+        Verify the OTP code received for a pre-verified phone number to complete the
+        verification process. This endpoint validates the code and updates the verification
+        status of the phone number.
+        
+        **Use Cases:**
+        - Complete phone number verification during WhatsApp Business onboarding
+        - Verify ownership of phone numbers for business messaging
+        - Enable phone numbers for WhatsApp Business API usage
+        
+        **Rate Limiting:**
+        This endpoint has specific rate limits to prevent abuse:
+        - 125 requests per hour for business use cases
+        - Standard Graph API rate limits also apply
+        
+        **Code Validation:**
+        - Codes are time-sensitive and expire after a set period
+        - Each code can only be used once
+        - Invalid or expired codes will result in verification failure
+        
+        **Error Handling:**
+        - Invalid codes return 400 Bad Request
+        - Expired codes return 422 Unprocessable Entity
+              operationId: verifyPreVerifiedPhoneNumberCode
+      tags:
+        - Pre-Verified Phone Numbers
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: Pre-Verified-Phone-Number-ID
+          in: path
+          description: |
+            Your Pre-Verified Phone Number ID. This ID is provided when you create the pre-verified
+            phone number and can be found in your WhatsApp Business Manager or through phone number APIs.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyCodeRequest'
+            examples:
+              verify_code:
+                summary: Verify received OTP code
+                value:
+                  code: '123456'
+        description: Verification code details
+        required: true
+components:
+  schemas:
+    VerifyCodeRequest:
+      type: object
+      description: Request payload for verifying OTP code
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          description: |
+            The numeric verification code received via SMS or voice call.
+            This code is provided after calling the request_code endpoint.
+          example: '123456'
+          maxLength: 8
+          minLength: 4
+          pattern: '^[0-9]+$'
+    VerifyCodeResponse:
+      type: object
+      description: >
+        Response indicating successful code
+        verification
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+          description: >
+            Indicates whether the code verification
+            was successful
+          example: true
+    GraphAPIError:
+      type: object
+      description: Standard Graph API error response
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - type
+            - code
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid verification code
+            type:
+              type: string
+              description: Error category type
+              example: OAuthException
+            code:
+              type: integer
+              description: Numeric error code
+              example: 100
+            error_subcode:
+              type: integer
+              description: >
+                More specific error subcode when
+                available
+              example: 33
+            fbtrace_id:
+              type: string
+              description: >
+                Unique identifier for debugging and
+                support requests with Meta
+              example: AXsgnV2Cm3ZMGF3dF_cfYIn
+            is_transient:
+              type: boolean
+              description: >
+                Indicates whether this error is
+                temporary and the request should be
+                retried
+              example: false
+            error_user_title:
+              type: string
+              description: >
+                User-friendly error title for display
+                purposes
+              example: Verification Failed
+            error_user_msg:
+              type: string
+              description: >
+                User-friendly error message for display
+                purposes
+              example: >
+                The verification code you entered is
+                invalid or has expired
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

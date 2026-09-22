@@ -1,0 +1,650 @@
+---
+openapi: 3.1.0
+info:
+  title: 'WhatsApp Business Platform - Client WhatsApp Business Accounts API'
+  version: v25.0
+  description: |
+    API for retrieving client WhatsApp Business Accounts (WABAs) shared with a business.
+    This endpoint allows businesses to retrieve information about WhatsApp Business Accounts
+    that have been shared with them by other businesses or solution partners.
+  termsOfService: https://developers.facebook.com/terms
+  contact:
+    name: WhatsApp Business Messaging Team
+    url: https://developers.facebook.com/support
+  license:
+    name: Meta Platform Terms
+    url: https://developers.facebook.com/terms
+servers:
+  - 
+    url: https://graph.facebook.com
+    description: Production Graph API server
+tags:
+  - 
+    name: Client WhatsApp Business Accounts
+    description: >
+      APIs for managing client WhatsApp
+      Business Account relationships
+paths:
+  /{Version}/{Business-ID}/client_whatsapp_business_accounts:
+    get:
+      responses:
+        200:
+          description: >
+            Successfully retrieved client WhatsApp
+            Business Accounts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientWhatsAppBusinessAccountsResponse'
+              examples:
+                multiple_accounts:
+                  summary: >
+                    Multiple client WhatsApp Business
+                    Accounts
+                  value:
+                    data:
+                      0:
+                        id: '1234567890123456'
+                        name: Client Business WABA A
+                        account_review_status: APPROVED
+                        currency: USD
+                        country: US
+                        timezone_id: '1'
+                        business_verification_status: VERIFIED
+                        ownership_type: CLIENT_OWNED
+                        is_enabled_for_insights: true
+                      1:
+                        id: '2345678901234567'
+                        name: Client Business WABA B
+                        account_review_status: PENDING
+                        currency: EUR
+                        country: DE
+                        timezone_id: '5'
+                        business_verification_status: PENDING
+                        ownership_type: AGENCY_OWNED
+                        is_enabled_for_insights: false
+                    paging:
+                      cursors:
+                        after: QVFIUjNpUWpVWmRBd0Rn
+                      next: >
+                        https://graph.facebook.com/v25.0/1234567890/client_whatsapp_business_accounts?after=QVFIUjNpUWpVWmRBd0Rn
+                single_account:
+                  summary: Single client WhatsApp Business Account
+                  value:
+                    data:
+                      0:
+                        id: '1234567890123456'
+                        name: Client Business WABA
+                        account_review_status: APPROVED
+                        currency: USD
+                        country: US
+                        timezone_id: '1'
+                        business_verification_status: VERIFIED
+                        ownership_type: CLIENT_OWNED
+                empty_response:
+                  summary: No client WhatsApp Business Accounts
+                  value:
+                    data: [ ]
+        400:
+          description: 'Bad Request - Invalid parameters or malformed request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: 'Invalid parameter: business_id must be a valid numeric string'
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions or access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to
+                    access client WhatsApp Business Accounts
+                    for this business
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  error_user_title: Permission Denied
+                  error_user_msg: >
+                    Your app doesn't have permission to
+                    access this resource
+        404:
+          description: 'Not Found - Business ID does not exist or is not accessible'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Business not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description: 'Unprocessable Entity - Request parameters are valid but cannot be processed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    The requested fields are not available
+                    for this business
+                  type: GraphMethodException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: 'Internal Server Error - Unexpected server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please
+                    retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Get Client WhatsApp Business Accounts
+      description: |
+        Retrieve a list of WhatsApp Business Accounts that have been shared with the specified business.
+        
+        **Use Cases:**
+        - Monitor shared WABA relationships and permissions
+        - Verify WABA configuration and status information
+        - Retrieve WABA details for business integrations
+        - Manage multi-business WhatsApp messaging setups
+        
+        **Rate Limiting:**
+        Standard Graph API rate limits apply. Use appropriate retry logic with exponential backoff.
+        
+        **Caching:**
+        WABA information can be cached for moderate periods, but status information may change
+        frequently. Implement appropriate cache invalidation strategies.
+      operationId: getClientWhatsAppBusinessAccounts
+      tags:
+        - Client WhatsApp Business Accounts
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: Business-ID
+          in: path
+          description: |
+            Your Business ID. This ID can be found in your Meta Business Suite URL
+            or through business management APIs.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: 1234567890123456
+        - 
+          name: fields
+          in: query
+          description: |
+            Comma-separated list of fields to include in the response. If not specified,
+            default fields will be returned (id, name, currency, timezone_id).
+            Available fields: id, name, account_review_status, purchase_order_number, audiences, ownership_type, subscribed_apps, business_verification_status, country, currency, timezone_id, on_behalf_of_business_info, schedules, is_enabled_for_insights, dcc_config, message_templates, phone_numbers
+          required: false
+          schema:
+            type: string
+          example: >
+            id,name,account_review_status,currency,country
+        - 
+          name: business_type
+          in: query
+          description: |
+            Filter results by WhatsApp Business Account type
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - STANDARD
+                - PREMIUM
+                - ENTERPRISE
+          example:
+            0: STANDARD
+            1: PREMIUM
+        - 
+          name: limit
+          in: query
+          description: |
+            Maximum number of WhatsApp Business Accounts to return per page. Default is 25, maximum is 100.
+          required: false
+          schema:
+            type: integer
+            default: 25
+            maximum: 100
+            minimum: 1
+          example: 25
+        - 
+          name: after
+          in: query
+          description: |
+            Cursor for pagination. Use this to get the next page of results.
+          required: false
+          schema:
+            type: string
+          example: QVFIUjNpUWpVWmRBd0Rn
+        - 
+          name: before
+          in: query
+          description: |
+            Cursor for pagination. Use this to get the previous page of results.
+          required: false
+          schema:
+            type: string
+          example: QVFIUjNpUWpVWmRBd0Dn
+        - 
+          name: find
+          in: query
+          description: |
+            Find a specific WhatsApp Business Account by ID
+          required: false
+          schema:
+            type: string
+          example: '9876543210987654'
+components:
+  schemas:
+    WhatsAppBusinessAccount:
+      type: object
+      description: >
+        WhatsApp Business Account details and
+        configuration
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          description: >
+            Unique identifier for the WhatsApp
+            Business Account
+          example: '1234567890123456'
+        name:
+          type: string
+          description: >
+            Human-readable name of the WhatsApp
+            Business Account
+          example: My WhatsApp Business Account
+          maxLength: 255
+          minLength: 1
+        account_review_status:
+          $ref: '#/components/schemas/AccountReviewStatus'
+        purchase_order_number:
+          type: string
+          description: >
+            Purchase order number associated with
+            the account
+          example: PO-2023-001234
+        audiences:
+          type: array
+          description: >
+            List of audience segments associated
+            with the account
+          example:
+            0: customers
+            1: prospects
+          items:
+            type: string
+        ownership_type:
+          $ref: '#/components/schemas/OwnershipType'
+        subscribed_apps:
+          type: array
+          description: >
+            List of applications subscribed to this
+            WABA
+          items:
+            $ref: '#/components/schemas/SubscribedApp'
+        business_verification_status:
+          $ref: '#/components/schemas/BusinessVerificationStatus'
+        country:
+          type: string
+          description: >
+            Country code where the WABA is
+            registered
+          example: US
+          pattern: '^[A-Z]{2}$'
+        currency:
+          type: string
+          description: Currency code for the WABA
+          example: USD
+          pattern: '^[A-Z]{3}$'
+        timezone_id:
+          type: string
+          description: Timezone identifier for the WABA
+          example: '1'
+        on_behalf_of_business_info:
+          $ref: '#/components/schemas/OnBehalfOfBusinessInfo'
+        schedules:
+          type: array
+          description: >
+            Business hours and scheduling
+            information
+          items:
+            $ref: '#/components/schemas/BusinessSchedule'
+        is_enabled_for_insights:
+          type: boolean
+          description: >
+            Whether insights are enabled for this
+            WABA
+          example: true
+        dcc_config:
+          $ref: '#/components/schemas/DCCConfig'
+        message_templates:
+          type: array
+          description: >
+            Message templates associated with the
+            WABA
+          items:
+            $ref: '#/components/schemas/MessageTemplate'
+        phone_numbers:
+          type: array
+          description: Phone numbers associated with the WABA
+          items:
+            $ref: '#/components/schemas/PhoneNumber'
+    AccountReviewStatus:
+      type: string
+      description: >
+        Review status of the WhatsApp Business
+        Account
+      example: APPROVED
+      enum:
+        - APPROVED
+        - PENDING
+        - REJECTED
+        - RESTRICTED
+    OwnershipType:
+      type: string
+      description: >
+        Type of ownership for the WhatsApp
+        Business Account
+      example: CLIENT_OWNED
+      enum:
+        - SELF_OWNED
+        - CLIENT_OWNED
+        - AGENCY_OWNED
+    BusinessVerificationStatus:
+      type: string
+      description: >
+        Verification status of the business
+        associated with the WABA
+      example: VERIFIED
+      enum:
+        - VERIFIED
+        - UNVERIFIED
+        - PENDING
+        - REJECTED
+    SubscribedApp:
+      type: object
+      description: Application subscribed to the WABA
+      properties:
+        id:
+          type: string
+          description: Application ID
+          example: '9876543210987654'
+        name:
+          type: string
+          description: Application name
+          example: WhatsApp Integration App
+    OnBehalfOfBusinessInfo:
+      type: object
+      description: >
+        Information about the business on whose
+        behalf the WABA operates
+      properties:
+        id:
+          type: string
+          description: Business ID
+          example: '5678901234567890'
+        name:
+          type: string
+          description: Business name
+          example: Partner Business Inc
+    BusinessSchedule:
+      type: object
+      description: Business hours schedule information
+      properties:
+        day_of_week:
+          type: string
+          example: MONDAY
+          enum:
+            - MONDAY
+            - TUESDAY
+            - WEDNESDAY
+            - THURSDAY
+            - FRIDAY
+            - SATURDAY
+            - SUNDAY
+        open_time:
+          type: string
+          description: Opening time in HH:MM format
+          example: 09:00
+          pattern: '^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$'
+        close_time:
+          type: string
+          description: Closing time in HH:MM format
+          example: 17:00
+          pattern: '^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$'
+    DCCConfig:
+      type: object
+      description: Data and Content Control configuration
+      properties:
+        enabled:
+          type: boolean
+          description: Whether DCC is enabled
+          example: true
+        policy_url:
+          type: string
+          description: URL to the DCC policy
+          example: https://example.com/dcc-policy
+    MessageTemplate:
+      type: object
+      description: Message template information
+      properties:
+        id:
+          type: string
+          description: Template ID
+          example: template_123456
+        name:
+          type: string
+          description: Template name
+          example: welcome_message
+        status:
+          type: string
+          example: APPROVED
+          enum:
+            - APPROVED
+            - PENDING
+            - REJECTED
+            - DISABLED
+    PhoneNumber:
+      type: object
+      description: Phone number associated with the WABA
+      properties:
+        id:
+          type: string
+          description: Phone number ID
+          example: '1234567890123456'
+        display_phone_number:
+          type: string
+          description: Formatted phone number for display
+          example: +1 (555) 123-4567
+        verified_name:
+          type: string
+          description: >
+            Verified business name for the phone
+            number
+          example: Example Business
+    ClientWhatsAppBusinessAccountsResponse:
+      type: object
+      description: >
+        Response containing list of client
+        WhatsApp Business Accounts
+      properties:
+        data:
+          type: array
+          description: >
+            Array of client WhatsApp Business
+            Accounts
+          items:
+            $ref: '#/components/schemas/WhatsAppBusinessAccount'
+        paging:
+          $ref: '#/components/schemas/CursorPaging'
+    CursorPaging:
+      type: object
+      description: Cursor-based pagination information
+      properties:
+        cursors:
+          type: object
+          properties:
+            before:
+              type: string
+              description: >
+                Cursor pointing to the start of the page
+                of data
+              example: QVFIUjNpUWpVWmRBd0Dn
+            after:
+              type: string
+              description: >
+                Cursor pointing to the end of the page
+                of data
+              example: QVFIUjNpUWpVWmRBd0Rn
+        previous:
+          type: string
+          description: URL for the previous page of results
+          example: >
+            https://graph.facebook.com/v25.0/1234567890/client_whatsapp_business_accounts?before=QVFIUjNpUWpVWmRBd0Dn
+        next:
+          type: string
+          description: URL for the next page of results
+          example: >
+            https://graph.facebook.com/v25.0/1234567890/client_whatsapp_business_accounts?after=QVFIUjNpUWpVWmRBd0Rn
+    GraphAPIError:
+      type: object
+      description: Standard Graph API error response
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - type
+            - code
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid parameter
+            type:
+              type: string
+              description: Error category type
+              example: OAuthException
+            code:
+              type: integer
+              description: Numeric error code
+              example: 100
+            error_subcode:
+              type: integer
+              description: >
+                More specific error subcode when
+                available
+              example: 33
+            fbtrace_id:
+              type: string
+              description: >
+                Unique identifier for debugging and
+                support requests with Meta
+              example: AXsgnV2Cm3ZMGF3dF_cfYIn
+            is_transient:
+              type: boolean
+              description: >
+                Indicates whether this error is
+                temporary and the request should be
+                retried
+              example: false
+            error_user_title:
+              type: string
+              description: >
+                User-friendly error title for display
+                purposes
+              example: Permission Denied
+            error_user_msg:
+              type: string
+              description: >
+                User-friendly error message for display
+                purposes
+              example: >
+                Your app doesn't have permission to
+                access this resource
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

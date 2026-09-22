@@ -1,0 +1,511 @@
+---
+openapi: 3.1.0
+info:
+  title: >
+    WhatsApp Business Pre-Verified Phone
+    Number API
+  version: v25.0
+  description: |
+    API for managing WhatsApp Business Pre-Verified Phone Numbers, including validation,
+    retrieval, and deletion operations.
+    Pre-verified phone numbers are phone numbers that have been pre-validated by Business
+    Solution Providers (BSPs) for WhatsApp Business API usage.
+  termsOfService: https://developers.facebook.com/terms
+  contact:
+    name: WhatsApp Business Messaging Team
+    url: https://developers.facebook.com/support
+  license:
+    name: Meta Platform Terms
+    url: https://developers.facebook.com/terms
+servers:
+  - 
+    url: https://graph.facebook.com
+    description: Production Graph API server
+tags:
+  - 
+    name: Pre-Verified Phone Numbers
+    description: >
+      APIs for managing WhatsApp Business
+      pre-verified phone numbers
+paths:
+  /{Version}/{Pre-Verified-Phone-Number-ID}:
+    get:
+      responses:
+        200:
+          description: >
+            Successfully retrieved pre-verified
+            phone number details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreVerifiedPhoneNumber'
+              examples:
+                verified_number:
+                  summary: Verified pre-verified phone number
+                  value:
+                    id: '1234567890123456'
+                    phone_number: '+15551234567'
+                    code_verification_status: VERIFIED
+                    code_verification_time: 1705312200
+                    verification_expiry_time: 1705398600
+                    owner_business:
+                      id: '9876543210987654'
+                      name: Example Business Corp
+                not_verified_number:
+                  summary: Not yet verified phone number
+                  value:
+                    id: '2345678901234567'
+                    phone_number: '+442012345678'
+                    code_verification_status: NOT_VERIFIED
+        400:
+          description: 'Bad Request - Invalid parameters or malformed request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: 'Invalid parameter: phone_number_id must be a valid numeric string'
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions or access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to
+                    access this pre-verified phone number
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  error_user_title: Permission Denied
+                  error_user_msg: >
+                    Your app doesn't have permission to
+                    access this resource
+        404:
+          description: 'Not Found - Pre-verified phone number ID does not exist or is not accessible'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Pre-verified phone number not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description: 'Unprocessable Entity - Request parameters are valid but cannot be processed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    The requested fields are not available
+                    for this phone number
+                  type: GraphMethodException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: 'Internal Server Error - Unexpected server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please
+                    retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Get Pre-Verified Phone Number Details
+      description: |
+        Retrieve details about a specific pre-verified phone number, including verification
+        status, ownership, and expiry information.
+        
+        **Use Cases:**
+        - Check verification status of a pre-verified phone number
+        - Retrieve phone number and ownership details
+        - Monitor verification expiry times
+        - Troubleshoot verification issues
+        
+        **Rate Limiting:**
+        Standard Graph API rate limits apply. Use appropriate retry logic with exponential backoff.
+      operationId: getPreVerifiedPhoneNumberDetails
+      tags:
+        - Pre-Verified Phone Numbers
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: Pre-Verified-Phone-Number-ID
+          in: path
+          description: |
+            The pre-verified phone number ID to retrieve details for. This ID is provided
+            by your Business Solution Provider (BSP) during the pre-verification process.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+        - 
+          name: fields
+          in: query
+          description: |
+            Comma-separated list of fields to include in the response.
+            Available fields: id, code_verification_status, code_verification_time,
+            owner_business, phone_number, verification_expiry_time
+          required: false
+          schema:
+            type: string
+          example: id,phone_number,code_verification_status
+    delete:
+      responses:
+        200:
+          description: >
+            Successfully deleted pre-verified phone
+            number
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: >
+                      Indicates whether the deletion was
+                      successful
+                    example: true
+        400:
+          description: 'Bad Request - Invalid parameters or malformed request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: 'Invalid parameter: phone_number_id must be a valid numeric string'
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions or access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to
+                    delete this pre-verified phone number
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  error_user_title: Permission Denied
+                  error_user_msg: >
+                    Your app doesn't have permission to
+                    access this resource
+        404:
+          description: 'Not Found - Pre-verified phone number ID does not exist or is not accessible'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Pre-verified phone number not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description: 'Unprocessable Entity - Phone number cannot be deleted due to current state'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Cannot delete phone number that is
+                    currently in use
+                  type: GraphMethodException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: 'Internal Server Error - Unexpected server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please
+                    retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Delete Pre-Verified Phone Number
+      description: |
+        Delete a pre-verified phone number from the system. This operation removes the
+        phone number from your pre-verified list and cannot be undone.
+        
+        **Use Cases:**
+        - Remove phone numbers that are no longer needed
+        - Clean up invalid or incorrect pre-verified phone numbers
+        - Manage phone number lifecycle and cleanup
+        
+        **Important Notes:**
+        - This operation is irreversible
+        - Deleted phone numbers cannot be recovered
+        - Ensure the phone number is not in active use before deletion
+        
+        **Rate Limiting:**
+        Standard Graph API rate limits apply. Use appropriate retry logic with exponential backoff.
+      operationId: deletePreVerifiedPhoneNumber
+      tags:
+        - Pre-Verified Phone Numbers
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: Pre-Verified-Phone-Number-ID
+          in: path
+          description: |
+            The pre-verified phone number ID to delete. This ID is provided
+            by your Business Solution Provider (BSP) during the pre-verification process.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+components:
+  schemas:
+    PreVerifiedPhoneNumber:
+      type: object
+      description: Pre-verified phone number node fields
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: >
+            Unique identifier for the pre-verified
+            phone number
+          example: '1234567890123456'
+        code_verification_status:
+          $ref: '#/components/schemas/WhatsAppCodeVerificationStatus'
+        code_verification_time:
+          type: integer
+          format: int64
+          description: >
+            Unix timestamp when the verification
+            code was last verified
+          example: 1705312200
+        owner_business:
+          type: object
+          description: >
+            Business that owns this pre-verified
+            phone number
+          properties:
+            id:
+              type: string
+              description: Unique identifier for the business
+              example: '9876543210987654'
+            name:
+              type: string
+              description: Name of the business
+              example: Example Business Corp
+        phone_number:
+          type: string
+          description: The phone number in E.164 format
+          example: '+15551234567'
+        verification_expiry_time:
+          type: integer
+          format: int64
+          description: >
+            Unix timestamp when the verification
+            expires
+          example: 1705398600
+    WhatsAppCodeVerificationStatus:
+      type: string
+      description: >
+        Current verification status of the
+        pre-verified phone number
+      example: VERIFIED
+      enum:
+        - EXPIRED
+        - NOT_VERIFIED
+        - VERIFIED
+    GraphAPIError:
+      type: object
+      description: Standard Graph API error response
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - type
+            - code
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid parameter
+            type:
+              type: string
+              description: Error category type
+              example: OAuthException
+            code:
+              type: integer
+              description: Numeric error code
+              example: 100
+            error_subcode:
+              type: integer
+              description: >
+                More specific error subcode when
+                available
+              example: 33
+            fbtrace_id:
+              type: string
+              description: >
+                Unique identifier for debugging and
+                support requests with Meta
+              example: AXsgnV2Cm3ZMGF3dF_cfYIn
+            is_transient:
+              type: boolean
+              description: >
+                Indicates whether this error is
+                temporary and the request should be
+                retried
+              example: false
+            error_user_title:
+              type: string
+              description: >
+                User-friendly error title for display
+                purposes
+              example: Permission Denied
+            error_user_msg:
+              type: string
+              description: >
+                User-friendly error message for display
+                purposes
+              example: >
+                Your app doesn't have permission to
+                access this resource
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

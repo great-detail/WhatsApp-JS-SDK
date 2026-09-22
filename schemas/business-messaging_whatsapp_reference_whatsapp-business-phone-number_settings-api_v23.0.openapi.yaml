@@ -1,0 +1,865 @@
+---
+openapi: 3.1.0
+info:
+  title: 'WhatsApp Cloud API - Settings API'
+  version: v23.0
+  description: |
+    The Settings API allows you to configure various features and settings
+    for your WhatsApp Business Account phone numbers. You can manage calling
+    settings, user identity change settings, payload encryption, and data
+    storage configurations.
+  contact: { }
+servers:
+  - 
+    url: https://graph.facebook.com
+paths:
+  /{Version}/{Phone-Number-ID}/settings:
+    get:
+      responses:
+        200:
+          description: >
+            Current phone number settings retrieved
+            successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhoneNumberSettingsResponse'
+              examples:
+                Basic settings response:
+                  value:
+                    calling:
+                      status: enabled
+                      call_icon_visibility: visible
+                      ip_addresses:
+                        default:
+                          0: 157.240.0.1
+                          1: 157.240.0.2
+                      callback_permission_status: enabled
+                      video:
+                        status: enabled
+                    payload_encryption:
+                      status: disabled
+                    storage_configuration:
+                      status: default
+                Settings with SIP and encryption:
+                  value:
+                    calling:
+                      status: enabled
+                      call_icon_visibility: visible
+                      ip_addresses:
+                        default:
+                          0: 157.240.0.1
+                          1: 157.240.0.2
+                      callback_permission_status: enabled
+                      srtp_key_exchange_protocol: DTLS-SRTP
+                      sip:
+                        status: enabled
+                        servers:
+                          0:
+                            app_id: '12345'
+                            hostname: sip.whatsapp.com
+                            port: 5060
+                      video:
+                        status: enabled
+                    payload_encryption:
+                      status: enabled
+                      client_encryption_key_fingerprint: SHA256:abcd1234...
+                      cloud_encryption_key: eyJhbGc...
+                    storage_configuration:
+                      status: in_country_storage_enabled
+                      data_localization_region: us
+        400:
+          description: 'Bad Request - Invalid request parameters'
+          content:
+            application/json:
+              # schema:
+              #   $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidTemplateParameters:
+                  summary: Invalid template name or parameters
+                  value:
+                    error:
+                      message: Invalid template name or parameters
+                      type: OAuthException
+                      code: 100
+                MalformedRequest:
+                  summary: Malformed request body
+                  value:
+                    error:
+                      message: Invalid JSON in request body
+                      type: OAuthException
+                      code: 100
+                MissingFeatureSetting:
+                  summary: One feature setting must be specified
+                  value:
+                    error:
+                      message: One feature setting must be specified
+                      type: OAuthException
+                      code: 100
+        403:
+          description: 'Forbidden - Template not approved or insufficient permissions'
+          content:
+            application/json:
+              # schema:
+              #   $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                TemplateNotApproved:
+                  summary: Template not approved for marketing use
+                  value:
+                    error:
+                      message: Template not approved for marketing use
+                      type: OAuthException
+                      code: 200
+                InsufficientPermissions:
+                  summary: >
+                    Insufficient permissions for this
+                    operation
+                  value:
+                    error:
+                      message: >
+                        This operation requires additional
+                        permissions
+                      type: OAuthException
+                      code: 200
+                FeatureNotSupported:
+                  summary: Feature not supported
+                  value:
+                    error:
+                      message: Not supported
+                      type: OAuthException
+                      code: 10
+      summary: Get phone number settings
+      description: |
+        Retrieve current settings for a WhatsApp Business phone number.
+        Returns calling settings, payload encryption settings, and data
+        storage configurations.
+      operationId: getPhoneNumberSettings
+      tags:
+        - Settings
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Content-Type
+          in: header
+          description: Media type of the request body
+          required: true
+          schema:
+            type: string
+            default: application/json
+            example: application/json
+            enum:
+              - application/json
+              - application/x-www-form-urlencoded
+              - multipart/form-data
+        - 
+          name: Version
+          in: path
+          required: true
+          schema:
+            type: string
+            example: v22.0
+        - 
+          name: Phone-Number-ID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: '123456789012345'
+        - 
+          name: include_sip_credentials
+          in: query
+          description: >
+            Include SIP credentials in the response
+            (requires additional permissions)
+          required: false
+          schema:
+            type: boolean
+            default: false
+    post:
+      responses:
+        200:
+          description: Settings updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+              examples:
+                Settings updated successfully:
+                  value:
+                    success: true
+          headers:
+            Access-Control-Allow-Origin:
+              $ref: '#/components/headers/Access-Control-Allow-Origin'
+            Alt-Svc:
+              $ref: '#/components/headers/Alt-Svc'
+            Cache-Control:
+              $ref: '#/components/headers/Cache-Control'
+            Connection:
+              $ref: '#/components/headers/Connection'
+            Content-Length:
+              $ref: '#/components/headers/Content-Length'
+            Date:
+              $ref: '#/components/headers/Date'
+            Expires:
+              $ref: '#/components/headers/Expires'
+            Pragma:
+              $ref: '#/components/headers/Pragma'
+            Strict-Transport-Security:
+              $ref: '#/components/headers/Strict-Transport-Security'
+            Vary:
+              $ref: '#/components/headers/Vary'
+            X-FB-Connection-Quality:
+              $ref: '#/components/headers/X-FB-Connection-Quality'
+            X-FB-Debug:
+              $ref: '#/components/headers/X-FB-Debug'
+            facebook-api-version:
+              $ref: '#/components/headers/facebook-api-version'
+            x-business-use-case-usage:
+              $ref: '#/components/headers/x-business-use-case-usage'
+            x-fb-request-id:
+              $ref: '#/components/headers/x-fb-request-id'
+            x-fb-rev:
+              $ref: '#/components/headers/x-fb-rev'
+            x-fb-trace-id:
+              $ref: '#/components/headers/x-fb-trace-id'
+        400:
+          description: 'Bad Request - Invalid request parameters'
+          content:
+            application/json:
+              # schema:
+              #   $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidTemplateParameters:
+                  summary: Invalid template name or parameters
+                  value:
+                    error:
+                      message: Invalid template name or parameters
+                      type: OAuthException
+                      code: 100
+                MalformedRequest:
+                  summary: Malformed request body
+                  value:
+                    error:
+                      message: Invalid JSON in request body
+                      type: OAuthException
+                      code: 100
+                MissingFeatureSetting:
+                  summary: One feature setting must be specified
+                  value:
+                    error:
+                      message: One feature setting must be specified
+                      type: OAuthException
+                      code: 100
+        403:
+          description: 'Forbidden - Template not approved or insufficient permissions'
+          content:
+            application/json:
+              # schema:
+              #   $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                TemplateNotApproved:
+                  summary: Template not approved for marketing use
+                  value:
+                    error:
+                      message: Template not approved for marketing use
+                      type: OAuthException
+                      code: 200
+                InsufficientPermissions:
+                  summary: >
+                    Insufficient permissions for this
+                    operation
+                  value:
+                    error:
+                      message: >
+                        This operation requires additional
+                        permissions
+                      type: OAuthException
+                      code: 200
+                FeatureNotSupported:
+                  summary: Feature not supported
+                  value:
+                    error:
+                      message: Not supported
+                      type: OAuthException
+                      code: 10
+      summary: Update phone number settings
+      description: |
+        Update various settings for a WhatsApp Business phone number.
+        You can configure calling settings, user identity change settings,
+        payload encryption, and data storage configurations.
+        Only one feature setting can be specified per request.
+      operationId: updatePhoneNumberSettings
+      tags:
+        - Settings
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Content-Type
+          in: header
+          description: Media type of the request body
+          required: true
+          schema:
+            type: string
+            default: application/json
+            example: application/json
+            enum:
+              - application/json
+              - application/x-www-form-urlencoded
+              - multipart/form-data
+        - 
+          name: Version
+          in: path
+          required: true
+          schema:
+            type: string
+            example: v22.0
+        - 
+          name: Phone-Number-ID
+          in: path
+          required: true
+          schema:
+            type: string
+            example: '123456789012345'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              oneOf:
+                - 
+                  $ref: '#/components/schemas/CallingSettingsRequest'
+                - 
+                  $ref: '#/components/schemas/UserIdentityChangeSettingsRequest'
+                - 
+                  $ref: '#/components/schemas/PayloadEncryptionSettingsRequest'
+                - 
+                  $ref: '#/components/schemas/StorageConfigurationSettingsRequest'
+            examples:
+              Enable calling with video:
+                value:
+                  calling:
+                    status: enabled
+                    call_icon_visibility: visible
+                    video:
+                      status: enabled
+              Disable calling:
+                value:
+                  calling:
+                    status: disabled
+              Enable SIP calling:
+                value:
+                  calling:
+                    status: enabled
+                    sip:
+                      status: enabled
+                    srtp_key_exchange_protocol: DTLS-SRTP
+              Enable payload encryption:
+                value:
+                  payload_encryption:
+                    status: enabled
+                    client_encryption_key: >
+                      LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJOUUVGQUFLQ0FRRUEzT2RoQzloK1FjYUpwUGxXWWJ0NE40NTFucFRKUHBnWAotLS0tLUVORCBQVUJMSUMgS0VZLS0tLS0=
+              Disable payload encryption:
+                value:
+                  payload_encryption:
+                    status: disabled
+              Enable user identity change:
+                value:
+                  user_identity_change:
+                    enabled: true
+              Configure data storage:
+                value:
+                  storage_configuration:
+                    enabled: true
+                    region: us
+components:
+  schemas:
+    CallingSettingsRequest:
+      type: object
+      required:
+        - calling
+      properties:
+        calling:
+          $ref: '#/components/schemas/CallingSettings'
+    CallingSettings:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Enable or disable calling feature
+          enum:
+            - enabled
+            - disabled
+        call_icon_visibility:
+          type: string
+          description: Control visibility of the call icon
+          enum:
+            - visible
+            - hidden
+        video:
+          $ref: '#/components/schemas/VideoSettings'
+        sip:
+          $ref: '#/components/schemas/SipSettings'
+        srtp_key_exchange_protocol:
+          type: string
+          description: SRTP key exchange protocol
+          enum:
+            - DTLS-SRTP
+            - SDES-SRTP
+    VideoSettings:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Enable or disable video calling
+          enum:
+            - enabled
+            - disabled
+    SipSettings:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Enable or disable SIP calling
+          enum:
+            - enabled
+            - disabled
+    UserIdentityChangeSettingsRequest:
+      type: object
+      required:
+        - user_identity_change
+      properties:
+        user_identity_change:
+          $ref: '#/components/schemas/UserIdentityChangeSettings'
+    UserIdentityChangeSettings:
+      type: object
+      required:
+        - enabled
+      properties:
+        enabled:
+          type: boolean
+          description: >
+            Enable or disable user identity change
+            notifications
+    PayloadEncryptionSettingsRequest:
+      type: object
+      required:
+        - payload_encryption
+      properties:
+        payload_encryption:
+          $ref: '#/components/schemas/PayloadEncryptionSettings'
+    PayloadEncryptionSettings:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Enable or disable payload encryption
+          enum:
+            - enabled
+            - disabled
+        client_encryption_key:
+          type: string
+          description: |
+            Base64-encoded public key for payload encryption
+            (required when enabling encryption)
+    StorageConfigurationSettingsRequest:
+      type: object
+      required:
+        - storage_configuration
+      properties:
+        storage_configuration:
+          $ref: '#/components/schemas/StorageConfigurationSettings'
+    StorageConfigurationSettings:
+      type: object
+      required:
+        - enabled
+      properties:
+        enabled:
+          type: boolean
+          description: >
+            Enable or disable custom storage
+            configuration
+        region:
+          type: string
+          description: Data storage region
+    PhoneNumberSettingsResponse:
+      type: object
+      required:
+        - calling
+        - storage_configuration
+      properties:
+        calling:
+          $ref: '#/components/schemas/CallingSettingsResponse'
+        payload_encryption:
+          $ref: '#/components/schemas/PayloadEncryptionSettingsResponse'
+        storage_configuration:
+          $ref: '#/components/schemas/StorageConfigurationSettingsResponse'
+    CallingSettingsResponse:
+      type: object
+      required:
+        - status
+        - call_icon_visibility
+        - ip_addresses
+        - callback_permission_status
+      properties:
+        status:
+          type: string
+          description: Current calling feature status
+          enum:
+            - enabled
+            - disabled
+        call_icon_visibility:
+          type: string
+          description: Current call icon visibility setting
+          enum:
+            - visible
+            - hidden
+        ip_addresses:
+          type: object
+          required:
+            - default
+          properties:
+            default:
+              type: array
+              description: Default IP addresses for calling
+              items:
+                type: string
+        callback_permission_status:
+          type: string
+          description: Callback permission status
+          enum:
+            - enabled
+            - disabled
+        srtp_key_exchange_protocol:
+          type: string
+          description: SRTP key exchange protocol (optional)
+          enum:
+            - DTLS-SRTP
+            - SDES-SRTP
+        call_hours:
+          $ref: '#/components/schemas/CallHoursSettings'
+        call_icons:
+          $ref: '#/components/schemas/CallIconsSettings'
+        sip:
+          $ref: '#/components/schemas/SipSettingsResponse'
+        video:
+          $ref: '#/components/schemas/VideoSettingsResponse'
+        audio:
+          $ref: '#/components/schemas/AudioSettingsResponse'
+        restrictions:
+          $ref: '#/components/schemas/CallingRestrictionsResponse'
+    CallHoursSettings:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Call hours feature status
+          enum:
+            - enabled
+            - disabled
+        timezone:
+          type: string
+          description: Timezone for call hours
+        day_of_week_start:
+          type: string
+          description: Start day of the week
+    CallIconsSettings:
+      type: object
+      properties:
+        restrict_to_user_countries:
+          type: array
+          description: >
+            List of countries where call icons are
+            restricted
+          items:
+            type: string
+    SipSettingsResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: SIP calling status
+          enum:
+            - enabled
+            - disabled
+        servers:
+          type: array
+          description: SIP server configuration
+          items:
+            $ref: '#/components/schemas/SipServerInfo'
+    SipServerInfo:
+      type: object
+      required:
+        - app_id
+        - hostname
+      properties:
+        app_id:
+          type: string
+          description: Application ID for SIP server
+        hostname:
+          type: string
+          description: SIP server hostname
+        port:
+          type: integer
+          description: SIP server port (optional)
+        password:
+          type: string
+          description: >
+            SIP password (only included when
+            include_sip_credentials=true)
+    VideoSettingsResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Video calling status
+          enum:
+            - enabled
+            - disabled
+    AudioSettingsResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Audio calling status
+          enum:
+            - enabled
+            - disabled
+    CallingRestrictionsResponse:
+      type: object
+      properties:
+        restrictions:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Type of restriction
+              expiration:
+                type: integer
+                format: int64
+                description: Expiration timestamp for the restriction
+    PayloadEncryptionSettingsResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Payload encryption status
+          enum:
+            - enabled
+            - disabled
+        client_encryption_key_fingerprint:
+          type: string
+          description: >
+            Client encryption key fingerprint (when
+            encryption is enabled)
+        cloud_encryption_key:
+          type: string
+          description: >
+            Cloud encryption key (when encryption is
+            enabled)
+    StorageConfigurationSettingsResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Data storage configuration status
+          enum:
+            - default
+            - in_country_storage_enabled
+        data_localization_region:
+          type: string
+          description: >
+            Data localization region (when
+            in-country storage is enabled)
+  headers:
+    Access-Control-Allow-Origin:
+      description: >
+        CORS policy allowing access from any
+        origin
+      schema:
+        type: string
+        example: '*'
+    Alt-Svc:
+      description: >
+        Alternative service advertisement for
+        HTTP/3
+      schema:
+        type: string
+        example: h3=":443"; ma=86400
+    Cache-Control:
+      description: >
+        Cache control directives for the
+        response
+      schema:
+        type: string
+        example: >
+          private, no-cache, no-store,
+          must-revalidate
+    Connection:
+      description: Connection management directive
+      schema:
+        type: string
+        example: keep-alive
+    Content-Length:
+      description: Size of the response body in bytes
+      schema:
+        type: string
+        example: '25'
+    Date:
+      description: >
+        Date and time when the response was
+        generated
+      schema:
+        type: string
+        example: Fri, 24 Jan 2025 00:48:41 GMT
+    Expires:
+      description: Expiration date for cached responses
+      schema:
+        type: string
+        example: Sat, 01 Jan 2000 00:00:00 GMT
+    Pragma:
+      description: Legacy cache control directive
+      schema:
+        type: string
+        example: no-cache
+    Strict-Transport-Security:
+      description: HSTS header enforcing HTTPS connections
+      schema:
+        type: string
+        example: max-age=15552000; preload
+    Vary:
+      description: >
+        Headers that affect caching and content
+        negotiation
+      schema:
+        type: string
+        example: Accept-Encoding
+    X-FB-Connection-Quality:
+      description: Facebook connection quality metrics
+      schema:
+        type: string
+        example: >
+          EXCELLENT; q=0.9, rtt=7, rtx=0, c=10,
+          mss=1380, tbw=372, tp=-1, tpl=-1,
+          uplat=527, ullat=0
+    X-FB-Debug:
+      description: >
+        Facebook debug information for
+        troubleshooting
+      schema:
+        type: string
+        example: >
+          52zkUgodnaVRhbBE+3RiGz6TnmjmDEGunwYd+vKSc4synE+Xii//dy6twB/7yKgOJiMUuV0OF248UAZ1qL3v0A==
+    facebook-api-version:
+      description: >
+        Facebook Graph API version used for the
+        request
+      schema:
+        type: string
+        example: v22.0
+    x-business-use-case-usage:
+      description: >
+        Business use case usage metrics and rate
+        limiting information
+      schema:
+        type: string
+        example: '{"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0},{"type":"whatsapp","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}'
+    x-fb-request-id:
+      description: >
+        Unique identifier for the request for
+        debugging purposes
+      schema:
+        type: string
+        example: AGaOBl2yM-g8gdON-dhzl5y
+    x-fb-rev:
+      description: Facebook internal revision number
+      schema:
+        type: string
+        example: '1019544279'
+    x-fb-trace-id:
+      description: >
+        Facebook trace identifier for request
+        tracking
+      schema:
+        type: string
+        example: E7riEe9OW2e
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

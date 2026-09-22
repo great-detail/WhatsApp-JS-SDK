@@ -1,0 +1,407 @@
+---
+openapi: 3.1.0
+info:
+  title: >
+    WhatsApp Business Pre-Verified Phone
+    Number Partners API
+  version: v25.0
+  description: |
+    API for retrieving partner businesses associated with a WhatsApp Business Pre-Verified Phone Number.
+    This endpoint allows authorized applications to retrieve the list of partner businesses
+    that have been granted access to a specific pre-verified phone number.
+  termsOfService: https://developers.facebook.com/terms
+  contact:
+    name: WhatsApp Business Messaging Team
+    url: https://developers.facebook.com/support
+  license:
+    name: Meta Platform Terms
+    url: https://developers.facebook.com/terms
+servers:
+  - 
+    url: https://graph.facebook.com
+    description: Production Graph API server
+tags:
+  - 
+    name: Pre-Verified Phone Number Partners
+    description: >
+      APIs for managing partner businesses
+      associated with pre-verified phone
+      numbers
+paths:
+  /{Version}/{Pre-Verified-Phone-Number-ID}/partners:
+    get:
+      responses:
+        200:
+          description: >
+            Successfully retrieved partner
+            businesses for the pre-verified phone
+            number
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppBusinessPreVerifiedPhoneNumberPartnersResponse'
+              examples:
+                multiple_partners:
+                  summary: Multiple partner businesses
+                  value:
+                    data:
+                      0:
+                        id: '1234567890123456'
+                        name: Partner Business Solutions Inc
+                      1:
+                        id: '2345678901234567'
+                        name: Global Commerce Partners LLC
+                    paging:
+                      cursors:
+                        after: MTAxNTExOTQ1MjAwNzI5NDE=
+                        before: MAZDZD
+                      next: >
+                        https://graph.facebook.com/v25.0/1234567890123456/partners?after=MTAxNTExOTQ1MjAwNzI5NDE%3D
+                single_partner:
+                  summary: Single partner business
+                  value:
+                    data:
+                      0:
+                        id: '1234567890123456'
+                        name: Partner Business Solutions Inc
+                    paging:
+                      cursors:
+                        after: MTAxNTExOTQ1MjAwNzI5NDE=
+                        before: MAZDZD
+                empty_partners:
+                  summary: No partner businesses found
+                  value:
+                    data: [ ]
+                    paging:
+                      cursors: { }
+        400:
+          description: 'Bad Request - Invalid parameters or malformed request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: 'Invalid parameter: pre_verified_phone_number_id must be a valid numeric string'
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions or access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to
+                    access this Pre-Verified Phone Number
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  error_user_title: Permission Denied
+                  error_user_msg: >
+                    Your app doesn't have permission to
+                    access this resource
+        404:
+          description: 'Not Found - Pre-Verified Phone Number ID does not exist or is not accessible'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Pre-Verified Phone Number not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description: 'Unprocessable Entity - Request parameters are valid but cannot be processed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    The requested fields are not available
+                    for this pre-verified phone number
+                  type: GraphMethodException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: 'Internal Server Error - Unexpected server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please
+                    retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Get Pre-Verified Phone Number Partners
+      description: |
+        Retrieve the list of partner businesses that have been granted access to a specific
+        WhatsApp Business Pre-Verified Phone Number.
+        
+        **Use Cases:**
+        - Monitor partner business relationships and access permissions
+        - Verify which businesses have access to shared pre-verified phone numbers
+        - Retrieve partner business information for operational purposes
+        - Validate partnership configurations before business operations
+        
+        **Rate Limiting:**
+        Standard Graph API rate limits apply. Use appropriate retry logic with exponential backoff.
+        
+        **Caching:**
+        Partner information can be cached for moderate periods, but partnership relationships
+        may change. Implement appropriate cache invalidation strategies.
+      operationId: getPreVerifiedPhoneNumberPartners
+      tags:
+        - Pre-Verified Phone Number Partners
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: Pre-Verified-Phone-Number-ID
+          in: path
+          description: |
+            Your Pre-Verified Phone Number ID. This ID is provided when the pre-verified phone number
+            is created and can be found in your WhatsApp Business Account management interface.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+        - 
+          name: fields
+          in: query
+          description: |
+            Comma-separated list of Business node fields to include in the response. If not specified,
+            default fields will be returned (id, name).
+          required: false
+          schema:
+            type: string
+          example: id,name
+        - 
+          name: limit
+          in: query
+          description: |
+            Maximum number of partner businesses to return per page. Default is 25, maximum is 100.
+          required: false
+          schema:
+            type: integer
+            default: 25
+            maximum: 100
+            minimum: 1
+          example: 50
+        - 
+          name: after
+          in: query
+          description: |
+            Cursor for pagination. Use the 'after' cursor from a previous response to get the next page.
+          required: false
+          schema:
+            type: string
+          example: MTAxNTExOTQ1MjAwNzI5NDE=
+        - 
+          name: before
+          in: query
+          description: |
+            Cursor for pagination. Use the 'before' cursor from a previous response to get the previous page.
+          required: false
+          schema:
+            type: string
+          example: MAZDZD
+components:
+  schemas:
+    WhatsAppBusinessPreVerifiedPhoneNumberPartnersResponse:
+      type: object
+      description: >
+        Response containing partner businesses
+        for a pre-verified phone number
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          description: >
+            List of partner businesses with access
+            to the pre-verified phone number
+          items:
+            $ref: '#/components/schemas/BusinessPartner'
+        paging:
+          $ref: '#/components/schemas/CursorPaging'
+    BusinessPartner:
+      type: object
+      description: |
+        Business entity that has partner access to the pre-verified phone number.
+        Returns standard Business node objects. Use the fields parameter to request
+        additional Business node fields beyond the defaults.
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          description: >
+            Unique identifier for the partner
+            business
+          example: '1234567890123456'
+        name:
+          type: string
+          description: Name of the partner business
+          example: Partner Business Solutions Inc
+    CursorPaging:
+      type: object
+      description: Cursor-based pagination information
+      properties:
+        cursors:
+          type: object
+          properties:
+            before:
+              type: string
+              description: >
+                Cursor pointing to the start of the page
+                of data that has been returned
+              example: MAZDZD
+            after:
+              type: string
+              description: >
+                Cursor pointing to the end of the page
+                of data that has been returned
+              example: MTAxNTExOTQ1MjAwNzI5NDE=
+        next:
+          type: string
+          description: >
+            Graph API endpoint URL for the next page
+            of results
+          example: >
+            https://graph.facebook.com/v25.0/1234567890123456/partners?after=MTAxNTExOTQ1MjAwNzI5NDE%3D
+        previous:
+          type: string
+          description: >
+            Graph API endpoint URL for the previous
+            page of results
+          example: >
+            https://graph.facebook.com/v25.0/1234567890123456/partners?before=MAZDZD
+    GraphAPIError:
+      type: object
+      description: Standard Graph API error response
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - type
+            - code
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid parameter
+            type:
+              type: string
+              description: Error category type
+              example: OAuthException
+            code:
+              type: integer
+              description: Numeric error code
+              example: 100
+            error_subcode:
+              type: integer
+              description: >
+                More specific error subcode when
+                available
+              example: 33
+            fbtrace_id:
+              type: string
+              description: >
+                Unique identifier for debugging and
+                support requests with Meta
+              example: AXsgnV2Cm3ZMGF3dF_cfYIn
+            is_transient:
+              type: boolean
+              description: >
+                Indicates whether this error is
+                temporary and the request should be
+                retried
+              example: false
+            error_user_title:
+              type: string
+              description: >
+                User-friendly error title for display
+                purposes
+              example: Permission Denied
+            error_user_msg:
+              type: string
+              description: >
+                User-friendly error message for display
+                purposes
+              example: >
+                Your app doesn't have permission to
+                access this resource
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

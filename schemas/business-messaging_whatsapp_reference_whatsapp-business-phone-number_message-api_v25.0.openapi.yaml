@@ -1,0 +1,2845 @@
+---
+openapi: 3.1.0
+info:
+  title: 'WhatsApp Cloud API - Message API'
+  version: v25.0
+  description: |
+    Send and receive WhatsApp messages including text, media, templates,
+    interactive messages, reactions, and more. Supports message status
+    tracking, delivery receipts, and read confirmations.
+  contact: { }
+servers:
+  - 
+    url: https://graph.facebook.com
+tags:
+  - 
+    name: Messages
+    description: 'Use the **`/{{Phone-Number-ID}}/messages`** endpoint to send text messages, media (audio, documents, images, and video), and message templates to your customers. For more information relating to the messages you can send, see [Messages](#1f4f7644-cc97-40b5-b8e4-c19da268fff1).\n\nMessages are identified by a unique ID. You can track message status in the Webhooks through its ID. You could also mark an incoming message as read through the **`/{{Phone-Number-ID}}/messages`** endpoint.\n\n## Prerequisites\n\n*   [User Access Token](https://developers.facebook.com/docs/facebook-login/access-tokens#usertokens) with **`whatsapp_business_messaging`** permission\n*   `phone-number-id` for your registered WhatsApp account. See [Get Phone Number](#c72d9c17-554d-4ae1-8f9e-b28a94010b28).'
+  - 
+    name: Examples
+paths:
+  /{Version}/{Phone-Number-ID}/messages:
+    post:
+      responses:
+        200:
+          description: >
+            Send Test Message / Send Text Message /
+            Send Reply to Text Message / Send Reply
+            with Reaction Message / Send Image
+            Message by ID / Send Reply to Image
+            Message by ID / Send Image Message by
+            URL / Send Reply to Image Message by URL
+            / Send Audio Message by ID / Send Reply
+            to Audio Message by ID / Send Audio
+            Message By URL / Send Reply to Audio
+            Message by URL / Send Document Message
+            by ID / Send Reply to Document Message
+            by ID / Send Document Message by URL /
+            Send Reply to Document Message by URL /
+            Send Sticker Message By ID / Send Reply
+            to Sticker Message by ID / Send Sticker
+            Message By URL / Send Reply to Sticker
+            Message by URL / Send Video Message By
+            ID / Send Reply to Video Message by ID /
+            Send Video Message By URL / Send Reply
+            to Video Message by URL / Send Contact
+            Message / Send Reply to Contact Message
+            / Send Location Messages / Send Reply to
+            Location Message / Send Message Template
+            Text / Send Message Template Media /
+            Send Interactive Message Template / Send
+            List Message / Send Reply to List
+            Message / Send Reply Button / Send
+            Single Product Message / Example
+            response / Example response / Send Draft
+            Flow by Name / Send Draft Flow by ID /
+            Send Published Flow by Name / Send
+            Published Flow by ID / Send Flow
+            Template Message / Send typing indicator
+            and read receipt / Send Sample Text
+            message / Send Sample Shipping
+            Confirmation Template / Send Sample
+            Issue Resolution Template
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponsePayload'
+              examples:
+                Example response:
+                  value:
+                    contacts:
+                      0:
+                        input: '+16505551234'
+                        wa_id: '16505551234'
+                    messages:
+                      0:
+                        id: >
+                          wamid.HBgLMTY1MDM4Nzk0MzkVAgARGBJCOTY3NDc0NDFDRUI3NTA0Q0UA
+                    messaging_product: whatsapp
+                Send Audio Message By URL:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Audio Message by ID:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Contact Message:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Document Message by ID:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Document Message by URL:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Draft Flow by ID:
+                  value:
+                    contacts:
+                      0:
+                        input: '18055555555'
+                        wa_id: '18055555555'
+                    messages:
+                      0:
+                        id: wamid.HBgL...
+                    messaging_product: whatsapp
+                Send Draft Flow by Name:
+                  value:
+                    contacts:
+                      0:
+                        input: '18055555555'
+                        wa_id: '18055555555'
+                    messages:
+                      0:
+                        id: wamid.HBgL...
+                    messaging_product: whatsapp
+                Send Flow Template Message:
+                  value:
+                    contacts:
+                      0:
+                        input: '18055555555'
+                        wa_id: '18055555555'
+                    messages:
+                      0:
+                        id: wamid.HBgL...
+                    messaging_product: whatsapp
+                Send Image Message by ID:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Image Message by URL:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Interactive Message Template:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send List Message:
+                  value:
+                    contacts:
+                      0:
+                        input: '15555551234'
+                        wa_id: '<WHATSAPP_ID>'
+                    messages:
+                      0:
+                        id: wamid.ID
+                    messaging_product: whatsapp
+                Send Location Messages:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Message Template Media:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Message Template Text:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Published Flow by ID:
+                  value:
+                    contacts:
+                      0:
+                        input: '18055555555'
+                        wa_id: '18055555555'
+                    messages:
+                      0:
+                        id: wamid.HBgL...
+                    messaging_product: whatsapp
+                Send Published Flow by Name:
+                  value:
+                    contacts:
+                      0:
+                        input: '18055555555'
+                        wa_id: '18055555555'
+                    messages:
+                      0:
+                        id: wamid.HBgL...
+                    messaging_product: whatsapp
+                Send Reply Button:
+                  value:
+                    contacts:
+                      0:
+                        input: PHONE_NUMBER
+                        wa_id: WHATSAPP_ID
+                    messages:
+                      0:
+                        id: wamid.ID
+                    messaging_product: whatsapp
+                Send Reply to Audio Message by ID:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Reply to Audio Message by URL:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Reply to Contact Message:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Reply to Document Message by ID:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Reply to Document Message by URL:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Reply to Image Message by ID:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Reply to Image Message by URL:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Reply to List Message:
+                  value:
+                    contacts:
+                      0:
+                        input: '15555551234'
+                        wa_id: '<WHATSAPP_ID>'
+                    messages:
+                      0:
+                        id: wamid.ID
+                    messaging_product: whatsapp
+                Send Reply to Location Message:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Reply to Sticker Message by ID:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Reply to Sticker Message by URL:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Reply to Text Message:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Reply to Video Message by ID:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Reply to Video Message by URL:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Reply with Reaction Message:
+                  value:
+                    contacts:
+                      0:
+                        input: '<PHONE_NUMBER>'
+                        wa_id: '<WHATSAPP_ID>'
+                    messages:
+                      0:
+                        id: wamid.HBgLM...
+                    messaging_product: whatsapp
+                Send Sample Shipping Confirmation Template:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Sample Text message:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Single Product Message:
+                  value:
+                    contacts:
+                      0:
+                        input: +1-631-555-5555
+                        wa_id: '16315555555'
+                    messages:
+                      0:
+                        id: wamid.gBGGFlaCGg0xcvAdgmZ9plHrf2Mh-o
+                    messaging_product: whatsapp
+                Send Sticker Message By ID:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Sticker Message By URL:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Test Message:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Text Message:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Video Message By ID:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send Video Message By URL:
+                  value:
+                    contacts:
+                      0:
+                        input: 48XXXXXXXXX
+                        wa_id: '48XXXXXXXXX '
+                    messages:
+                      0:
+                        id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+                    messaging_product: whatsapp
+                Send typing indicator and read receipt:
+                  value:
+                    success: true
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+              description: >
+                CORS policy allowing access from any
+                origin
+            Alt-Svc:
+              schema:
+                type: string
+                example: h3=":443"; ma=86400
+              description: >
+                Alternative service advertisement for
+                HTTP/3
+            Cache-Control:
+              schema:
+                type: string
+                example: >
+                  private, no-cache, no-store,
+                  must-revalidate
+              description: >
+                Cache control directives for the
+                response
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+              description: Connection management directive
+            Content-Length:
+              schema:
+                type: string
+                example: '25'
+              description: Size of the response body in bytes
+            Date:
+              schema:
+                type: string
+                example: Fri, 24 Jan 2025 00:48:41 GMT
+              description: >
+                Date and time when the response was
+                generated
+            Expires:
+              schema:
+                type: string
+                example: Sat, 01 Jan 2000 00:00:00 GMT
+              description: Expiration date for cached responses
+            Pragma:
+              schema:
+                type: string
+                example: no-cache
+              description: Legacy cache control directive
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=15552000; preload
+              description: HSTS header enforcing HTTPS connections
+            Vary:
+              schema:
+                type: string
+                example: Accept-Encoding
+              description: >
+                Headers that affect caching and content
+                negotiation
+            X-FB-Connection-Quality:
+              schema:
+                type: string
+                example: >
+                  EXCELLENT; q=0.9, rtt=7, rtx=0, c=10,
+                  mss=1380, tbw=372, tp=-1, tpl=-1,
+                  uplat=527, ullat=0
+              description: Facebook connection quality metrics
+            X-FB-Debug:
+              schema:
+                type: string
+                example: >
+                  52zkUgodnaVRhbBE+3RiGz6TnmjmDEGunwYd+vKSc4synE+Xii//dy6twB/7yKgOJiMUuV0OF248UAZ1qL3v0A==
+              description: >
+                Facebook debug information for
+                troubleshooting
+            facebook-api-version:
+              schema:
+                type: string
+                example: v22.0
+              description: >
+                Facebook Graph API version used for the
+                request
+            x-business-use-case-usage:
+              schema:
+                type: string
+                example: '{"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0},{"type":"whatsapp","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}'
+              description: >
+                Business use case usage metrics and rate
+                limiting information
+            x-fb-request-id:
+              schema:
+                type: string
+                example: AGaOBl2yM-g8gdON-dhzl5y
+              description: >
+                Unique identifier for the request for
+                debugging purposes
+            x-fb-rev:
+              schema:
+                type: string
+                example: '1019544279'
+              description: Facebook internal revision number
+            x-fb-trace-id:
+              schema:
+                type: string
+                example: E7riEe9OW2e
+              description: >
+                Facebook trace identifier for request
+                tracking
+      summary: Send Message.
+      description: Send Message.
+      operationId: sendMessage
+      tags:
+        - Messages
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Content-Type
+          in: header
+          description: Media type of the request body
+          required: true
+          schema:
+            type: string
+            default: application/json
+            example: application/json
+            enum:
+              - application/json
+              - application/x-www-form-urlencoded
+              - multipart/form-data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+            examples:
+              Send Audio Message by ID:
+                value:
+                  audio:
+                    id: '<AUDIO_OBJECT_ID>'
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: audio
+              Send Audio Message by URL:
+                value:
+                  audio:
+                    link: '<http(s)://audio-url>'
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: audio
+              Send Catalog Message:
+                value:
+                  interactive:
+                    action:
+                      name: catalog_message
+                      parameters:
+                        thumbnail_product_retailer_id: 2lc20305pt
+                    body:
+                      text: >
+                        Hello! Thanks for your interest.
+                        Ordering is easy. Just visit our catalog
+                        and add items to purchase.
+                    footer:
+                      text: Best grocery deals on WhatsApp!
+                    type: catalog_message
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '+16505551234'
+                  type: interactive
+              Send Template Message with URL Button:
+                value:
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  template:
+                    components:
+                      0:
+                        parameters:
+                          0:
+                            text: '4512'
+                            type: text
+                        type: body
+                      1:
+                        index: '0'
+                        parameters:
+                          0:
+                            text: track-order-4512
+                            type: text
+                        sub_type: url
+                        type: button
+                    language:
+                      code: en_US
+                      policy: deterministic
+                    name: order_tracking_link
+                  to: '+16505551234'
+                  type: template
+              Send Contact Message:
+                value:
+                  contacts:
+                    0:
+                      addresses:
+                        0:
+                          city: Menlo Park
+                          country: United States
+                          country_code: us
+                          state: CA
+                          street: 1 Hacker Way
+                          type: HOME
+                          zip: '94025'
+                        1:
+                          city: Menlo Park
+                          country: United States
+                          country_code: us
+                          state: CA
+                          street: 200 Jefferson Dr
+                          type: WORK
+                          zip: '94025'
+                      birthday: 2012-08-18
+                      emails:
+                        0:
+                          email: 'test@example.com'
+                          type: WORK
+                        1:
+                          email: 'test@whatsapp.com'
+                          type: HOME
+                      name:
+                        first_name: John
+                        formatted_name: John Smith
+                        last_name: Smith
+                        middle_name: D.
+                        prefix: Dr
+                        suffix: Jr
+                      org:
+                        company: WhatsApp
+                        department: Design
+                        title: Manager
+                      phones:
+                        0:
+                          phone: +1 (940) 555-1234
+                          type: HOME
+                        1:
+                          phone: +1 (650) 555-1234
+                          type: WORK
+                          wa_id: '16505551234'
+                      urls:
+                        0:
+                          type: WORK
+                          url: https://www.facebook.com
+                        1:
+                          type: HOME
+                          url: https://www.whatsapp.com
+                  messaging_product: whatsapp
+                  to: '{{Recipient-Phone-Number}}'
+                  type: contacts
+              Send Document Message by ID:
+                value:
+                  document:
+                    caption: '<DOCUMENT_CAPTION_TO_SEND>'
+                    filename: '<DOCUMENT_FILENAME>'
+                    id: '<DOCUMENT_OBJECT_ID>'
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: document
+              Send Document Message by URL:
+                value:
+                  document:
+                    caption: '<DOCUMENT-CAPTION-TEXT>'
+                    link: '<http(s)://document-url>'
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: document
+              Send Draft Flow by ID:
+                value:
+                  interactive:
+                    action:
+                      name: flow
+                      parameters:
+                        flow_action: navigate
+                        flow_action_payload:
+                          data:
+                            <CUSTOM_KEY>: '<CUSTOM_VALUE>'
+                          screen: '<SCREEN_ID>'
+                        flow_cta: Not shown in draft mode
+                        flow_id: '{{Flow-ID}}'
+                        flow_message_version: '3'
+                        flow_token: '<FLOW_TOKEN>'
+                        mode: draft
+                    body:
+                      text: Not shown in draft mode
+                    footer:
+                      text: Not shown in draft mode
+                    header:
+                      text: Not shown in draft mode
+                      type: text
+                    type: flow
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: interactive
+              Send Draft Flow by Name:
+                value:
+                  interactive:
+                    action:
+                      name: flow
+                      parameters:
+                        flow_action: navigate
+                        flow_action_payload:
+                          data:
+                            <CUSTOM_KEY>: '<CUSTOM_VALUE>'
+                          screen: '<SCREEN_ID>'
+                        flow_cta: Not shown in draft mode
+                        flow_message_version: '3'
+                        flow_name: '{{Flow-Name}}'
+                        flow_token: '<FLOW_TOKEN>'
+                        mode: draft
+                    body:
+                      text: Not shown in draft mode
+                    footer:
+                      text: Not shown in draft mode
+                    header:
+                      text: Not shown in draft mode
+                      type: text
+                    type: flow
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: interactive
+              Send Template Message without Components:
+                value:
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  template:
+                    language:
+                      code: en_US
+                      policy: deterministic
+                    name: hello_world
+                  to: '{{Recipient-Phone-Number}}'
+                  type: template
+              Send Image Message by ID:
+                value:
+                  image:
+                    id: '<IMAGE_OBJECT_ID>'
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: image
+              Send Image Message by URL:
+                value:
+                  image:
+                    link: http(s)://image-url
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: image
+              Send List Message:
+                value:
+                  interactive:
+                    action:
+                      button: '<BUTTON_TEXT>'
+                      sections:
+                        0:
+                          rows:
+                            0:
+                              description: '<SECTION_1_ROW_1_DESC>'
+                              id: '<LIST_SECTION_1_ROW_1_ID>'
+                              title: '<SECTION_1_ROW_1_TITLE>'
+                            1:
+                              description: '<SECTION_1_ROW_2_DESC>'
+                              id: '<LIST_SECTION_1_ROW_2_ID>'
+                              title: '<SECTION_1_ROW_2_TITLE>'
+                          title: '<LIST_SECTION_1_TITLE>'
+                        1:
+                          rows:
+                            0:
+                              description: '<SECTION_2_ROW_1_DESC>'
+                              id: '<LIST_SECTION_2_ROW_1_ID>'
+                              title: '<SECTION_2_ROW_1_TITLE>'
+                            1:
+                              description: '<SECTION_2_ROW_2_DESC>'
+                              id: '<LIST_SECTION_2_ROW_2_ID>'
+                              title: '<SECTION_2_ROW_2_TITLE>'
+                          title: '<LIST_SECTION_2_TITLE>'
+                    body:
+                      text: '<BODY_TEXT>'
+                    footer:
+                      text: '<FOOTER_TEXT>'
+                    header:
+                      text: '<HEADER_TEXT>'
+                      type: text
+                    type: list
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: interactive
+              Send Location Message:
+                value:
+                  location:
+                    address: 1 Hacker Way, Menlo Park, CA 94025
+                    latitude: 37.758056
+                    longitude: -122.425332
+                    name: META HQ
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: location
+              Send Template Message with Quick Reply Buttons:
+                value:
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  template:
+                    components:
+                      0:
+                        parameters:
+                          0:
+                            text: text-string
+                            type: text
+                        type: body
+                      1:
+                        index: '0'
+                        parameters:
+                          0:
+                            payload: ORDER_DETAILS
+                            type: payload
+                        sub_type: quick_reply
+                        type: button
+                      2:
+                        index: '1'
+                        parameters:
+                          0:
+                            payload: CHANGE_SHIPPING_ADDRESS
+                            type: payload
+                        sub_type: quick_reply
+                        type: button
+                    language:
+                      code: en_US
+                      policy: deterministic
+                    name: order_update_buttons
+                  to: '{{Recipient-Phone-Number}}'
+                  type: template
+              Send Template Message with Image Header:
+                value:
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  template:
+                    components:
+                      0:
+                        parameters:
+                          0:
+                            image:
+                              link: http(s)://example.com/order-shipped.png
+                            type: image
+                        type: header
+                      1:
+                        parameters:
+                          0:
+                            text: Sofia
+                            type: text
+                          1:
+                            text: order
+                            type: text
+                        type: body
+                    language:
+                      code: en_US
+                      policy: deterministic
+                    name: shipping_update_header
+                  to: '{{Recipient-Phone-Number}}'
+                  type: template
+              Send Template Message with Body Text Parameters:
+                value:
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  template:
+                    components:
+                      0:
+                        parameters:
+                          0:
+                            text: Sofia
+                            type: text
+                          1:
+                            text: order
+                            type: text
+                          2:
+                            text: tomorrow by 3 PM
+                            type: text
+                        type: body
+                    language:
+                      code: en_US
+                      policy: deterministic
+                    name: shipping_update_text
+                  to: '{{Recipient-Phone-Number}}'
+                  type: template
+              Send Multi-Product Message:
+                value:
+                  interactive:
+                    action:
+                      catalog_id: '146265584024623'
+                      sections:
+                        0:
+                          product_items:
+                            0:
+                              product_retailer_id: '<YOUR_PRODUCT1_SKU_IN_CATALOG>'
+                            1:
+                              product_retailer_id: '<YOUR_SECOND_PRODUCT1_SKU_IN_CATALOG>'
+                          title: '<SECTION1_TITLE>'
+                        1:
+                          product_items:
+                            0:
+                              product_retailer_id: '<YOUR_PRODUCT2_SKU_IN_CATALOG>'
+                            1:
+                              product_retailer_id: '<YOUR_SECOND_PRODUCT2_SKU_IN_CATALOG>'
+                          title: '<SECTION2_TITLE>'
+                    body:
+                      text: '<YOUR_TEXT_BODY_CONTENT>'
+                    footer:
+                      text: '<YOUR_TEXT_FOOTER_CONTENT>'
+                    header:
+                      text: '<YOUR_TEXT_HEADER_CONTENT>'
+                      type: '<HEADER_TYPE>'
+                    type: product_list
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: interactive
+              Send Order Details Message:
+                value:
+                  interactive:
+                    action:
+                      name: review_and_pay
+                      parameters:
+                        currency: INR
+                        order:
+                          discount:
+                            description: optional_text
+                            discount_program_name: optional_text
+                            offset: 100
+                            value: 100
+                          items:
+                            0:
+                              amount:
+                                offset: 100
+                                value: 1500
+                              name: bread
+                              quantity: 1
+                              retailer_id: '1234567'
+                              sale_amount:
+                                offset: 100
+                                value: 1000
+                          shipping:
+                            description: optional_text
+                            offset: 100
+                            value: 100
+                          status: pending
+                          subtotal:
+                            offset: 100
+                            value: 1000
+                          tax:
+                            description: optional_text
+                            offset: 100
+                            value: 100
+                        payment_configuration: my-payment-config-name
+                        payment_type: upi
+                        reference_id: unique-reference-id
+                        total_amount:
+                          offset: 100
+                          value: 1100
+                        type: digital-goods
+                    body:
+                      text: your-text-body-content
+                    footer:
+                      text: your-text-footer-content
+                    header:
+                      image:
+                        link: >
+                          https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Home_made_sour_dough_bread.jpg/640px-Home_made_sour_dough_bread.jpg
+                      type: image
+                    type: order_details
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-WA-Phone-Number}}'
+                  type: interactive
+              Send Order Status Message:
+                value:
+                  interactive:
+                    action:
+                      name: review_order
+                      parameters:
+                        order:
+                          description: optional-text
+                          status: processing
+                        reference_id: >
+                          unique-reference-id-from-order-details-msg
+                    body:
+                      text: your-text-body-content
+                    type: order_status
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-WA-Phone-Number}}'
+                  type: interactive
+              Send Published Flow by ID:
+                value:
+                  interactive:
+                    action:
+                      name: flow
+                      parameters:
+                        flow_action: navigate
+                        flow_action_payload:
+                          data:
+                            <CUSTOM_KEY>: '<CUSTOM_VALUE>'
+                          screen: '<SCREEN_ID>'
+                        flow_cta: Open Flow!
+                        flow_id: '{{Flow-ID}}'
+                        flow_message_version: '3'
+                        flow_token: '<FLOW_TOKEN>'
+                    body:
+                      text: '<BODY_TEXT>'
+                    footer:
+                      text: '<FOOTER_TEXT>'
+                    header:
+                      text: '<HEADER_TEXT>'
+                      type: text
+                    type: flow
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: interactive
+              Send Published Flow by Name:
+                value:
+                  interactive:
+                    action:
+                      name: flow
+                      parameters:
+                        flow_action: navigate
+                        flow_action_payload:
+                          data:
+                            <CUSTOM_KEY>: '<CUSTOM_VALUE>'
+                          screen: '<SCREEN_ID>'
+                        flow_cta: Open Flow!
+                        flow_message_version: '3'
+                        flow_name: '{{Flow-Name}}'
+                        flow_token: '<FLOW_TOKEN>'
+                    body:
+                      text: '<BODY_TEXT>'
+                    footer:
+                      text: '<FOOTER_TEXT>'
+                    header:
+                      text: '<HEADER_TEXT>'
+                      type: text
+                    type: flow
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: interactive
+              Send Reply Button:
+                value:
+                  interactive:
+                    action:
+                      buttons:
+                        0:
+                          reply:
+                            id: '<UNIQUE_BUTTON_ID_1>'
+                            title: '<BUTTON_TITLE_1>'
+                          type: reply
+                        1:
+                          reply:
+                            id: '<UNIQUE_BUTTON_ID_2>'
+                            title: '<BUTTON_TITLE_2>'
+                          type: reply
+                    body:
+                      text: '<BUTTON_TEXT>'
+                    type: button
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: interactive
+              Send Reply to Audio Message by ID:
+                value:
+                  audio:
+                    id: '<AUDIO_OBJECT_ID>'
+                  context:
+                    message_id: '<MSGID_OF_MSG_YOU_ARE_REPLYING_TO>'
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: audio
+              Send Reply to Audio Message by URL:
+                value:
+                  audio:
+                    link: http(s)://audio-url
+                  context:
+                    message_id: '<MSGID_OF_MSG_YOU_ARE_REPLYING_TO>'
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: audio
+              Send Reply to Contact Message:
+                value:
+                  contacts:
+                    0:
+                      addresses:
+                        0:
+                          city: Menlo Park
+                          country: United States
+                          country_code: us
+                          state: CA
+                          street: 1 Hacker Way
+                          type: HOME
+                          zip: '94025'
+                        1:
+                          city: Menlo Park
+                          country: United States
+                          country_code: us
+                          state: CA
+                          street: 200 Jefferson Dr
+                          type: WORK
+                          zip: '94025'
+                      birthday: 2012-08-18
+                      emails:
+                        0:
+                          email: 'test@example.com'
+                          type: WORK
+                        1:
+                          email: 'test@whatsapp.com'
+                          type: HOME
+                      name:
+                        first_name: John
+                        formatted_name: John Smith
+                        last_name: Smith
+                        middle_name: D.
+                        prefix: Dr
+                        suffix: Jr
+                      org:
+                        company: WhatsApp
+                        department: Design
+                        title: Manager
+                      phones:
+                        0:
+                          phone: +1 (940) 555-1234
+                          type: HOME
+                        1:
+                          phone: +1 (650) 555-1234
+                          type: WORK
+                          wa_id: '16505551234'
+                      urls:
+                        0:
+                          type: WORK
+                          url: https://www.facebook.com
+                        1:
+                          type: HOME
+                          url: https://www.whatsapp.com
+                  context:
+                    message_id: '<MSGID_OF_PREV_MSG>'
+                  messaging_product: whatsapp
+                  to: '{{Recipient-Phone-Number}}'
+                  type: contacts
+              Send Reply to Document Message by ID:
+                value:
+                  context:
+                    message_id: '<MSGID_OF_MSG_YOU_ARE_REPLYING_TO>'
+                  document:
+                    caption: '<DOCUMENT_CAPTION_TO_SEND>'
+                    filename: '<DOCUMENT_FILENAME>'
+                    id: '<DOCUMENT_OBJECT_ID>'
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: document
+              Send Reply to Document Message by URL:
+                value:
+                  context:
+                    message_id: '<MSGID_OF_MSG_YOU_ARE_REPLYING_TO>'
+                  document:
+                    caption: '<DOCUMENT_CAPTION_TEXT>'
+                    link: '<http(s)://document-url>'
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: document
+              Send Reply to Image Message by ID:
+                value:
+                  context:
+                    message_id: '<MSGID_OF_PREV_MSG>'
+                  image:
+                    id: '<IMAGE_OBJECT_ID>'
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: image
+              Send Reply to Image Message by URL:
+                value:
+                  context:
+                    message_id: '<MSGID_OF_PREV_MSG>'
+                  image:
+                    link: http(s)://image-url
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: image
+              Send Reply to List Message:
+                value:
+                  context:
+                    message_id: '<MSGID_OF_PREV_MSG>'
+                  interactive:
+                    action:
+                      button: '<BUTTON_TEXT>'
+                      sections:
+                        0:
+                          rows:
+                            0:
+                              description: '<SECTION_1_ROW_1_DESC>'
+                              id: '<LIST_SECTION_1_ROW_1_ID>'
+                              title: '<SECTION_1_ROW_1_TITLE>'
+                            1:
+                              description: '<SECTION_1_ROW_2_DESC>'
+                              id: '<LIST_SECTION_1_ROW_2_ID>'
+                              title: '<SECTION_1_ROW_2_TITLE>'
+                          title: '<LIST_SECTION_1_TITLE>'
+                        1:
+                          rows:
+                            0:
+                              description: '<SECTION_2_ROW_1_DESC>'
+                              id: '<LIST_SECTION_2_ROW_1_ID>'
+                              title: '<SECTION_2_ROW_1_TITLE>'
+                            1:
+                              description: '<SECTION_2_ROW_2_DESC>'
+                              id: '<LIST_SECTION_2_ROW_2_ID>'
+                              title: '<SECTION_2_ROW_2_TITLE>'
+                          title: '<LIST_SECTION_2_TITLE>'
+                    body:
+                      text: '<BODY_TEXT>'
+                    footer:
+                      text: '<FOOTER_TEXT>'
+                    header:
+                      text: '<HEADER_TEXT>'
+                      type: text
+                    type: list
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+              Send Reply to Location Message:
+                value:
+                  context:
+                    message_id: '<MSGID_OF_PREV_MSG>'
+                  location:
+                    address: 1 Hacker Way, Menlo Park, CA 94025
+                    latitude: 37.758056
+                    longitude: -122.425332
+                    name: META HQ
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: location
+              Send Reply to Sticker Message by ID:
+                value:
+                  context:
+                    message_id: '<MSGID_OF_MSG_YOU_ARE_REPLYING_TO>'
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  sticker:
+                    id: '<MEDIA_OBJECT_ID>'
+                  to: '{{Recipient-Phone-Number}}'
+                  type: sticker
+              Send Reply to Sticker Message by URL:
+                value:
+                  context:
+                    message_id: '<MSGID_OF_MSG_YOU_ARE_REPLYING_TO>'
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  sticker:
+                    link: '<http(s)://sticker-url>'
+                  to: '{{Recipient-Phone-Number}}'
+                  type: sticker
+              Send Reply to Text Message:
+                value:
+                  context:
+                    message_id: '<MSGID_OF_PREV_MSG>'
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  text:
+                    body: '<TEXT_MSG_CONTENT>'
+                    preview_url: false
+                  to: '{{Recipient-Phone-Number}}'
+                  type: text
+              Send Reply to Video Message by ID:
+                value:
+                  context:
+                    message_id: '<MSGID_OF_MSG_YOU_ARE_REPLYING_TO>'
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: video
+                  video:
+                    caption: '<VIDEO_CAPTION_TEXT>'
+                    id: '<VIDEO_OBJECT_ID>'
+              Send Reply to Video Message by URL:
+                value:
+                  context:
+                    message_id: '<MSGID_OF_MSG_YOU_ARE_REPLYING_TO>'
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: video
+                  video:
+                    caption: '<VIDEO_CAPTION_TEXT>'
+                    link: '<http(s)://video-url>'
+              Send Reply with Reaction Message:
+                value:
+                  messaging_product: whatsapp
+                  reaction:
+                    emoji: \U0001F600
+                    message_id: wamid.HBgLM...
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: reaction
+              Send Sample Issue Resolution Template:
+                value:
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  template:
+                    components:
+                      0:
+                        parameters:
+                          0:
+                            text: '*Mr. Jones*'
+                            type: text
+                        type: body
+                      1:
+                        index: '0'
+                        parameters:
+                          0:
+                            payload: ISSUE_RESOLVED_YES
+                            type: payload
+                        sub_type: quick_reply
+                        type: button
+                      2:
+                        index: '1'
+                        parameters:
+                          0:
+                            payload: ISSUE_RESOLVED_NO
+                            type: payload
+                        sub_type: quick_reply
+                        type: button
+                    language:
+                      code: en_US
+                      policy: deterministic
+                    name: sample_issue_resolution
+                  to: '{{Recipient-Phone-Number}}'
+                  type: template
+              Send Sample Shipping Confirmation Template:
+                value:
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  template:
+                    components:
+                      0:
+                        parameters:
+                          0:
+                            text: text-string
+                            type: text
+                          1:
+                            currency:
+                              amount_1000: 100990
+                              code: USD
+                              fallback_value: $100.99
+                            type: currency
+                          2:
+                            date_time:
+                              calendar: GREGORIAN
+                              day_of_month: 25
+                              day_of_week: 5
+                              fallback_value: February 25, 1977
+                              hour: 15
+                              minute: 33
+                              month: 2
+                              year: 1977
+                            type: date_time
+                        type: body
+                    language:
+                      code: language-and-locale-code
+                      policy: deterministic
+                    name: template-name
+                  to: '16315555555'
+                  type: template
+              Send Sample Text Message:
+                value:
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  template:
+                    components:
+                      0:
+                        parameters:
+                          0:
+                            text: text-string
+                            type: text
+                          1:
+                            currency:
+                              amount_1000: 100990
+                              code: USD
+                              fallback_value: $100.99
+                            type: currency
+                          2:
+                            date_time:
+                              calendar: GREGORIAN
+                              day_of_month: 25
+                              day_of_week: 5
+                              fallback_value: February 25, 1977
+                              hour: 15
+                              minute: 33
+                              month: 2
+                              year: 1977
+                            type: date_time
+                        type: body
+                    language:
+                      code: language-and-locale-code
+                      policy: deterministic
+                    name: template-name
+                  to: '16315555555'
+                  type: template
+              Send Single Product Message:
+                value:
+                  interactive:
+                    action:
+                      catalog_id: '367025965434465'
+                      product_retailer_id: '<ID_TEST_ITEM_1>'
+                    body:
+                      text: '<OPTIONAL_BODY_TEXT>'
+                    footer:
+                      text: '<OPTIONAL_FOOTER_TEXT>'
+                    type: product
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: interactive
+              Send Sticker Message by ID:
+                value:
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  sticker:
+                    id: '<MEDIA_OBJECT_ID>'
+                  to: '{{Recipient-Phone-Number}}'
+                  type: sticker
+              Send Sticker Message by URL:
+                value:
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  sticker:
+                    link: '<http(s)://sticker-url>'
+                  to: '{{Recipient-Phone-Number}}'
+                  type: sticker
+              Send Test Message:
+                value:
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  template:
+                    language:
+                      code: en_US
+                      policy: deterministic
+                    name: hello_world
+                  to: '{{Recipient-Phone-Number}}'
+                  type: template
+              Send Text Message:
+                value:
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  text:
+                    body: text-message-content
+                    preview_url: false
+                  to: '{{Recipient-Phone-Number}}'
+                  type: text
+              Send Text Message with Preview URL:
+                value:
+                  messaging_product: whatsapp
+                  text:
+                    body: >
+                      Please visit
+                      https://youtu.be/hpltvTEiRrY.
+                    preview_url: true
+                  to: '{{Recipient-Phone-Number}}'
+              Send Video Message by ID:
+                value:
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: video
+                  video:
+                    caption: '<VIDEO_CAPTION_TEXT>'
+                    id: '<VIDEO_OBJECT_ID>'
+              Send Video Message by URL:
+                value:
+                  messaging_product: whatsapp
+                  recipient_type: individual
+                  to: '{{Recipient-Phone-Number}}'
+                  type: video
+                  video:
+                    caption: '<VIDEO_CAPTION_TEXT>'
+                    link: '<http(s)://video-url>'
+              Send typing indicator and read receipt:
+                value:
+                  message_id: >
+                    wamid.HBgLMTY1MDM4Nzk0MzkVAgASGBQzQUYzMjEzNDM2RTZGQ0MzMDJBRgA=
+                  messaging_product: whatsapp
+                  status: read
+                  typing_indicator:
+                    type: text
+    parameters:
+      - 
+        name: Version
+        in: path
+        required: true
+        schema:
+          type: string
+      - 
+        name: Phone-Number-ID
+        in: path
+        required: true
+        schema:
+          type: string
+components:
+  schemas:
+    BaseMessageProperties:
+      type: object
+      description: >
+        Common properties shared by all message
+        types
+      required:
+        - messaging_product
+        - recipient_type
+        - to
+        - type
+      properties:
+        messaging_product:
+          type: string
+          example: whatsapp
+        recipient_type:
+          type: string
+          description: The type of recipient.
+          example: individual
+          enum:
+            - individual
+            - group
+        to:
+          type: string
+          description: >
+            The recipient's phone number for
+            individual messages, and group-id for
+            group message.
+          example: '19505550005'
+        type:
+          type: string
+          description: The type of message
+        context:
+          $ref: '#/components/schemas/MessageContext'
+    MessageContext:
+      type: object
+      description: >
+        Context information for replying to a
+        message
+      properties:
+        message_id:
+          type: string
+          description: >
+            The ID of the message to which this
+            message is a reply.
+          example: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+    MediaObject:
+      type: object
+      description: >
+        A media object. Either `id` or `link` is
+        required.
+      oneOf:
+        - 
+          required:
+            - id
+          properties:
+            id:
+              type: string
+              description: 'The media object ID. **Required when `link` is not used.**'
+              example: MEDIA_OBJECT_ID
+            caption:
+              type: string
+              description: Optional caption for the media
+              maxLength: 1024
+          additionalProperties: false
+        - 
+          required:
+            - link
+          properties:
+            link:
+              type: string
+              format: url
+              description: >
+                The protocol and URL of the media to be
+                sent (HTTP/HTTPS only).
+              example: http(s)://example.com/media.mp4
+            caption:
+              type: string
+              description: Optional caption for the media
+              maxLength: 1024
+          additionalProperties: false
+    Message:
+      oneOf:
+        - 
+          $ref: '#/components/schemas/TextMessage'
+        - 
+          $ref: '#/components/schemas/AudioMessage'
+        - 
+          $ref: '#/components/schemas/DocumentMessage'
+        - 
+          $ref: '#/components/schemas/ImageMessage'
+        - 
+          $ref: '#/components/schemas/LocationMessage'
+        - 
+          $ref: '#/components/schemas/VideoMessage'
+        - 
+          $ref: '#/components/schemas/StickerMessage'
+        - 
+          $ref: '#/components/schemas/ReactionMessage'
+        - 
+          $ref: '#/components/schemas/InteractiveMessage'
+        - 
+          $ref: '#/components/schemas/TemplateMessage'
+        - 
+          $ref: '#/components/schemas/ContactsMessage'
+      discriminator:
+        propertyName: type
+        mapping:
+          text: '#/components/schemas/TextMessage'
+          audio: '#/components/schemas/AudioMessage'
+          document: '#/components/schemas/DocumentMessage'
+          image: '#/components/schemas/ImageMessage'
+          location: '#/components/schemas/LocationMessage'
+          video: '#/components/schemas/VideoMessage'
+          sticker: '#/components/schemas/StickerMessage'
+          reaction: '#/components/schemas/ReactionMessage'
+          interactive: '#/components/schemas/InteractiveMessage'
+          template: '#/components/schemas/TemplateMessage'
+          contacts: '#/components/schemas/ContactsMessage'
+    TextMessage:
+      allOf:
+        - 
+          $ref: '#/components/schemas/BaseMessageProperties'
+        - 
+          type: object
+          required:
+            - text
+          properties:
+            type:
+              type: string
+              enum:
+                - text
+            text:
+              type: object
+              properties:
+                body:
+                  type: string
+                  description: The text of the message.
+                  example: Hello World!
+                preview_url:
+                  type: boolean
+              additionalProperties: false
+          additionalProperties: false
+    AudioMessage:
+      allOf:
+        - 
+          $ref: '#/components/schemas/BaseMessageProperties'
+        - 
+          type: object
+          required:
+            - audio
+          properties:
+            type:
+              type: string
+              enum:
+                - audio
+            audio:
+              $ref: '#/components/schemas/MediaObject'
+          additionalProperties: false
+    VideoMessage:
+      allOf:
+        - 
+          $ref: '#/components/schemas/BaseMessageProperties'
+        - 
+          type: object
+          required:
+            - video
+          properties:
+            type:
+              type: string
+              enum:
+                - video
+            video:
+              $ref: '#/components/schemas/MediaObject'
+          additionalProperties: false
+    DocumentMessage:
+      allOf:
+        - 
+          $ref: '#/components/schemas/BaseMessageProperties'
+        - 
+          type: object
+          required:
+            - document
+          properties:
+            type:
+              type: string
+              enum:
+                - document
+            document:
+              $ref: '#/components/schemas/MediaObject'
+          additionalProperties: false
+    ImageMessage:
+      allOf:
+        - 
+          $ref: '#/components/schemas/BaseMessageProperties'
+        - 
+          type: object
+          required:
+            - image
+          properties:
+            type:
+              type: string
+              enum:
+                - image
+            image:
+              $ref: '#/components/schemas/MediaObject'
+          additionalProperties: false
+    LocationMessage:
+      allOf:
+        - 
+          $ref: '#/components/schemas/BaseMessageProperties'
+        - 
+          type: object
+          required:
+            - location
+          properties:
+            type:
+              type: string
+              enum:
+                - location
+            location:
+              type: object
+              properties:
+                address:
+                  type: string
+                  description: The address of the location.
+                  example: 1 Hacker Way, Menlo Park, CA 94025
+                latitude:
+                  type: string
+                  description: The latitude of the location.
+                  example: 37.4847
+                longitude:
+                  type: string
+                  description: The longitude of the location.
+                  example: -122.1486
+                name:
+                  type: string
+                  description: The name of the location.
+                  example: Meta HQ
+              additionalProperties: false
+          additionalProperties: false
+    StickerMessage:
+      allOf:
+        - 
+          $ref: '#/components/schemas/BaseMessageProperties'
+        - 
+          type: object
+          required:
+            - sticker
+          properties:
+            type:
+              type: string
+              enum:
+                - sticker
+            sticker:
+              type: object
+              oneOf:
+                - 
+                  type: object
+                  required:
+                    - id
+                  properties:
+                    id:
+                      type: string
+                      description: The ID of the sticker.
+                  additionalProperties: false
+                - 
+                  type: object
+                  required:
+                    - link
+                  properties:
+                    link:
+                      type: string
+                      description: The URL of the sticker.
+                  additionalProperties: false
+          additionalProperties: false
+    ReactionMessage:
+      allOf:
+        - 
+          $ref: '#/components/schemas/BaseMessageProperties'
+        - 
+          type: object
+          required:
+            - reaction
+          properties:
+            type:
+              type: string
+              enum:
+                - reaction
+            reaction:
+              type: object
+              properties:
+                emoji:
+                  type: string
+                  description: emoji
+                message_id:
+                  type: string
+                  description: reacted message-id
+              additionalProperties: false
+          additionalProperties: false
+    InteractiveMessage:
+      allOf:
+        - 
+          $ref: '#/components/schemas/BaseMessageProperties'
+        - 
+          type: object
+          required:
+            - interactive
+          properties:
+            type:
+              type: string
+              enum:
+                - interactive
+            interactive:
+              $ref: '#/components/schemas/InteractiveObject'
+          additionalProperties: false
+    InteractiveObject:
+      type: object
+      description: >
+        An object containing the content for an
+        interactive message.
+      required:
+        - type
+        - action
+      properties:
+        type:
+          type: string
+          description: The type of interactive message to send.
+          enum:
+            - button
+            - call_permission_request
+            - catalog_message
+            - list
+            - product
+            - product_list
+            - flow
+        header:
+          $ref: '#/components/schemas/HeaderObject'
+        body:
+          $ref: '#/components/schemas/BodyObject'
+        footer:
+          $ref: '#/components/schemas/FooterObject'
+        action:
+          $ref: '#/components/schemas/ActionObject'
+    HeaderObject:
+      type: object
+      description: >
+        Header content displayed on top of a
+        message. Required for 'product_list'
+        type. Cannot be set for 'product' type.
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          description: The header type.
+          enum:
+            - text
+            - video
+            - image
+            - document
+        text:
+          type: string
+          description: >
+            Text for the header. Required if 'type'
+            is 'text'. Emojis supported, no
+            markdown.
+          maxLength: 60
+        sub_text:
+          type: string
+          description: >
+            Optional sub-text for the header. Emojis
+            supported, no markdown.
+          maxLength: 60
+        document:
+          $ref: '#/components/schemas/MediaObject'
+          description: >
+            Contains the media object for this
+            document. Required if 'type' is
+            'document'.
+        image:
+          $ref: '#/components/schemas/MediaObject'
+          description: >
+            Contains the media object for this
+            image. Required if 'type' is 'image'.
+        video:
+          $ref: '#/components/schemas/MediaObject'
+          description: >
+            Contains the media object for this
+            video. Required if 'type' is 'video'.
+    BodyObject:
+      type: object
+      description: >
+        An object with the body of the message.
+        Optional for 'product' type, required
+        for other interactive message types.
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          description: >
+            The content of the message body. Emojis
+            and markdown are supported.
+          maxLength: 1024
+    FooterObject:
+      type: object
+      description: >
+        An object with the footer of the
+        message. Optional.
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          description: >
+            The footer content. Emojis, markdown,
+            and links are supported.
+          maxLength: 60
+    ActionObject:
+      type: object
+      description: >
+        Action you want the user to perform
+        after reading the message. Its structure
+        varies by interactive message type.
+      oneOf:
+        - 
+          required:
+            - button
+            - sections
+          properties:
+            button:
+              type: string
+              description: >
+                Button content for List Messages. Cannot
+                be empty, must be unique. Emojis
+                supported, no markdown.
+              maxLength: 20
+            sections:
+              type: array
+              description: Array of section objects.
+              maxItems: 10
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/SectionObject'
+        - 
+          required:
+            - buttons
+          properties:
+            buttons:
+              type: array
+              description: Array of button objects.
+              maxItems: 3
+              minItems: 1
+              items:
+                type: object
+                required:
+                  - type
+                  - reply
+                properties:
+                  type:
+                    type: string
+                    description: >
+                      Only supported type is "reply" for Reply
+                      Button.
+                    enum:
+                      - reply
+                  reply:
+                    type: object
+                    required:
+                      - id
+                      - title
+                    properties:
+                      id:
+                        type: string
+                        description: >
+                          Unique identifier for your button. No
+                          leading/trailing spaces.
+                        maxLength: 256
+                      title:
+                        type: string
+                        description: >
+                          Button title. Cannot be empty, must be
+                          unique. Emojis supported, no markdown.
+                        maxLength: 20
+        - 
+          required:
+            - catalog_id
+          properties:
+            catalog_id:
+              type: string
+              description: >
+                Unique identifier of the Facebook
+                catalog linked to your WhatsApp Business
+                Account.
+            product_retailer_id:
+              type: string
+              description: >
+                Unique identifier of the product in a
+                catalog. Required for Single Product
+                Messages.
+            sections:
+              type: array
+              description: Array of section objects.
+              maxItems: 10
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/SectionObject'
+        - 
+          required:
+            - name
+            - parameters
+          properties:
+            name:
+              type: string
+              enum:
+                - catalog_message
+            parameters:
+              type: object
+              required:
+                - thumbnail_product_retailer_id
+              properties:
+                thumbnail_product_retailer_id:
+                  type: string
+                  description: Product retailer ID for the thumbnail.
+        - 
+          required:
+            - name
+            - parameters
+          properties:
+            name:
+              type: string
+              enum:
+                - flow
+            parameters:
+              type: object
+              required:
+                - flow_message_version
+                - flow_cta
+              properties:
+                flow_message_version:
+                  type: string
+                  description: Must be "3".
+                  enum:
+                    - '3'
+                flow_id:
+                  type: string
+                  description: >
+                    Unique identifier of the Flow provided
+                    by WhatsApp. Required unless flow_name
+                    is set. Cannot be used with flow_name.
+                flow_name:
+                  type: string
+                  description: >
+                    The name of the Flow that you created.
+                    Required unless flow_id is set. Cannot
+                    be used with flow_id.
+                flow_cta:
+                  type: string
+                  description: >
+                    Text on the CTA button (e.g., "Signup").
+                    Advised 30 characters or less, no emoji.
+                  maxLength: 30
+                mode:
+                  type: string
+                  description: >
+                    The current mode of the Flow, either
+                    "draft" or "published".
+                  default: published
+                  enum:
+                    - draft
+                    - published
+                flow_token:
+                  type: string
+                  description: >
+                    A token generated by the business to
+                    serve as an identifier. Defaults to
+                    "unused".
+                flow_action:
+                  type: string
+                  description: >
+                    Either "navigate" to predefine the first
+                    screen, or "data_exchange" for advanced
+                    use cases.
+                  default: navigate
+                  enum:
+                    - navigate
+                    - data_exchange
+                flow_action_payload:
+                  type: object
+                  description: >
+                    Optional only if 'flow_action' is
+                    'navigate'.
+                  properties:
+                    screen:
+                      type: string
+                      description: >
+                        The 'id' of the first screen of the
+                        Flow.
+                      default: FIRST_ENTRY_SCREEN
+                    data:
+                      type: object
+                      description: >
+                        The input data for the first screen of
+                        the Flow. Must be a non-empty object.
+              oneOf:
+                - 
+                  required:
+                    - flow_id
+                - 
+                  required:
+                    - flow_name
+        - 
+          required:
+            - name
+          properties:
+            name:
+              type: string
+              enum:
+                - call_permission_request
+    SectionObject:
+      type: object
+      description: >
+        A section object, used in List Messages
+        and Multi-Product Messages.
+      properties:
+        title:
+          type: string
+          description: >
+            Title of the section. Required if the
+            message has more than one section. Max
+            24 characters.
+          maxLength: 24
+        product_items:
+          type: array
+          description: Array of product objects.
+          maxItems: 30
+          minItems: 1
+          items:
+            type: object
+            required:
+              - product_retailer_id
+            properties:
+              product_retailer_id:
+                type: string
+                description: >
+                  Unique identifier of the product in a
+                  catalog.
+        rows:
+          type: array
+          description: Contains a list of rows.
+          maxItems: 10
+          items:
+            type: object
+            required:
+              - id
+              - title
+            properties:
+              id:
+                type: string
+                description: Unique row identifier.
+                maxLength: 200
+              title:
+                type: string
+                description: Row title.
+                maxLength: 24
+              description:
+                type: string
+                description: Optional row description.
+                maxLength: 72
+    TemplateMessage:
+      allOf:
+        - 
+          $ref: '#/components/schemas/BaseMessageProperties'
+        - 
+          type: object
+          description: >
+            Send an approved message template. Use
+            the `template` object to identify the
+            template by name, select the render
+            language, and supply any variable
+            header, body, or button parameters
+            through `template.components`.
+          required:
+            - template
+          properties:
+            type:
+              type: string
+              enum:
+                - template
+            template:
+              description: >
+                Template content for the send request.
+                `template.components` is where you
+                provide header, body, and button
+                parameter values for templates that
+                define placeholders or variable buttons.
+              allOf:
+                - 
+                  type: object
+                  description: >
+                    Identifies the approved message template
+                    to send and supplies values for any
+                    variable parts of that template. Use
+                    `name` to select the template,
+                    `language` to choose the render locale,
+                    and `components` to provide header,
+                    body, or button parameters when the
+                    template defines them.
+                  required:
+                    - name
+                    - language
+                  properties:
+                    name:
+                      type: string
+                      description: >
+                        Name of the approved message template to
+                        send.
+                      example: TEMPLATE_NAME
+                    language:
+                      # TODO: Replace when ref is fixed in source
+                      # $ref: '#/components/schemas/LanguageObject'
+                      type: string
+                      description: >
+                        Language in which the template should be
+                        rendered.
+                    components:
+                      type: array
+                      description: >
+                        Optional list of template components
+                        that supply parameter values for
+                        variable parts of the template. Add a
+                        `header` component for header
+                        parameters, a `body` component for body
+                        placeholders, and a `button` component
+                        for button parameters when the template
+                        defines them.
+                      example:
+                        0:
+                          type: header
+                          parameters:
+                            0:
+                              type: image
+                              image:
+                                link: http(s)://example.com/image.jpg
+                        1:
+                          type: body
+                          parameters:
+                            0:
+                              type: text
+                              text: 'Hello {{1}}! Your order of {{2}} is confirmed for {{3}}.'
+                        2:
+                          type: button
+                          sub_type: quick_reply
+                          index: '0'
+                          parameters:
+                            0:
+                              type: payload
+                              payload: ORDER_DETAILS_CLICKED
+                      items:
+                        # $ref: '#/components/schemas/TemplateComponent'
+                        # TODO: Replace when ref is fixed in source
+                        type: object
+                        required:
+                          - type
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                              - header
+                              - body
+                              - button
+                          sub_type:
+                            type: string
+                            enum:
+                              - quick_reply
+                              - url
+                              - copy_code
+                          index:
+                            type: string
+                          parameters:
+                            type: array
+                            items:
+                              type: object
+                              required:
+                                - type
+                              properties:
+                                type:
+                                  type: string
+                                  enum:
+                                    - text
+                                    - currency
+                                    - date_time
+                                    - image
+                                    - document
+                                    - video
+                                    - payload
+                                    - coupon_code
+                                text:
+                                  type: string
+                                payload:
+                                  type: string
+                                coupon_code:
+                                  type: string
+                                image:
+                                  $ref: '#/components/schemas/MediaObject'
+                                document:
+                                  $ref: '#/components/schemas/MediaObject'
+                                video:
+                                  $ref: '#/components/schemas/MediaObject'
+                                currency:
+                                  type: object
+                                  properties:
+                                    fallback_value:
+                                      type: string
+                                    code:
+                                      type: string
+                                    amount_1000:
+                                      type: integer
+                                date_time:
+                                  type: object
+                                  properties:
+                                    fallback_value:
+                                      type: string
+    ContactsMessage:
+      allOf:
+        - 
+          $ref: '#/components/schemas/BaseMessageProperties'
+        - 
+          type: object
+          required:
+            - contacts
+          properties:
+            type:
+              type: string
+              enum:
+                - contacts
+            contacts:
+              type: array
+              maxItems: 5
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/ContactObject'
+          additionalProperties: false
+    ContactObject:
+      type: object
+      properties:
+        addresses:
+          type: array
+          description: Full contact address(es)
+          items:
+            $ref: '#/components/schemas/AddressObject'
+        birthday:
+          type: string
+          format: date
+          description: Date of birth (YYYY-MM-DD format)
+          example: 2012-08-18
+        emails:
+          type: array
+          description: Contact email address(es)
+          items:
+            $ref: '#/components/schemas/EmailObject'
+        name:
+          $ref: '#/components/schemas/NameObject'
+          description: Contact name object
+        org:
+          $ref: '#/components/schemas/OrganizationObject'
+          description: Contact organization information
+        phones:
+          type: array
+          description: Contact phone number(s)
+          items:
+            $ref: '#/components/schemas/PhoneObject'
+        urls:
+          type: array
+          description: Contact URL(s)
+          items:
+            $ref: '#/components/schemas/UrlObject'
+      additionalProperties: false
+    AddressObject:
+      type: object
+      properties:
+        city:
+          type: string
+          description: City name
+          example: Menlo Park
+        country:
+          type: string
+          description: Full country name
+          example: United States
+        country_code:
+          type: string
+          description: Two-letter ISO country code
+          example: us
+        state:
+          type: string
+          description: State abbreviation
+          example: CA
+        street:
+          type: string
+          description: Street address
+          example: 1 Hacker Way
+        type:
+          type: string
+          description: Address type
+          enum:
+            - HOME
+            - WORK
+        zip:
+          type: string
+          description: ZIP code
+          example: '94025'
+      additionalProperties: false
+    EmailObject:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email address
+          example: 'test@example.com'
+        type:
+          type: string
+          description: Email type
+          enum:
+            - HOME
+            - WORK
+      additionalProperties: false
+    NameObject:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: First name
+          example: John
+        formatted_name:
+          type: string
+          description: Formatted full name
+          example: John Smith
+        last_name:
+          type: string
+          description: Last name
+          example: Smith
+        middle_name:
+          type: string
+          description: Middle name
+          example: D.
+        prefix:
+          type: string
+          description: Name prefix
+          example: Dr
+        suffix:
+          type: string
+          description: Name suffix
+          example: Jr
+      additionalProperties: false
+    OrganizationObject:
+      type: object
+      properties:
+        company:
+          type: string
+          description: Company name
+          example: WhatsApp
+        department:
+          type: string
+          description: Department name
+          example: Design
+        title:
+          type: string
+          description: Job title
+          example: Manager
+      additionalProperties: false
+    PhoneObject:
+      type: object
+      required:
+        - phone
+      properties:
+        phone:
+          type: string
+          description: Phone number
+          example: +1 (650) 555-1234
+        type:
+          type: string
+          description: Phone type
+          enum:
+            - HOME
+            - WORK
+        wa_id:
+          type: string
+          description: WhatsApp ID
+          example: '16505551234'
+      additionalProperties: false
+    UrlObject:
+      type: object
+      required:
+        - url
+      properties:
+        type:
+          type: string
+          description: URL type
+          enum:
+            - HOME
+            - WORK
+        url:
+          type: string
+          format: uri
+          description: URL
+          example: https://www.facebook.com
+      additionalProperties: false
+    MessageResponsePayload:
+      type: object
+      properties:
+        contacts:
+          type: array
+          example:
+            0:
+              input: 48XXXXXXXXX
+              wa_id: '48XXXXXXXXX '
+          items:
+            type: object
+            properties:
+              input:
+                type: string
+                example: 48XXXXXXXXX
+              wa_id:
+                type: string
+                example: '48XXXXXXXXX '
+        messages:
+          type: array
+          example:
+            0:
+              id: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+              message_status: accepted
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: wamid.gBGGSFcCNEOPAgkO_KJ55r4w_ww
+              message_status:
+                type: string
+                description: |
+                  The status of a WhatsApp message:
+                  - `accepted`: The message has been accepted by WhatsApp and is being processed
+                  - `held_for_quality_assessment`: The message is being held for quality assessment before delivery
+                  - `paused`: The message delivery has been paused
+                enum:
+                  - accepted
+                  - held_for_quality_assessment
+                  - paused
+        messaging_product:
+          type: string
+          example: whatsapp
+    MarkMessageRequestPayload:
+      type: object
+      required:
+        - message_id
+        - messaging_product
+        - status
+      properties:
+        message_id:
+          type: string
+          example: wamid.234123
+        messaging_product:
+          type: string
+          example: whatsapp
+        status:
+          type: string
+          example: read
+    MarkMessageResponsePayload:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+  headers:
+    Access-Control-Allow-Origin:
+      description: >
+        CORS policy allowing access from any
+        origin
+      schema:
+        type: string
+        example: '*'
+    Alt-Svc:
+      description: >
+        Alternative service advertisement for
+        HTTP/3
+      schema:
+        type: string
+        example: h3=":443"; ma=86400
+    Cache-Control:
+      description: >
+        Cache control directives for the
+        response
+      schema:
+        type: string
+        example: >
+          private, no-cache, no-store,
+          must-revalidate
+    Connection:
+      description: Connection management directive
+      schema:
+        type: string
+        example: keep-alive
+    Content-Length:
+      description: Size of the response body in bytes
+      schema:
+        type: string
+        example: '25'
+    Date:
+      description: >
+        Date and time when the response was
+        generated
+      schema:
+        type: string
+        example: Fri, 24 Jan 2025 00:48:41 GMT
+    Expires:
+      description: Expiration date for cached responses
+      schema:
+        type: string
+        example: Sat, 01 Jan 2000 00:00:00 GMT
+    Pragma:
+      description: Legacy cache control directive
+      schema:
+        type: string
+        example: no-cache
+    Strict-Transport-Security:
+      description: HSTS header enforcing HTTPS connections
+      schema:
+        type: string
+        example: max-age=15552000; preload
+    Vary:
+      description: >
+        Headers that affect caching and content
+        negotiation
+      schema:
+        type: string
+        example: Accept-Encoding
+    X-FB-Connection-Quality:
+      description: Facebook connection quality metrics
+      schema:
+        type: string
+        example: >
+          EXCELLENT; q=0.9, rtt=7, rtx=0, c=10,
+          mss=1380, tbw=372, tp=-1, tpl=-1,
+          uplat=527, ullat=0
+    X-FB-Debug:
+      description: >
+        Facebook debug information for
+        troubleshooting
+      schema:
+        type: string
+        example: >
+          52zkUgodnaVRhbBE+3RiGz6TnmjmDEGunwYd+vKSc4synE+Xii//dy6twB/7yKgOJiMUuV0OF248UAZ1qL3v0A==
+    facebook-api-version:
+      description: >
+        Facebook Graph API version used for the
+        request
+      schema:
+        type: string
+        example: v22.0
+    x-business-use-case-usage:
+      description: >
+        Business use case usage metrics and rate
+        limiting information
+      schema:
+        type: string
+        example: '{"102290129340398":[{"type":"whatsapp_business_management","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0},{"type":"whatsapp","call_count":1,"total_cputime":1,"total_time":1,"estimated_time_to_regain_access":0}]}'
+    x-fb-request-id:
+      description: >
+        Unique identifier for the request for
+        debugging purposes
+      schema:
+        type: string
+        example: AGaOBl2yM-g8gdON-dhzl5y
+    x-fb-rev:
+      description: Facebook internal revision number
+      schema:
+        type: string
+        example: '1019544279'
+    x-fb-trace-id:
+      description: >
+        Facebook trace identifier for request
+        tracking
+      schema:
+        type: string
+        example: E7riEe9OW2e
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

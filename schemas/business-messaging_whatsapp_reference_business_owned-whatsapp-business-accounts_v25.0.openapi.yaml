@@ -1,0 +1,473 @@
+---
+openapi: 3.1.0
+info:
+  title: 'WhatsApp Business Management API - Owned WhatsApp Business Accounts'
+  version: v25.0
+  description: |
+    API for retrieving WhatsApp Business Accounts owned by a specific business.
+    This endpoint allows businesses to retrieve comprehensive information about their
+    owned WhatsApp Business Accounts, including account details, status, and configuration.
+  termsOfService: https://developers.facebook.com/terms
+  contact:
+    name: WhatsApp Business Messaging Team
+    url: https://developers.facebook.com/support
+  license:
+    name: Meta Platform Terms
+    url: https://developers.facebook.com/terms
+servers:
+  - 
+    url: https://graph.facebook.com
+    description: Production Graph API server
+tags:
+  - 
+    name: Owned WhatsApp Business Accounts
+    description: >
+      APIs for retrieving WhatsApp Business
+      Accounts owned by a business
+paths:
+  /{Version}/{Business-ID}/owned_whatsapp_business_accounts:
+    get:
+      responses:
+        200:
+          description: >
+            Successfully retrieved owned WhatsApp
+            Business Accounts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppBusinessAccountsConnection'
+              examples:
+                multiple_accounts:
+                  summary: >
+                    Multiple owned WhatsApp Business
+                    Accounts
+                  value:
+                    data:
+                      0:
+                        id: '104996122399160'
+                        name: Lucky Shrub
+                        message_template_namespace: 58e6d318_b627_4112_b9c7_2961197553ea
+                        timezone_id: '1'
+                      1:
+                        id: '102290129340398'
+                        name: Test WhatsApp Business Account
+                        message_template_namespace: ba30dd89_2ebd_41e4_b805_f2c05ae04cc9
+                        timezone_id: '1'
+                    paging:
+                      cursors:
+                        after: >
+                          QVFIUjBrRUs5QVJuUDhDSmZARMlc2dXRYNXBmMjMtRUt3SmFlbk9PRk43azdiN1VQaW1HcnRkejFzZATNoNDdTdGVWMDhjamVvY25HWnI4WjIzX0hYSk40NHhB
+                        before: >
+                          QVFIUnpPVXRnY3BPN19rTVItOG51T291YURjV3BaeXRXU29adDVreS04ekhSNl9YWTlfdmN3SHlyTEk1a2FRdnlWanBqM1FuQm1uZAHhfYl9UMTNCYjM3MWV3
+                single_account:
+                  summary: Single owned WhatsApp Business Account
+                  value:
+                    data:
+                      0:
+                        id: '104996122399160'
+                        name: Lucky Shrub
+                        message_template_namespace: 58e6d318_b627_4112_b9c7_2961197553ea
+                        timezone_id: '1'
+                empty_result:
+                  summary: No owned accounts found
+                  value:
+                    data: [ ]
+        400:
+          description: 'Bad Request - Invalid parameters or malformed request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: 'Invalid parameter: business_id must be a valid numeric string'
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions or access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to
+                    access this business's WhatsApp Business
+                    Accounts
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  error_user_title: Permission Denied
+                  error_user_msg: >
+                    Your app doesn't have permission to
+                    access this resource
+        404:
+          description: 'Not Found - Business ID does not exist or is not accessible'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Business not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description: 'Unprocessable Entity - Request parameters are valid but cannot be processed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    The requested filter combination is not
+                    supported
+                  type: GraphMethodException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: 'Internal Server Error - Unexpected server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please
+                    retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Get Owned WhatsApp Business Accounts
+      description: |
+        Retrieve WhatsApp Business Accounts owned by the specified business. This endpoint
+        provides comprehensive information about all WABAs owned by the business, including
+        account details, configuration, and status information.
+        
+        **Use Cases:**
+        - Retrieve all WhatsApp Business Accounts owned by a business
+        - Filter accounts by business type
+        - Find specific accounts by ID
+        - Monitor business portfolio of WhatsApp Business Accounts
+        - Manage account access and permissions across multiple WABAs
+        
+        **Rate Limiting:**
+        Standard Graph API rate limits apply. Use appropriate retry logic with exponential backoff.
+        
+        **Caching:**
+        Account information can be cached for short periods, but status and configuration
+        may change frequently. Implement appropriate cache invalidation strategies.
+      operationId: getOwnedWhatsAppBusinessAccounts
+      tags:
+        - Owned WhatsApp Business Accounts
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: Business-ID
+          in: path
+          description: |
+            Your Business ID. This ID represents the business portfolio that owns the
+            WhatsApp Business Accounts and can be found in your Business Manager settings.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+        - 
+          name: business_type
+          in: query
+          description: |
+            Filter accounts by business type. Can specify multiple types as comma-separated values.
+            Use this to filter between enterprise and small-medium business accounts.
+          required: false
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/WhatsAppBusinessType'
+          example:
+            0: ENTERPRISE
+            1: SMB
+        - 
+          name: after
+          in: query
+          description: |
+            Cursor for forward pagination. Use the cursor from the previous response
+            to get the next page of results.
+          required: false
+          schema:
+            type: string
+          example: >
+            QVFIUjBrRUs5QVJuUDhDSmZARMlc2dXRYNXBmMjMtRUt3SmFlbk9PRk43azdiN1VQaW1HcnRkejFzZATNoNDdTdGVWMDhjamVvY25HWnI4WjIzX0hYSk40NHhB
+        - 
+          name: first
+          in: query
+          description: |
+            Number of results to return in forward pagination. Maximum value is 100.
+            Use with 'after' cursor for forward pagination.
+          required: false
+          schema:
+            type: integer
+            maximum: 100
+            minimum: 1
+          example: 25
+        - 
+          name: before
+          in: query
+          description: |
+            Cursor for backward pagination. Use the cursor from the previous response
+            to get the previous page of results.
+          required: false
+          schema:
+            type: string
+          example: >
+            QVFIUnpPVXRnY3BPN19rTVItOG51T291YURjV3BaeXRXU29adDVreS04ekhSNl9YWTlfdmN3SHlyTEk1a2FRdnlWanBqM1FuQm1uZAHhfYl9UMTNCYjM3MWV3
+        - 
+          name: last
+          in: query
+          description: |
+            Number of results to return in backward pagination. Maximum value is 100.
+            Use with 'before' cursor for backward pagination.
+          required: false
+          schema:
+            type: integer
+            maximum: 100
+            minimum: 1
+          example: 25
+        - 
+          name: find
+          in: query
+          description: |
+            Find a specific WhatsApp Business Account by ID within the owned accounts.
+            Use this to quickly locate a specific account.
+          required: false
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '104996122399160'
+components:
+  schemas:
+    WhatsAppBusinessAccount:
+      type: object
+      description: >
+        WhatsApp Business Account owned by the
+        business
+      required:
+        - id
+        - name
+        - message_template_namespace
+        - timezone_id
+      properties:
+        id:
+          type: string
+          description: >
+            Unique identifier for the WhatsApp
+            Business Account
+          example: '104996122399160'
+        name:
+          type: string
+          description: >
+            Human-readable name of the WhatsApp
+            Business Account
+          example: Lucky Shrub
+          maxLength: 100
+          minLength: 1
+        message_template_namespace:
+          type: string
+          description: >
+            Namespace identifier for message
+            templates associated with this account
+          example: 58e6d318_b627_4112_b9c7_2961197553ea
+        timezone_id:
+          type: string
+          description: >
+            Timezone identifier for the WhatsApp
+            Business Account
+          example: '1'
+    WhatsAppBusinessType:
+      type: string
+      description: Type of WhatsApp Business Account
+      example: ENTERPRISE
+      enum:
+        - ENTERPRISE
+        - SMB
+    WhatsAppBusinessAccountOnboardingFilter:
+      type: string
+      description: >
+        Filter for accounts based on onboarding
+        status
+      example: ONBOARDED
+      enum:
+        - ONBOARDED
+        - NOT_ONBOARDED
+        - ALL
+    WhatsAppBusinessAccountsConnection:
+      type: object
+      description: >
+        Paginated collection of owned WhatsApp
+        Business Accounts
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          description: >
+            Array of owned WhatsApp Business Account
+            records
+          items:
+            $ref: '#/components/schemas/WhatsAppBusinessAccount'
+        paging:
+          $ref: '#/components/schemas/CursorPaging'
+    CursorPaging:
+      type: object
+      description: Cursor-based pagination information
+      properties:
+        cursors:
+          type: object
+          properties:
+            before:
+              type: string
+              description: >
+                Cursor pointing to the start of the page
+                of data that has been returned
+              example: >
+                QVFIUnpPVXRnY3BPN19rTVItOG51T291YURjV3BaeXRXU29adDVreS04ekhSNl9YWTlfdmN3SHlyTEk1a2FRdnlWanBqM1FuQm1uZAHhfYl9UMTNCYjM3MWV3
+            after:
+              type: string
+              description: >
+                Cursor pointing to the end of the page
+                of data that has been returned
+              example: >
+                QVFIUjBrRUs5QVJuUDhDSmZARMlc2dXRYNXBmMjMtRUt3SmFlbk9PRk43azdiN1VQaW1HcnRkejFzZATNoNDdTdGVWMDhjamVvY25HWnI4WjIzX0hYSk40NHhB
+        next:
+          type: string
+          description: URL for the next page of results
+          example: >
+            https://graph.facebook.com/v25.0/1234567890/owned_whatsapp_business_accounts?after=QVFIUjBrRUs5QVJuUDhDSmZARMlc2dXRYNXBmMjMtRUt3SmFlbk9PRk43azdiN1VQaW1HcnRkejFzZATNoNDdTdGVWMDhjamVvY25HWnI4WjIzX0hYSk40NHhB
+        previous:
+          type: string
+          description: URL for the previous page of results
+          example: >
+            https://graph.facebook.com/v25.0/1234567890/owned_whatsapp_business_accounts?before=QVFIUnpPVXRnY3BPN19rTVItOG51T291YURjV3BaeXRXU29adDVreS04ekhSNl9YWTlfdmN3SHlyTEk1a2FRdnlWanBqM1FuQm1uZAHhfYl9UMTNCYjM3MWV3
+    GraphAPIError:
+      type: object
+      description: Standard Graph API error response
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - type
+            - code
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid parameter
+            type:
+              type: string
+              description: Error category type
+              example: OAuthException
+            code:
+              type: integer
+              description: Numeric error code
+              example: 100
+            error_subcode:
+              type: integer
+              description: >
+                More specific error subcode when
+                available
+              example: 33
+            fbtrace_id:
+              type: string
+              description: >
+                Unique identifier for debugging and
+                support requests with Meta
+              example: AXsgnV2Cm3ZMGF3dF_cfYIn
+            is_transient:
+              type: boolean
+              description: >
+                Indicates whether this error is
+                temporary and the request should be
+                retried
+              example: false
+            error_user_title:
+              type: string
+              description: >
+                User-friendly error title for display
+                purposes
+              example: Permission Denied
+            error_user_msg:
+              type: string
+              description: >
+                User-friendly error message for display
+                purposes
+              example: >
+                Your app doesn't have permission to
+                access this resource
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

@@ -1,3 +1,5 @@
+src/__generated/
+
 *~
 package-lock.json
 yarn.lock

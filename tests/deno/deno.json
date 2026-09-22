@@ -8,6 +8,7 @@
   "license": "MIT",
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
-    "ky": "npm:ky@^1.8.2"
+    "ky": "npm:ky@^1.8.2",
+    "openapi-fetch": "npm:openapi-fetch@^0.17.0"
   }
 }

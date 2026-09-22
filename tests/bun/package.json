@@ -7,7 +7,8 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "ky": "^1.8.2"
+    "ky": "^1.8.2",
+    "openapi-fetch": "^0.17.0"
   },
   "devDependencies": {
     "@types/bun": "latest"

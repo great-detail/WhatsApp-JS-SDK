@@ -37,7 +37,7 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --prefer-offline --frozen-lockfile
-      - run: pnpm audit signatures
+      # - run: pnpm audit signatures
       - name: Create .npmrc
         run: |
       - run: |

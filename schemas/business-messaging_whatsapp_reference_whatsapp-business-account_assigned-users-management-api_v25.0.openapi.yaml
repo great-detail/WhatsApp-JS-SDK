@@ -1,0 +1,873 @@
+---
+openapi: 3.1.0
+info:
+  title: 'WhatsApp Business Account - Assigned Users Management API'
+  version: v25.0
+  description: |
+    API for managing user assignments and permissions for WhatsApp Business Accounts.
+    This endpoint allows businesses to manage user access to their WhatsApp Business Accounts,
+    including listing assigned users, adding users with specific permissions, and removing user access.
+  termsOfService: https://developers.facebook.com/terms
+  contact:
+    name: WhatsApp Business Messaging Team
+    url: https://developers.facebook.com/support
+  license:
+    name: Meta Platform Terms
+    url: https://developers.facebook.com/terms
+servers:
+  - 
+    url: https://graph.facebook.com
+    description: Production Graph API server
+tags:
+  - 
+    name: WhatsApp Business Account Users
+    description: >
+      APIs for managing user assignments and
+      permissions for WhatsApp Business
+      Accounts
+paths:
+  /{Version}/{WhatsApp-Business-Account-ID}/assigned_users:
+    get:
+      responses:
+        200:
+          description: >
+            Successfully retrieved assigned users
+            list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignedUsersResponse'
+              examples:
+                multiple_users:
+                  summary: >
+                    Multiple assigned users with different
+                    types
+                  value:
+                    data:
+                      0:
+                        id: '1234567890123456'
+                        name: John Smith
+                        business:
+                          id: '9876543210987654'
+                          name: Example Business Inc
+                        user_type: BUSINESS_USER
+                      1:
+                        id: '2345678901234567'
+                        name: System User Bot
+                        business:
+                          id: '9876543210987654'
+                          name: Example Business Inc
+                        user_type: SYSTEM_USER
+                    paging:
+                      cursors:
+                        after: QVFIUjJ5M2wwdmtONVFHbDZAMVQ4OGJBQUFBQQ
+                        before: QVFIUmx1WTBpMGpJWXprYzVYaVhabW9PVVhF
+                      next: 'https://graph.facebook.com/v25.0/1234567890123456/assigned_users?access_token=YOUR_SYSTEM_USER_ACCESS_TOKEN&limit=25&after=QVFIUjJ5M2wwdmtONVFHbDZAMVQ4OGJBQUFBQQ'
+                    summary:
+                      total_count: 15
+                single_user:
+                  summary: Single assigned user
+                  value:
+                    data:
+                      0:
+                        id: '1234567890123456'
+                        name: Jane Doe
+                        user_type: BUSINESS_USER
+                    summary:
+                      total_count: 1
+        400:
+          description: 'Bad Request - Invalid parameters or malformed request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    The parameter business is required to
+                    specify a business
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions or access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Need permission on
+                    WhatsAppBusinessAccount or this Business
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  error_user_title: Permission Denied
+                  error_user_msg: >
+                    Your app doesn't have permission to
+                    access this resource
+        404:
+          description: 'Not Found - WhatsApp Business Account ID does not exist or is not accessible'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: WhatsApp Business Account not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description: 'Unprocessable Entity - Request parameters are valid but cannot be processed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    The requested fields are not available
+                    for this account
+                  type: GraphMethodException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: 'Internal Server Error - Unexpected server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please
+                    retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: List Assigned Users
+      description: |
+        Retrieve a list of users assigned to the WhatsApp Business Account with their permissions
+        and user details. This endpoint supports pagination and filtering capabilities.
+        
+        **Rate Limiting:**
+        Standard Graph API rate limits apply. Use appropriate retry logic with exponential backoff.
+        
+        **Caching:**
+        User assignment data can be cached for short periods, but permission changes may occur
+        frequently. Implement appropriate cache invalidation strategies.
+      operationId: getAssignedUsers
+      tags:
+        - WhatsApp Business Account Users
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: WhatsApp-Business-Account-ID
+          in: path
+          description: |
+            Your WhatsApp Business Account ID. This ID is provided when you create the account
+            and can be found in your Business Manager or through account management APIs.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+        - 
+          name: business
+          in: query
+          description: |
+            Business ID that owns or has access to the WhatsApp Business Account.
+            This parameter is required to specify the business context for user assignments.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '9876543210987654'
+        - 
+          name: fields
+          in: query
+          description: |
+            Comma-separated list of fields to include in the response. If not specified,
+            default fields will be returned (id, name). Available fields: id, name, business, user_type
+          required: false
+          schema:
+            type: string
+          example: id,name,business,user_type
+        - 
+          name: limit
+          in: query
+          description: |
+            Maximum number of assigned users to return per page. Default is 25, maximum is 100.
+          required: false
+          schema:
+            type: integer
+            maximum: 100
+            minimum: 1
+          example: 25
+        - 
+          name: after
+          in: query
+          description: |
+            Cursor for pagination. Use this to get the next page of results.
+          required: false
+          schema:
+            type: string
+          example: QVFIUjJ5M2wwdmtONVFHbDZAMVQ4OGJBQUFBQQ
+        - 
+          name: before
+          in: query
+          description: |
+            Cursor for pagination. Use this to get the previous page of results.
+          required: false
+          schema:
+            type: string
+          example: QVFIUmx1WTBpMGpJWXprYzVYaVhabW9PVVhF
+    post:
+      responses:
+        200:
+          description: >
+            Successfully added user to WhatsApp
+            Business Account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              example:
+                success: true
+        400:
+          description: 'Bad Request - Invalid parameters or malformed request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: 'Invalid parameter: user must be a valid user ID'
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions or access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to add
+                    users to this WhatsApp Business Account
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  error_user_title: Permission Denied
+                  error_user_msg: >
+                    Your app doesn't have permission to
+                    access this resource
+        404:
+          description: 'Not Found - WhatsApp Business Account ID or User ID does not exist'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: WhatsApp Business Account not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description: 'Unprocessable Entity - Request parameters are valid but cannot be processed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    User is already assigned to this
+                    WhatsApp Business Account
+                  type: GraphMethodException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: 'Internal Server Error - Unexpected server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please
+                    retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Add User to WhatsApp Business Account
+      description: |
+        Add a user to the WhatsApp Business Account with specified permission tasks.
+        This operation grants the user access to perform specific actions on the account
+        based on the provided permission tasks.
+        
+        **Permission Tasks:**
+        Different permission tasks grant access to different WhatsApp Business Account features:
+        - MANAGE: General account management permissions
+        - DEVELOP: Development and API access permissions
+        - MANAGE_TEMPLATES: Message template management
+        - MANAGE_PHONE: Phone number management
+        - MESSAGING: Send and receive messages
+        
+        **Rate Limiting:**
+        Standard Graph API rate limits apply. Use appropriate retry logic with exponential backoff.
+      operationId: addAssignedUser
+      tags:
+        - WhatsApp Business Account Users
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: WhatsApp-Business-Account-ID
+          in: path
+          description: |
+            Your WhatsApp Business Account ID. This ID is provided when you create the account
+            and can be found in your Business Manager or through account management APIs.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - user
+                - tasks
+              properties:
+                user:
+                  type: string
+                  description: |
+                    User ID of the person to add to the WhatsApp Business Account.
+                    This must be a valid Facebook user ID.
+                  example: '2345678901234567'
+                  pattern: '^[0-9]+$'
+                tasks:
+                  type: array
+                  description: |
+                    Array of permission tasks to grant to the user. These tasks determine
+                    what actions the user can perform on the WhatsApp Business Account.
+                  example:
+                    0: MANAGE
+                    1: DEVELOP
+                    2: MANAGE_TEMPLATES
+                  maxItems: 16
+                  minItems: 1
+                  items:
+                    $ref: '#/components/schemas/WhatsAppBusinessAccountPermissionTask'
+            examples:
+              basic_permissions:
+                summary: >
+                  Add user with basic management
+                  permissions
+                value:
+                  user: '2345678901234567'
+                  tasks:
+                    0: MANAGE
+                    1: VIEW_COST
+              developer_permissions:
+                summary: Add user with development permissions
+                value:
+                  user: '3456789012345678'
+                  tasks:
+                    0: DEVELOP
+                    1: MANAGE_TEMPLATES
+                    2: VIEW_TEMPLATES
+              full_access:
+                summary: Add user with full control
+                value:
+                  user: '4567890123456789'
+                  tasks:
+                    - VIEW_COST
+        required: true
+    delete:
+      responses:
+        200:
+          description: >
+            Successfully removed user from WhatsApp
+            Business Account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              example:
+                success: true
+        400:
+          description: 'Bad Request - Invalid parameters or malformed request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: 'Invalid parameter: user must be a valid user ID'
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions or access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to
+                    remove users from this WhatsApp Business
+                    Account
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  error_user_title: Permission Denied
+                  error_user_msg: >
+                    Your app doesn't have permission to
+                    access this resource
+        404:
+          description: 'Not Found - WhatsApp Business Account ID or User ID does not exist or is not assigned'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    User is not assigned to this WhatsApp
+                    Business Account
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description: 'Unprocessable Entity - Request parameters are valid but cannot be processed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Cannot remove user due to business asset
+                    group permissions
+                  type: GraphMethodException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: 'Internal Server Error - Unexpected server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please
+                    retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: >
+        Remove User from WhatsApp Business
+        Account
+      description: |
+        Remove a user's access from the WhatsApp Business Account. This operation revokes
+        all permissions and access rights for the specified user on the account.
+        
+        **Important Notes:**
+        - This operation removes ALL permissions for the user on this WhatsApp Business Account
+        - The user will lose access to all account features and data
+        - This action cannot be undone - the user must be re-added if access is needed again
+        - Webhooks may be triggered to notify of user access changes
+        
+        **Rate Limiting:**
+        Standard Graph API rate limits apply. Use appropriate retry logic with exponential backoff.
+      operationId: removeAssignedUser
+      tags:
+        - WhatsApp Business Account Users
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: WhatsApp-Business-Account-ID
+          in: path
+          description: |
+            Your WhatsApp Business Account ID. This ID is provided when you create the account
+            and can be found in your Business Manager or through account management APIs.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - user
+              properties:
+                user:
+                  type: string
+                  description: |
+                    User ID of the person to remove from the WhatsApp Business Account.
+                    This must be a valid Facebook user ID that is currently assigned to the account.
+                  example: '2345678901234567'
+                  pattern: '^[0-9]+$'
+            examples:
+              remove_user:
+                summary: Remove user access
+                value:
+                  user: '2345678901234567'
+        required: true
+components:
+  schemas:
+    AssignedUser:
+      type: object
+      description: >
+        User assigned to WhatsApp Business
+        Account with permissions
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the assigned user
+          example: '1234567890123456'
+        name:
+          type: string
+          description: Display name of the assigned user
+          example: John Smith
+        business:
+          $ref: '#/components/schemas/BusinessNode'
+        user_type:
+          $ref: '#/components/schemas/AssignedUserType'
+    AssignedUserType:
+      type: string
+      description: Type of user assignment
+      example: BUSINESS_USER
+      enum:
+        - BUSINESS_USER
+        - SYSTEM_USER
+        - PERSONAL_USER
+    BusinessNode:
+      type: object
+      description: Business entity associated with the user
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the business
+          example: '9876543210987654'
+        name:
+          type: string
+          description: Name of the business
+          example: Example Business Inc
+    WhatsAppBusinessAccountPermissionTask:
+      type: string
+      description: >
+        Granular permission tasks for WhatsApp
+        Business Account access
+      example: MANAGE
+      enum:
+        - MANAGE
+        - DEVELOP
+        - MANAGE_TEMPLATES
+        - MANAGE_PHONE
+        - VIEW_COST
+        - MANAGE_EXTENSIONS
+        - VIEW_PHONE_ASSETS
+        - MANAGE_PHONE_ASSETS
+        - VIEW_TEMPLATES
+        - MESSAGING
+    AssignedUsersResponse:
+      type: object
+      description: >
+        Response containing list of assigned
+        users with pagination
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          description: Array of assigned users
+          items:
+            $ref: '#/components/schemas/AssignedUser'
+        paging:
+          $ref: '#/components/schemas/CursorPaging'
+        summary:
+          $ref: '#/components/schemas/AssignedUsersSummary'
+    AssignedUsersSummary:
+      type: object
+      description: Summary information about assigned users
+      properties:
+        total_count:
+          type: integer
+          description: Total number of assigned users
+          example: 25
+    CursorPaging:
+      type: object
+      description: Cursor-based pagination information
+      properties:
+        cursors:
+          type: object
+          properties:
+            before:
+              type: string
+              description: >
+                Cursor pointing to the start of the page
+                of data
+              example: QVFIUmx1WTBpMGpJWXprYzVYaVhabW9PVVhF
+            after:
+              type: string
+              description: >
+                Cursor pointing to the end of the page
+                of data
+              example: QVFIUjJ5M2wwdmtONVFHbDZAMVQ4OGJBQUFBQQ
+        next:
+          type: string
+          description: >
+            Graph API endpoint for the next page of
+            results
+          example: 'https://graph.facebook.com/v25.0/1234567890123456/assigned_users?access_token=YOUR_SYSTEM_USER_ACCESS_TOKEN&limit=25&after=QVFIUjJ5M2wwdmtONVFHbDZAMVQ4OGJBQUFBQQ'
+        previous:
+          type: string
+          description: >
+            Graph API endpoint for the previous page
+            of results
+          example: 'https://graph.facebook.com/v25.0/1234567890123456/assigned_users?access_token=YOUR_SYSTEM_USER_ACCESS_TOKEN&limit=25&before=QVFIUmx1WTBpMGpJWXprYzVYaVhabW9PVVhF'
+    SuccessResponse:
+      type: object
+      description: >
+        Standard success response for write
+        operations
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+          description: >
+            Indicates whether the operation was
+            successful
+          example: true
+    GraphAPIError:
+      type: object
+      description: Standard Graph API error response
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - type
+            - code
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid parameter
+            type:
+              type: string
+              description: Error category type
+              example: OAuthException
+            code:
+              type: integer
+              description: Numeric error code
+              example: 100
+            error_subcode:
+              type: integer
+              description: >
+                More specific error subcode when
+                available
+              example: 33
+            fbtrace_id:
+              type: string
+              description: >
+                Unique identifier for debugging and
+                support requests with Meta
+              example: AXsgnV2Cm3ZMGF3dF_cfYIn
+            is_transient:
+              type: boolean
+              description: >
+                Indicates whether this error is
+                temporary and the request should be
+                retried
+              example: false
+            error_user_title:
+              type: string
+              description: >
+                User-friendly error title for display
+                purposes
+              example: Permission Denied
+            error_user_msg:
+              type: string
+              description: >
+                User-friendly error message for display
+                purposes
+              example: >
+                Your app doesn't have permission to
+                access this resource
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

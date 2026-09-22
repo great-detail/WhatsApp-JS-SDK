@@ -1,0 +1,415 @@
+---
+openapi: 3.1.0
+info:
+  title: WhatsApp Business Account Activities API
+  version: v25.0
+  description: |
+    API for retrieving WhatsApp Business Account activity history.
+    This endpoint allows businesses to monitor and track activities performed on their
+    WhatsApp Business Account, including administrative actions, configuration changes,
+    and operational events.
+  termsOfService: https://developers.facebook.com/terms
+  contact:
+    name: WhatsApp Business Messaging Team
+    url: https://developers.facebook.com/support
+  license:
+    name: Meta Platform Terms
+    url: https://developers.facebook.com/terms
+servers:
+  - 
+    url: https://graph.facebook.com
+    description: Production Graph API server
+tags:
+  - 
+    name: WhatsApp Business Account Activities
+    description: >
+      APIs for retrieving WhatsApp Business
+      Account activity history
+paths:
+  /{Version}/{WABA-ID}/activities:
+    get:
+      responses:
+        200:
+          description: >
+            Successfully retrieved WhatsApp Business
+            Account activities
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityList'
+              examples:
+                recent_activities:
+                  summary: Recent account activities
+                  value:
+                    data:
+                      0:
+                        id: '1234567890123456'
+                        event_type: PHONE_NUMBER_ADDED
+                        category: PHONE_NUMBER
+                        timestamp: 1697377800
+                        actor_id: '9876543210987654'
+                        actor_business_id: '5678901234567890'
+                      1:
+                        id: '1234567890123457'
+                        event_type: USER_ADDED
+                        category: USER
+                        timestamp: 1697374200
+                        actor_id: '1111222233334444'
+                        actor_business_id: '5678901234567890'
+                    paging:
+                      cursors:
+                        after: NDMyNzQyODI3OTQw
+                        before: MTAxNTExOTQ1MjAwNzI5NDE=
+        400:
+          description: 'Bad Request - Invalid parameters or malformed request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid parameter
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to
+                    access this resource
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+      summary: Get WhatsApp Business Account Activities
+      description: |
+        Retrieve activity history for a WhatsApp Business Account.
+        Default fields returned: event_type, timestamp.
+      operationId: getWhatsAppBusinessAccountActivities
+      tags:
+        - WhatsApp Business Account Activities
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: Graph API version
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: WABA-ID
+          in: path
+          description: WhatsApp Business Account ID
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+        - 
+          name: fields
+          in: query
+          description: |
+            Comma-separated list of fields to include in the response.
+            Default fields: event_type, timestamp.
+            Available fields: id, actor_business_id, actor_id, category, event_type, timestamp
+          required: false
+          schema:
+            type: string
+          example: >
+            id,category,event_type,timestamp,actor_id
+        - 
+          name: limit
+          in: query
+          description: >
+            Maximum number of activity records to
+            return per page
+          required: false
+          schema:
+            type: integer
+            default: 25
+            maximum: 100
+            minimum: 1
+          example: 50
+        - 
+          name: after
+          in: query
+          description: Cursor for pagination
+          required: false
+          schema:
+            type: string
+        - 
+          name: before
+          in: query
+          description: Cursor for pagination
+          required: false
+          schema:
+            type: string
+components:
+  schemas:
+    WhatsAppBusinessActivityHistory:
+      type: object
+      description: >
+        WhatsApp Business Account activity
+        history record
+      properties:
+        id:
+          type: string
+          description: >
+            Unique identifier for the activity
+            record
+          example: '1234567890123456'
+        actor_business_id:
+          type: string
+          description: >
+            ID of the business that performed the
+            activity
+          example: '9876543210987654'
+        actor_id:
+          type: string
+          description: >
+            ID of the user or system that performed
+            the activity
+          example: '5678901234567890'
+        category:
+          $ref: '#/components/schemas/WhatsAppBusinessAccountHistoryComponentType'
+        event_type:
+          $ref: '#/components/schemas/WhatsAppBusinessAccountHistoryEventType'
+        timestamp:
+          type: integer
+          format: int64
+          description: >
+            Unix timestamp when the activity
+            occurred
+          example: 1697377800
+    WhatsAppBusinessAccountHistoryComponentType:
+      type: string
+      description: Category of the activity
+      example: PHONE_NUMBER
+      enum:
+        - ACCOUNT
+        - APP
+        - BILLING
+        - BUSINESS_PROFILE
+        - MESSAGE_TEMPLATE
+        - PAYMENT_CONFIGURATION
+        - PHONE_NUMBER
+        - USER
+        - WHATSAPP_BUSINESS_PAYMENT_TOS
+    WhatsAppBusinessAccountHistoryEventType:
+      type: string
+      description: Specific event type of the activity
+      example: PHONE_NUMBER_ADDED
+      enum:
+        - ACCOUNT_MIGRATED_FROM_OBO_TO_SHARED
+        - >
+          ACCOUNT_MIGRATION_FROM_OBO_TO_SHARED_INTENT
+        - ACCOUNT_REVIEW_STATUS_UPDATED
+        - ACCOUNT_SANDBOX_ELIGIBLE
+        - ACCOUNT_VERIFIED
+        - APP_INSTALLED
+        - APP_UNINSTALLED
+        - BILLING_ADDED
+        - BILLING_DELETED
+        - BILLING_UPDATED
+        - BOT_CREATED
+        - BOT_UPDATED
+        - BUSINESS_CAPABILITY_UPDATED
+        - >
+          BUSINESS_PRIMARY_LOCATION_COUNTRY_UPDATED
+        - BUSINESS_PROFILE_PICTURE_UPDATED
+        - BUSINESS_PROFILE_UPDATED
+        - CALLING_CONFIG_CHANGED
+        - CALLING_STATUS_CHANGED
+        - DATA_LOCALIZATION_SETTING_CHANGED
+        - DEFAULT
+        - MESSAGE_TEMPLATE_ADDED
+        - MESSAGE_TEMPLATE_DELETED
+        - MESSAGE_TEMPLATE_EDITED
+        - NAME_REVERFICATION_REQUESTED
+        - OFFICIAL_BUSINESS_ACCOUNT_REQUEST
+        - OTP_REQUESTED
+        - OTP_VERIFIED
+        - PARTNER_ADDED
+        - PARTNER_REMOVED
+        - PAYMENT_CONFIGURATION_UPDATED
+        - PHONE_MIGRATION_COMPLETED
+        - PHONE_MIGRATION_STARTED
+        - PHONE_NUMBER_ADDED
+        - PHONE_NUMBER_DELETED
+        - PHONE_NUMBER_DEREGISTERED_FROM_CLOUD_API
+        - PHONE_NUMBER_OBA_APPROVED
+        - PHONE_NUMBER_REGISTERED_ON_CLOUD_API
+        - SEARCH_STATUS_CHANGED_TO_NON_VISIBLE
+        - SEARCH_STATUS_CHANGED_TO_PENDING_VISIBLE
+        - SEARCH_STATUS_CHANGED_TO_VISIBLE
+        - TWO_STEP_VERIFICATION_PIN_CHANGED
+        - TWO_STEP_VERIFICATION_PIN_REMOVED
+        - >
+          TWO_STEP_VERIFICATION_PIN_RESET_REQUESTED
+        - USER_ADDED
+        - USER_DELETED
+        - USER_PERMISSION_ADDED
+        - USER_PERMISSION_UPDATED
+        - WELCOME_MESSAGE_SEQUENCE_ADDED
+        - WELCOME_MESSAGE_SEQUENCE_DELETED
+        - WELCOME_MESSAGE_SEQUENCE_UPDATED
+        - WHATSAPP_BUSINESS_PAYMENT_TOS_ACCEPTED
+    ActivityList:
+      type: object
+      description: >
+        Paginated list of WhatsApp Business
+        Account activities
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          description: Array of activity records
+          items:
+            $ref: '#/components/schemas/WhatsAppBusinessActivityHistory'
+        paging:
+          $ref: '#/components/schemas/Paging'
+    Paging:
+      type: object
+      description: >
+        Pagination information for activity
+        results
+      properties:
+        cursors:
+          type: object
+          properties:
+            before:
+              type: string
+              description: >
+                Cursor pointing to the start of the page
+                of data
+              example: MTAxNTExOTQ1MjAwNzI5NDE=
+            after:
+              type: string
+              description: >
+                Cursor pointing to the end of the page
+                of data
+              example: NDMyNzQyODI3OTQw
+        previous:
+          type: string
+          description: >
+            Graph API endpoint URL for the previous
+            page of results
+        next:
+          type: string
+          description: >
+            Graph API endpoint URL for the next page
+            of results
+    GraphAPIError:
+      type: object
+      description: Standard Graph API error response
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - type
+            - code
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid parameter
+            type:
+              type: string
+              description: Error category type
+              example: OAuthException
+            code:
+              type: integer
+              description: Numeric error code
+              example: 100
+            error_subcode:
+              type: integer
+              description: >
+                More specific error subcode when
+                available
+              example: 33
+            fbtrace_id:
+              type: string
+              description: >
+                Unique identifier for debugging and
+                support requests with Meta
+              example: AXsgnV2Cm3ZMGF3dF_cfYIn
+            is_transient:
+              type: boolean
+              description: >
+                Indicates whether this error is
+                temporary and the request should be
+                retried
+              example: false
+            error_user_title:
+              type: string
+              description: >
+                User-friendly error title for display
+                purposes
+              example: Permission Denied
+            error_user_msg:
+              type: string
+              description: >
+                User-friendly error message for display
+                purposes
+              example: >
+                Your app doesn't have permission to
+                access this resource
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

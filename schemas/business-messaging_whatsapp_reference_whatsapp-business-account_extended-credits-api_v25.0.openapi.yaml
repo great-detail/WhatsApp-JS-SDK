@@ -1,0 +1,415 @@
+---
+openapi: 3.1.0
+info:
+  title: 'WhatsApp Cloud API - Extended Credits API'
+  version: v25.0
+  description: |
+    Retrieve extended credit line information for WhatsApp Business Accounts.
+    Returns credit details including balances, allocation, ownership, and billing information.
+  termsOfService: https://developers.facebook.com/terms
+  contact:
+    name: WhatsApp Business Messaging Team
+    url: https://developers.facebook.com/support
+  license:
+    name: Meta Platform Terms
+    url: https://developers.facebook.com/terms
+servers:
+  - 
+    url: https://graph.facebook.com
+    description: Production Graph API server
+tags:
+  - 
+    name: Billing
+    description: >
+      APIs for managing billing and extended
+      credit lines
+paths:
+  /{Version}/{Business-ID}/extendedcredits:
+    get:
+      responses:
+        200:
+          description: >
+            Extended credit lines retrieved
+            successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtendedCreditsResponse'
+              examples:
+                credit_lines:
+                  summary: Extended credit lines with balances
+                  value:
+                    data:
+                      0:
+                        id: '1972385232742146'
+                        legal_entity_name: Lucky Shrub LLC
+                        credit_type: WHATSAPP_BUSINESS
+                        balance:
+                          amount: '500.00'
+                          amount_in_hundredths: '50000'
+                          currency: USD
+                          offsetted_amount: '50000'
+                        credit_available:
+                          amount: '1500.00'
+                          amount_in_hundredths: '150000'
+                          currency: USD
+                          offsetted_amount: '150000'
+                        max_balance:
+                          amount: '2000.00'
+                          amount_in_hundredths: '200000'
+                          currency: USD
+                          offsetted_amount: '200000'
+                        owner_business:
+                          id: '9876543210987654'
+                          name: Example Business Corp
+                        is_access_revoked: false
+                        is_shared_credit_line_enabled_for_mpa: false
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid parameter
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Insufficient permissions to access
+                    extended credits
+                  type: OAuthException
+                  code: 200
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Business not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: An unexpected error occurred
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Get Extended Credit Lines
+      description: |
+        Retrieve extended credit line information for a business account, including
+        balances, credit availability, ownership, and billing details.
+      operationId: getExtendedCreditLines
+      tags:
+        - Billing
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: Graph API version
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: Business-ID
+          in: path
+          description: >
+            The unique identifier of the Meta
+            Business Portfolio
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+        - 
+          name: fields
+          in: query
+          description: |
+            Comma-separated list of fields to include in the response.
+            Available fields: id, credit_type, balance, credit_available, max_balance,
+            online_max_balance, allocated_amount, partition_from, owner_business,
+            owner_business_name, is_automated_experience, legal_entity_name,
+            send_bill_to_biz_name, liable_biz_name, receiving_credit_allocation_config,
+            is_access_revoked, is_shared_credit_line_enabled_for_mpa
+          required: false
+          schema:
+            type: string
+          example: >
+            id,legal_entity_name,credit_available,balance
+        - 
+          name: order_by_is_owned_credential
+          in: query
+          description: |
+            When true, reorders results so owning credentials appear before receiving credentials.
+          required: false
+          schema:
+            type: boolean
+            default: false
+          example: true
+components:
+  schemas:
+    ExtendedCreditLine:
+      type: object
+      description: >
+        Extended credit line associated with a
+        business account
+      properties:
+        id:
+          type: string
+          description: >
+            Unique identifier for the extended
+            credit line
+          example: '1972385232742146'
+        credit_type:
+          $ref: '#/components/schemas/ExtendedCreditType'
+        balance:
+          $ref: '#/components/schemas/CurrencyAmount'
+        credit_available:
+          $ref: '#/components/schemas/CurrencyAmount'
+        max_balance:
+          $ref: '#/components/schemas/CurrencyAmount'
+        online_max_balance:
+          $ref: '#/components/schemas/CurrencyAmount'
+        allocated_amount:
+          $ref: '#/components/schemas/CurrencyAmount'
+        partition_from:
+          type: string
+          description: Partition source for the credit line
+          example: '9876543210987654'
+        owner_business:
+          type: object
+          description: Business that owns this credit line
+          properties:
+            id:
+              type: string
+              description: >
+                Unique identifier for the owning
+                business
+              example: '9876543210987654'
+            name:
+              type: string
+              description: Name of the owning business
+              example: Example Business Corp
+        owner_business_name:
+          type: string
+          description: >
+            Name of the business that owns this
+            credit line
+          example: Example Business Corp
+        is_automated_experience:
+          type: boolean
+          description: >
+            Whether this credit line uses automated
+            experience
+          example: false
+        legal_entity_name:
+          type: string
+          description: >
+            Legal entity name associated with the
+            credit line
+          example: Lucky Shrub LLC
+        send_bill_to_biz_name:
+          type: string
+          description: Name of the business to send bills to
+          example: Lucky Shrub Billing
+        liable_biz_name:
+          type: string
+          description: Name of the liable business
+          example: Lucky Shrub LLC
+        receiving_credit_allocation_config:
+          type: object
+          description: >
+            Credit allocation configuration for
+            receiving credentials
+          properties:
+            id:
+              type: string
+              description: >
+                Unique identifier for the allocation
+                config
+            partition_type:
+              type: string
+              description: Type of credit allocation partition
+            currency_amount:
+              $ref: '#/components/schemas/CurrencyAmount'
+        is_access_revoked:
+          type: boolean
+          description: >
+            Whether access to this credit line has
+            been revoked
+          example: false
+        is_shared_credit_line_enabled_for_mpa:
+          type: boolean
+          description: >
+            Whether shared credit line is enabled
+            for managed partner accounts
+          example: false
+    ExtendedCreditType:
+      type: string
+      description: Type of extended credit
+      example: WHATSAPP_BUSINESS
+      enum:
+        - ADS_BUSINESS
+        - ADS_SEQUENTIAL
+        - APP2USER
+        - PAY_LATER
+        - UNSPECIFIED
+        - WHATSAPP_BUSINESS
+    CurrencyAmount:
+      type: object
+      description: Currency amount with formatting details
+      properties:
+        amount:
+          type: string
+          description: Formatted currency amount
+          example: '1000.00'
+        amount_in_hundredths:
+          type: string
+          description: >
+            Amount in hundredths (minor currency
+            units)
+          example: '100000'
+        currency:
+          type: string
+          description: ISO 4217 currency code
+          example: USD
+        offsetted_amount:
+          type: string
+          description: Offset amount in minor currency units
+          example: '100000'
+    ExtendedCreditsResponse:
+      type: object
+      description: >
+        Response containing the list of extended
+        credit lines
+      properties:
+        data:
+          type: array
+          description: Array of extended credit line entries
+          items:
+            $ref: '#/components/schemas/ExtendedCreditLine'
+        paging:
+          $ref: '#/components/schemas/CursorPaging'
+    CursorPaging:
+      type: object
+      description: Cursor-based pagination information
+      properties:
+        cursors:
+          type: object
+          properties:
+            before:
+              type: string
+              description: Cursor pointing to the start of the page
+            after:
+              type: string
+              description: Cursor pointing to the end of the page
+        previous:
+          type: string
+          description: URL for the previous page of results
+        next:
+          type: string
+          description: URL for the next page of results
+    GraphAPIError:
+      type: object
+      description: Standard Graph API error response
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - type
+            - code
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid parameter
+            type:
+              type: string
+              description: Error category type
+              example: OAuthException
+            code:
+              type: integer
+              description: Numeric error code
+              example: 100
+            error_subcode:
+              type: integer
+              description: More specific error subcode
+            fbtrace_id:
+              type: string
+              description: Unique identifier for debugging
+              example: AXsgnV2Cm3ZMGF3dF_cfYIn
+            is_transient:
+              type: boolean
+              description: Whether this error is temporary
+              example: false
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

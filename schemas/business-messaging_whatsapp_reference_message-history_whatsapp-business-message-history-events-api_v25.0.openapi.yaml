@@ -1,0 +1,528 @@
+---
+openapi: 3.1.0
+info:
+  title: >
+    WhatsApp Business Message History Events
+    API
+  version: v25.0
+  description: |
+    API for retrieving WhatsApp Business Message History Events and delivery status occurrences.
+    This endpoint allows businesses to retrieve detailed message delivery status events
+    for specific message history entries, including delivery status transitions,
+    timestamps, and application information.
+  termsOfService: https://developers.facebook.com/terms
+  contact:
+    name: WhatsApp Business Messaging Team
+    url: https://developers.facebook.com/support
+  license:
+    name: Meta Platform Terms
+    url: https://developers.facebook.com/terms
+servers:
+  - 
+    url: https://graph.facebook.com
+    description: Production Graph API server
+tags:
+  - 
+    name: Message History Events
+    description: >
+      APIs for retrieving WhatsApp Business
+      Message History Events and delivery
+      status occurrences
+paths:
+  /{Version}/{Message-History-ID}/events:
+    get:
+      responses:
+        200:
+          description: >
+            Successfully retrieved WhatsApp message
+            history events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageHistoryEventsResponse'
+              examples:
+                message_history_events:
+                  summary: >
+                    Message history events with delivery
+                    status occurrences
+                  value:
+                    data:
+                      0:
+                        cursor: MTAxNTExOTQ1MjAwNzI5NDE=
+                        node:
+                          id: '2345678901234567'
+                          delivery_status: SENT
+                          occurrence_timestamp: 1640995200
+                          status_timestamp: 1640995205
+                          application:
+                            id: '9876543210987654'
+                            name: WhatsApp Business API Client
+                      1:
+                        cursor: MTAxNTExOTQ1MjAwNzI5NDI=
+                        node:
+                          id: '3456789012345678'
+                          delivery_status: DELIVERED
+                          occurrence_timestamp: 1640995260
+                          status_timestamp: 1640995265
+                          application:
+                            id: '9876543210987654'
+                            name: WhatsApp Business API Client
+                      2:
+                        cursor: MTAxNTExOTQ1MjAwNzI5NDM=
+                        node:
+                          id: '4567890123456789'
+                          delivery_status: READ
+                          occurrence_timestamp: 1640995320
+                          status_timestamp: 1640995325
+                          application:
+                            id: '9876543210987654'
+                            name: WhatsApp Business API Client
+                    paging:
+                      cursors:
+                        after: MTAxNTExOTQ1MjAwNzI5NDM=
+                        before: MTAxNTExOTQ1MjAwNzI5NDE=
+                      next: >
+                        https://graph.facebook.com/v25.0/1234567890123456/events?after=MTAxNTExOTQ1MjAwNzI5NDM
+                filtered_by_status:
+                  summary: >
+                    Message history events filtered by
+                    delivery status
+                  value:
+                    data:
+                      0:
+                        cursor: MTAxNTExOTQ1MjAwNzI5NDI=
+                        node:
+                          id: '3456789012345678'
+                          delivery_status: DELIVERED
+                          occurrence_timestamp: 1640995260
+                          status_timestamp: 1640995265
+                          application:
+                            id: '9876543210987654'
+                            name: WhatsApp Business API Client
+                    paging:
+                      cursors:
+                        after: MTAxNTExOTQ1MjAwNzI5NDI=
+                        before: MTAxNTExOTQ1MjAwNzI5NDI=
+        400:
+          description: 'Bad Request - Invalid parameters or malformed request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: 'Invalid parameter: delivery_status must be a valid delivery status'
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions or access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to
+                    access message history events for this
+                    resource
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  error_user_title: Permission Denied
+                  error_user_msg: >
+                    Your app doesn't have permission to
+                    access this resource
+        404:
+          description: 'Not Found - Message History ID does not exist or is not accessible'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    WhatsApp Business Message History not
+                    found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description: 'Unprocessable Entity - Request parameters are valid but cannot be processed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    The requested fields are not available
+                    for this message history
+                  type: GraphMethodException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: 'Internal Server Error - Unexpected server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please
+                    retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Get WhatsApp Message History Events
+      description: |
+        Retrieve paginated message delivery status events for a specific message history entry,
+        including delivery status occurrences, timestamps, and application information.
+        
+        **Use Cases:**
+        - Track detailed message delivery status events and transitions
+        - Monitor delivery status occurrence timestamps
+        - Retrieve application information for delivery events
+        - Debug message delivery issues and status changes
+        
+        **Rate Limiting:**
+        Standard Graph API rate limits apply. Use appropriate retry logic with exponential backoff.
+        
+        **Caching:**
+        Message history events can be cached for short periods, but delivery status events
+        may change frequently. Implement appropriate cache invalidation strategies.
+        
+        **Pagination:**
+        This endpoint supports cursor-based pagination. Use the `after` and `before` cursors
+        from the response to navigate through results.
+      operationId: getMessageHistoryEvents
+      tags:
+        - Message History Events
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: Message-History-ID
+          in: path
+          description: |
+            Your WhatsApp Business Message History ID. This ID is provided when you retrieve
+            message history and can be found through message history APIs.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+        - 
+          name: delivery_status
+          in: query
+          description: |
+            Filter results by specific delivery status. When provided,
+            only events with this delivery status will be returned.
+          required: false
+          schema:
+            $ref: '#/components/schemas/WhatsAppMessageDeliveryStatus'
+          example: DELIVERED
+        - 
+          name: fields
+          in: query
+          description: |
+            Comma-separated list of fields to include in the response. If not specified,
+            default fields will be returned (cursor, node{id,delivery_status,occurrence_timestamp}).
+            Available fields: cursor, node{id,delivery_status,error_description,occurrence_timestamp,status_timestamp,application,webhook_update_state,webhook_uri}
+          required: false
+          schema:
+            type: string
+          example: 'cursor,node{id,delivery_status,occurrence_timestamp,application}'
+        - 
+          name: limit
+          in: query
+          description: |
+            Maximum number of message history events to return per page.
+            Default is 25, maximum is 100.
+          required: false
+          schema:
+            type: integer
+            default: 25
+            maximum: 100
+            minimum: 1
+          example: 25
+        - 
+          name: after
+          in: query
+          description: |
+            Cursor for pagination. Use this to get the next page of results.
+            This value comes from the `paging.cursors.after` field in previous responses.
+          required: false
+          schema:
+            type: string
+          example: MTAxNTExOTQ1MjAwNzI5NDE=
+        - 
+          name: before
+          in: query
+          description: |
+            Cursor for pagination. Use this to get the previous page of results.
+            This value comes from the `paging.cursors.before` field in previous responses.
+          required: false
+          schema:
+            type: string
+          example: MAZDZD
+components:
+  schemas:
+    WhatsAppMessageHistoryEventsEdge:
+      type: object
+      description: >
+        Edge containing message delivery status
+        occurrence with pagination cursor
+      required:
+        - node
+      properties:
+        cursor:
+          type: string
+          description: Pagination cursor for this edge
+          example: MTAxNTExOTQ1MjAwNzI5NDE=
+        node:
+          $ref: '#/components/schemas/WhatsAppBusinessMessageDeliveryStatusOccurrence'
+    WhatsAppBusinessMessageDeliveryStatusOccurrence:
+      type: object
+      description: >
+        Message delivery status occurrence with
+        detailed event information
+      required:
+        - id
+        - delivery_status
+        - occurrence_timestamp
+      properties:
+        id:
+          type: string
+          description: >
+            Unique identifier for the message
+            delivery status occurrence
+          example: '2345678901234567'
+        delivery_status:
+          $ref: '#/components/schemas/WhatsAppMessageDeliveryStatus'
+        error_description:
+          type: string
+          description: >
+            Error description if the delivery
+            encountered an error
+          example: >
+            Message delivery failed due to invalid
+            phone number
+        occurrence_timestamp:
+          type: integer
+          format: int64
+          description: >
+            Unix timestamp when the delivery status
+            occurrence happened
+          example: 1640995200
+        status_timestamp:
+          type: integer
+          format: int64
+          description: >
+            Unix timestamp when the status was
+            recorded
+          example: 1640995205
+        application:
+          $ref: '#/components/schemas/ApplicationNode'
+        webhook_update_state:
+          type: string
+          description: >
+            State of the webhook update for this
+            delivery status event
+          example: SUCCESS
+          enum:
+            - ERROR
+            - SUCCESS
+        webhook_uri:
+          type: string
+          format: uri
+          description: >
+            URI of the webhook that received this
+            delivery status update
+          example: https://example.com/webhook
+    WhatsAppMessageDeliveryStatus:
+      type: string
+      description: Message delivery status
+      example: DELIVERED
+      enum:
+        - ACCEPTED
+        - DELIVERED
+        - ERROR
+        - READ
+        - SENT
+    ApplicationNode:
+      type: object
+      description: >
+        Meta application that processed the
+        delivery status event
+      properties:
+        id:
+          type: string
+          description: >
+            Unique identifier for the Meta
+            application
+          example: '9876543210987654'
+        name:
+          type: string
+          description: Name of the Meta application
+          example: WhatsApp Business API Client
+    MessageHistoryEventsResponse:
+      type: object
+      description: >
+        Paginated response containing message
+        history events
+      properties:
+        data:
+          type: array
+          description: Array of message history event edges
+          items:
+            $ref: '#/components/schemas/WhatsAppMessageHistoryEventsEdge'
+        paging:
+          $ref: '#/components/schemas/PaginationInfo'
+    PaginationInfo:
+      type: object
+      description: >
+        Pagination information for navigating
+        through results
+      properties:
+        cursors:
+          type: object
+          description: Pagination cursors for navigation
+          properties:
+            before:
+              type: string
+              description: Cursor for the previous page of results
+              example: MAZDZD
+            after:
+              type: string
+              description: Cursor for the next page of results
+              example: MTAxNTExOTQ1MjAwNzI5NDE=
+        previous:
+          type: string
+          format: uri
+          description: URL for the previous page of results
+          example: >
+            https://graph.facebook.com/v25.0/1234567890123456/events?before=MAZDZD
+        next:
+          type: string
+          format: uri
+          description: URL for the next page of results
+          example: >
+            https://graph.facebook.com/v25.0/1234567890123456/events?after=MTAxNTExOTQ1MjAwNzI5NDE=
+    GraphAPIError:
+      type: object
+      description: Standard Graph API error response
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - type
+            - code
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid parameter
+            type:
+              type: string
+              description: Error category type
+              example: OAuthException
+            code:
+              type: integer
+              description: Numeric error code
+              example: 100
+            error_subcode:
+              type: integer
+              description: >
+                More specific error subcode when
+                available
+              example: 33
+            fbtrace_id:
+              type: string
+              description: >
+                Unique identifier for debugging and
+                support requests with Meta
+              example: AXsgnV2Cm3ZMGF3dF_cfYIn
+            is_transient:
+              type: boolean
+              description: >
+                Indicates whether this error is
+                temporary and the request should be
+                retried
+              example: false
+            error_user_title:
+              type: string
+              description: >
+                User-friendly error title for display
+                purposes
+              example: Permission Denied
+            error_user_msg:
+              type: string
+              description: >
+                User-friendly error message for display
+                purposes
+              example: >
+                Your app doesn't have permission to
+                access this resource
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

@@ -1,0 +1,193 @@
+---
+openapi: 3.1.0
+info:
+  title: 'WhatsApp Cloud API - Media API'
+  version: v23.0
+  description: |
+    Retrieve and delete uploaded media files by media ID.
+    Get media URLs with file metadata including size, MIME type, and SHA256 hash.
+    Media URLs are valid for 5 minutes after retrieval.
+  contact: { }
+servers:
+  - 
+    url: https://graph.facebook.com
+paths:
+  /{Version}/{Media-ID}:
+    get:
+      responses:
+        200:
+          description: Retrieve Media URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  file_size:
+                    type: string
+                    example: '303833'
+                  id:
+                    type: string
+                    example: '2621233374848975'
+                  messaging_product:
+                    type: string
+                    example: whatsapp
+                  mime_type:
+                    type: string
+                    example: image/jpeg
+                  sha256:
+                    type: string
+                    example: '<HASH>'
+                  url:
+                    type: string
+                    example: '<URL>'
+              examples:
+                Retrieve Media URL:
+                  value:
+                    file_size: '303833'
+                    id: '2621233374848975'
+                    messaging_product: whatsapp
+                    mime_type: image/jpeg
+                    sha256: '<HASH>'
+                    url: '<URL>'
+      summary: Retrieve Media URL
+      description: |-
+        To retrieve your media’s URL, make a **GET** call to **`/{{Media-ID}}`**. Use the returned URL to download the media file. Note that clicking this URL (i.e. performing a generic GET) will not return the media; you must include an access token. For more information, see [Download Media](https://developers.facebook.com/docs/business-messaging/whatsapp/business-phone-numbers/media#download-media).
+        
+        You can also use the optional query **`?phone_number_id`** for **`Retrieve Media URL`** and **`Delete Media`**. This parameter checks to make sure the media belongs to the phone number before retrieval or deletion.
+        
+        #### Response
+        
+        A successful response includes an object with a media URL. The URL is only valid for 5 minutes. To use this URL, see [Download Media](https://developers.facebook.com/docs/business-messaging/whatsapp/business-phone-numbers/media#download-media).
+      operationId: retrieveMediaUrl
+      tags:
+        - Media
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: phone_number_id
+          in: query
+          description: >
+            Specifies that this action only be
+            performed if the media belongs to the
+            provided phone number.
+          schema:
+            type: string
+            example: '<PHONE_NUMBER_ID>'
+    delete:
+      responses:
+        200:
+          description: Delete Media
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+              examples:
+                Delete Media:
+                  value:
+                    success: true
+      summary: Delete Media
+      description: |-
+        To delete media, make a **DELETE** call to the ID of the media you want to delete.
+        
+        ## Prerequisites
+        - [User Access Token](https://developers.facebook.com/docs/facebook-login/access-tokens#usertokens) with **`whatsapp_business_messaging`** permission
+        - Media object ID from either uploading media endpoint or media message Webhooks
+      operationId: deleteMedia
+      tags:
+        - Media
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Content-Type
+          in: header
+          description: Media type of the request body
+          required: true
+          schema:
+            type: string
+            default: application/json
+            example: application/json
+            enum:
+              - application/json
+              - application/x-www-form-urlencoded
+              - multipart/form-data
+        - 
+          name: phone_number_id
+          in: query
+          description: 'Specifies that deletion of the media  only be performed if the media belongs to the provided phone number.'
+          schema:
+            type: string
+            example: '<PHONE_NUMBER_ID>'
+    parameters:
+      - 
+        name: Version
+        in: path
+        required: true
+        schema:
+          type: string
+      - 
+        name: Media-ID
+        in: path
+        required: true
+        schema:
+          type: string
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

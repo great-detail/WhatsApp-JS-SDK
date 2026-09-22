@@ -1,0 +1,1159 @@
+---
+openapi: 3.1.0
+info:
+  title: >
+    WhatsApp Business Account Phone Number
+    API
+  version: v23.0
+  description: |
+    API for WhatsApp Business Account phone number operations including status management,
+    settings configuration, messaging setup, webhook configuration, and display name management.
+    This endpoint provides comprehensive management capabilities for WhatsApp Business
+    Account phone numbers, enabling businesses to configure phone number status, messaging settings,
+    webhook endpoints, and business profile information.
+  termsOfService: https://developers.facebook.com/terms
+  contact:
+    name: WhatsApp Business Messaging Team
+    url: https://developers.facebook.com/support
+  license:
+    name: Meta Platform Terms
+    url: https://developers.facebook.com/terms
+servers:
+  - 
+    url: https://graph.facebook.com
+tags:
+  - 
+    name: Phone Numbers
+    description: >
+      APIs for managing WhatsApp Business
+      Account phone number operations
+paths:
+  /{Version}/{Phone-Number-ID}:
+    get:
+      responses:
+        200:
+          description: |
+            Successfully retrieved phone number information. The response includes core phone number details
+            and any additional fields requested via the `fields` parameter.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhoneNumberInfo'
+              examples:
+                default_response:
+                  summary: Default phone number information
+                  description: >
+                    Basic phone number details without
+                    additional fields
+                  value:
+                    id: '106853218861309'
+                    display_phone_number: +1 555-555-5555
+                    verified_name: Jaspers Market
+                    quality_rating: GREEN
+                with_name_status:
+                  summary: Phone number with display name status
+                  description: >
+                    Includes business name certification
+                    status
+                  value:
+                    id: '106853218861309'
+                    display_phone_number: +1 555-555-5555
+                    verified_name: Jaspers Market
+                    quality_rating: GREEN
+                    name_status: AVAILABLE_WITHOUT_REVIEW
+                with_verification_status:
+                  summary: >
+                    Phone number with code verification
+                    status
+                  description: Includes two-step verification status
+                  value:
+                    id: '106853218861309'
+                    display_phone_number: +1 555-555-5555
+                    verified_name: Jaspers Market
+                    quality_rating: GREEN
+                    code_verification_status: VERIFIED
+                comprehensive_response:
+                  summary: Full phone number information
+                  description: >
+                    All available fields included in
+                    response
+                  value:
+                    id: '106853218861309'
+                    display_phone_number: +1 555-555-5555
+                    verified_name: Jaspers Market
+                    quality_rating: GREEN
+                    name_status: APPROVED
+                    code_verification_status: VERIFIED
+        400:
+          description: 'Bad Request - Invalid parameters or malformed request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              examples:
+                invalid_version:
+                  summary: Invalid API version format
+                  value:
+                    error:
+                      message: "Invalid version format. Use format like 'v23.0'"
+                      type: OAuthException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                invalid_phone_id:
+                  summary: Invalid phone number ID format
+                  value:
+                    error:
+                      message: >
+                        Invalid phone number ID format. Must be
+                        numeric.
+                      type: OAuthException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                invalid_fields:
+                  summary: Invalid fields parameter
+                  value:
+                    error:
+                      message: 'Invalid field requested. Available fields: name_status, code_verification_status'
+                      type: OAuthException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              examples:
+                invalid_token:
+                  summary: Invalid access token
+                  value:
+                    error:
+                      message: Invalid OAuth access token
+                      type: OAuthException
+                      code: 190
+                      error_subcode: 463
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                expired_token:
+                  summary: Expired access token
+                  value:
+                    error:
+                      message: 'Error validating access token: Session has expired'
+                      type: OAuthException
+                      code: 190
+                      error_subcode: 463
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                missing_token:
+                  summary: Missing access token
+                  value:
+                    error:
+                      message: >
+                        An access token is required to request
+                        this resource
+                      type: OAuthException
+                      code: 104
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions or access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              examples:
+                insufficient_permissions:
+                  summary: Insufficient app permissions
+                  value:
+                    error:
+                      message: >
+                        Your app doesn't have permission to
+                        access this phone number
+                      type: OAuthException
+                      code: 200
+                      error_subcode: 1349174
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                not_linked_to_waba:
+                  summary: >
+                    App not linked to WhatsApp Business
+                    Account
+                  value:
+                    error:
+                      message: >
+                        Your app is not linked to the WhatsApp
+                        Business Account that owns this phone
+                        number
+                      type: OAuthException
+                      code: 200
+                      error_subcode: 1349175
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                missing_permissions:
+                  summary: Missing required permissions
+                  value:
+                    error:
+                      message: >
+                        Requires whatsapp_business_messaging or
+                        whatsapp_business_management permission
+                      type: OAuthException
+                      code: 200
+                      error_subcode: 1349176
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        404:
+          description: 'Not Found - Phone number ID does not exist or is not accessible'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              examples:
+                phone_not_found:
+                  summary: Phone number not found
+                  value:
+                    error:
+                      message: Phone number not found
+                      type: GraphMethodException
+                      code: 803
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                deleted_phone:
+                  summary: Phone number has been deleted
+                  value:
+                    error:
+                      message: >
+                        This phone number has been deleted and
+                        is no longer accessible
+                      type: GraphMethodException
+                      code: 803
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                waba_not_found:
+                  summary: WhatsApp Business Account not found
+                  value:
+                    error:
+                      message: >
+                        The WhatsApp Business Account associated
+                        with this phone number could not be
+                        found
+                      type: GraphMethodException
+                      code: 803
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description: 'Unprocessable Entity - Request parameters are valid but cannot be processed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              examples:
+                phone_not_registered:
+                  summary: Phone number not registered
+                  value:
+                    error:
+                      message: >
+                        The phone number is not registered with
+                        WhatsApp Business API
+                      type: GraphMethodException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                phone_in_review:
+                  summary: Phone number under review
+                  value:
+                    error:
+                      message: >
+                        Phone number is currently under review
+                        and information is not available
+                      type: GraphMethodException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                temporarily_unavailable:
+                  summary: Phone number temporarily unavailable
+                  value:
+                    error:
+                      message: >
+                        Phone number information is temporarily
+                        unavailable. Please try again later.
+                      type: GraphMethodException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        429:
+          description: 'Too Many Requests - Rate limit exceeded'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              examples:
+                rate_limit_exceeded:
+                  summary: Application rate limit exceeded
+                  value:
+                    error:
+                      message: Application request limit reached
+                      type: OAuthException
+                      code: 4
+                      error_subcode: 2446079
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                      is_transient: true
+                user_rate_limit:
+                  summary: User-level rate limit exceeded
+                  value:
+                    error:
+                      message: User request limit reached
+                      type: OAuthException
+                      code: 17
+                      error_subcode: 2446079
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                      is_transient: true
+                business_rate_limit:
+                  summary: Business-level rate limit exceeded
+                  value:
+                    error:
+                      message: >
+                        Business request limit reached for
+                        WhatsApp Business Account
+                      type: OAuthException
+                      code: 80007
+                      error_subcode: 2446079
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                      is_transient: true
+        500:
+          description: 'Internal Server Error - Unexpected server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              examples:
+                internal_error:
+                  summary: Generic internal server error
+                  value:
+                    error:
+                      message: >
+                        An unexpected error occurred. Please
+                        retry your request
+                      type: GraphMethodException
+                      code: 2
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                      is_transient: true
+                service_unavailable:
+                  summary: WhatsApp service temporarily unavailable
+                  value:
+                    error:
+                      message: >
+                        WhatsApp Business API service is
+                        temporarily unavailable
+                      type: GraphMethodException
+                      code: 2
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                      is_transient: true
+                database_error:
+                  summary: Database connectivity error
+                  value:
+                    error:
+                      message: >
+                        Database temporarily unavailable. Please
+                        retry your request
+                      type: GraphMethodException
+                      code: 2
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                      is_transient: true
+      summary: >
+        Retrieve WhatsApp Business Phone Number
+        Information
+      description: |
+        Retrieve comprehensive information about a WhatsApp Business phone number using its unique ID (CSID).
+        This endpoint provides phone number status, verification details, quality metrics, and configuration information.
+        
+        **Core Information Returned:**
+        - Phone number ID and display format
+        - Verification status and verified business name
+        - Quality rating based on message delivery performance
+        - Code verification status for two-step verification
+        - Display name certification status (when requested)
+        
+        **Quality Rating System:**
+        The quality rating reflects how recipients have been receiving messages from this phone number:
+        - **GREEN**: High quality - messages are being delivered and engaged with well
+        - **YELLOW**: Medium quality - some delivery or engagement issues detected
+        - **RED**: Low quality - significant delivery or engagement problems
+        - **NA**: Quality rating not yet determined (new phone numbers)
+        
+        **Display Name Status:**
+        When requesting the `name_status` field, you'll receive the current certification status:
+        - **APPROVED**: Business name verified and certificate available for download
+        - **AVAILABLE_WITHOUT_REVIEW**: Certificate ready without additional review required
+        - **DECLINED**: Business name verification rejected
+        - **EXPIRED**: Existing certificate has expired and needs renewal
+        - **PENDING_REVIEW**: Name verification request is under review
+        - **NONE**: No certificate or verification request exists
+        
+        **Code Verification Status:**
+        Indicates the two-step verification status:
+        - **VERIFIED**: Phone number has completed two-step verification
+        - **UNVERIFIED**: Two-step verification is pending or incomplete
+        
+        **Use Cases:**
+        - Monitor phone number quality and delivery performance
+        - Check verification and certification status
+        - Validate phone number configuration before sending messages
+        - Retrieve display information for business profiles
+        - Audit phone number compliance and status
+        
+        For more information on quality ratings, see [WhatsApp Business Account Message Quality Rating](https://www.facebook.com/business/help/896873687365001).
+      operationId: getPhoneNumberById
+      tags:
+        - Phone Numbers
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+            Use the latest stable version for optimal performance and feature support.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v23.0
+        - 
+          name: Phone-Number-ID
+          in: path
+          description: |
+            Your WhatsApp Business Account phone number ID (CSID). This unique identifier is assigned when you
+            register the phone number with WhatsApp Business API and can be found in your WhatsApp Business Manager.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '106853218861309'
+        - 
+          name: fields
+          in: query
+          description: |
+            Comma-separated list of additional fields to include in the response. If not specified,
+            only default fields (id, display_phone_number, verified_name, quality_rating) are returned.
+            
+            **Available Fields:**
+            - `name_status`: Display name certification status for business verification
+            - `code_verification_status`: Two-step verification status for the phone number
+            
+            **Field Values:**
+            
+            **name_status** values:
+            - `APPROVED`: Business name approved, certificate available for download
+            - `AVAILABLE_WITHOUT_REVIEW`: Certificate ready without additional review
+            - `DECLINED`: Business name verification rejected
+            - `EXPIRED`: Certificate expired and needs renewal
+            - `PENDING_REVIEW`: Name verification under review
+            - `NONE`: No certificate or verification request exists
+            
+            **code_verification_status** values:
+            - `VERIFIED`: Phone number has completed two-step verification
+            - `UNVERIFIED`: Two-step verification pending or incomplete
+          required: false
+          schema:
+            type: string
+            example: name_status,code_verification_status
+    post:
+      responses:
+        200:
+          description: Operation completed successfully
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - 
+                    $ref: '#/components/schemas/MessageResponse'
+                  - 
+                    $ref: '#/components/schemas/SuccessResponse'
+              examples:
+                message_sent:
+                  summary: Message sent successfully
+                  value:
+                    messaging_product: whatsapp
+                    contacts:
+                      0:
+                        input: '+1234567890'
+                        wa_id: '1234567890'
+                    messages:
+                      0:
+                        id: >
+                          wamid.HBgLMTY3NzE4NDM4NjAVAgARGBI5QTRCMEM4RjA2NzY4RTlBNAA=
+                settings_updated:
+                  summary: Settings updated successfully
+                  value:
+                    success: true
+                phone_registered:
+                  summary: Phone number registered successfully
+                  value:
+                    success: true
+                code_verified:
+                  summary: Verification code verified successfully
+                  value:
+                    success: true
+                two_step_verification_set:
+                  summary: >
+                    Two-step verification code set
+                    successfully
+                  value:
+                    success: true
+        400:
+          description: 'Bad Request - Invalid parameters or malformed request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: 'Invalid parameter: recipient phone number format is incorrect'
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions or access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to
+                    access this phone number
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        404:
+          description: 'Not Found - Phone number ID does not exist or is not accessible'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Phone number not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description: 'Unprocessable Entity - Request parameters are valid but cannot be processed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: The phone number is not registered
+                  type: GraphMethodException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        429:
+          description: 'Too Many Requests - Rate limit exceeded'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Application request limit reached
+                  type: OAuthException
+                  code: 4
+                  error_subcode: 2446079
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+        500:
+          description: 'Internal Server Error - Unexpected server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please
+                    retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: >
+        Update WhatsApp Business Account Phone
+        Number Status and Configuration
+      description: |
+        Update the status and configuration of a WhatsApp Business Account phone number.
+        This endpoint supports comprehensive phone number management including status updates,
+        webhook configuration, security settings, and business profile management.
+        
+        **Supported Operations:**
+        - Update connection status between WhatsApp Business Account and phone number
+        - Configure webhook endpoints for message delivery notifications
+        - Set up two-step verification and security notifications
+        - Update display names for name verification
+        - Configure search visibility and privacy settings
+        - Set username for the WhatsApp Business Account
+        - Override webhook callback URIs for message notifications
+        
+        **Business Logic Requirements:**
+        - App must be linked to the WhatsApp Business Account
+        - Webhook subscription must exist before configuring callback URI overrides
+        - Callback URI verification is performed for external URLs
+        - Internal URLs are allowed for development environments
+        
+        **Rate Limiting:**
+        WhatsApp use case throttling applies. Use appropriate retry logic with exponential backoff.
+        
+        **Security Validations:**
+        - App-to-WABA linking validation enforced
+        - Webhook callback URI verification required for external URLs
+        - Business integration system user checks for AI bot onboarding
+        - Capability checks for first-party app access
+      operationId: updatePhoneNumberStatus
+      tags:
+        - Phone Numbers
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v23.0
+        - 
+          name: Phone-Number-ID
+          in: path
+          description: |
+            Your WhatsApp Business Account phone number ID (CSID). This ID is provided when you
+            register the phone number and can be found in your WhatsApp Business Manager.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhoneNumberStatusUpdateRequest'
+            examples:
+              update_connection_status:
+                summary: Update connection status
+                value:
+                  connection_status: CONNECTED
+              configure_webhook:
+                summary: Configure webhook URL
+                value:
+                  webhook_url: https://your-domain.com/webhook
+                  webhook_configuration:
+                    override_callback_uri: https://your-domain.com/webhook/override
+                    verify_token: YOUR_VERIFY_TOKEN
+              update_security_settings:
+                summary: >
+                  Update security and notification
+                  settings
+                value:
+                  whatsapp_business_api_data:
+                    pin: '123456'
+                    show_security_notifications: true
+                    notify_user_change_number: false
+                  search_visibility: VISIBLE
+              update_display_name:
+                summary: Update display name for verification
+                value:
+                  new_display_name: My New Business Name
+              set_username:
+                summary: Set WhatsApp Business Account username
+                value:
+                  username: mynewbusiness
+              comprehensive_update:
+                summary: >
+                  Comprehensive status and configuration
+                  update
+                value:
+                  connection_status: CONNECTED
+                  webhook_url: https://your-domain.com/webhook
+                  whatsapp_business_api_data:
+                    pin: '123456'
+                    show_security_notifications: true
+                    notify_user_change_number: false
+                  search_visibility: VISIBLE
+                  webhook_configuration:
+                    override_callback_uri: https://your-domain.com/webhook/override
+                    verify_token: YOUR_VERIFY_TOKEN
+                  new_display_name: My Business Name
+                  username: mybusiness
+        description: |
+          Configuration parameters for updating phone number status and settings.
+          All parameters are optional and can be combined in a single request.
+        required: false
+components:
+  schemas:
+    PhoneNumberInfo:
+      type: object
+      description: Phone number information and status
+      properties:
+        id:
+          type: string
+          description: The ID associated with the phone number
+          example: '1906385232743451'
+        display_phone_number:
+          type: string
+          description: >
+            The string representation of the phone
+            number
+          example: +1 631-555-5555
+        verified_name:
+          type: string
+          description: >
+            The verified name associated with the
+            phone number
+          example: Jasper's Market
+        quality_rating:
+          type: string
+          description: |
+            The quality rating of the phone number based on how messages have been received by recipients in recent days.
+            - GREEN: High Quality
+            - YELLOW: Medium Quality
+            - RED: Low Quality
+            - NA: Quality has not been determined
+          example: GREEN
+          enum:
+            - GREEN
+            - YELLOW
+            - RED
+            - NA
+        code_verification_status:
+          type: string
+          description: |
+            The two-step verification status for the phone number indicating whether the number has completed two-step verification.
+            - VERIFIED: Phone number has completed two-step verification
+            - UNVERIFIED: Two-step verification is pending or incomplete
+          example: VERIFIED
+          enum:
+            - VERIFIED
+            - UNVERIFIED
+        name_status:
+          type: string
+          description: |
+            The status of a display name associated with a specific phone number.
+            - APPROVED: The name has been approved. You can download your certificate now.
+            - AVAILABLE_WITHOUT_REVIEW: The certificate for the phone is available and display name is ready to use without review.
+            - DECLINED: The name has not been approved. You cannot download your certificate.
+            - EXPIRED: Your certificate has expired and can no longer be downloaded.
+            - PENDING_REVIEW: Your name request is under review. You cannot download your certificate.
+            - NONE: No certificate is available.
+          example: AVAILABLE_WITHOUT_REVIEW
+          enum:
+            - APPROVED
+            - AVAILABLE_WITHOUT_REVIEW
+            - DECLINED
+            - EXPIRED
+            - PENDING_REVIEW
+            - NONE
+    MessageRequest:
+      type: object
+      description: >
+        Request to send a message via WhatsApp
+        Business API
+      required:
+        - messaging_product
+        - to
+        - type
+      properties:
+        messaging_product:
+          type: string
+          description: Messaging service used for the request
+          example: whatsapp
+          enum:
+            - whatsapp
+        recipient_type:
+          type: string
+          description: Type of recipient
+          default: individual
+          example: individual
+          enum:
+            - individual
+            - group
+        to:
+          type: string
+          description: >
+            Recipient's phone number (with country
+            code) or group ID
+          example: '+1234567890'
+        type:
+          type: string
+          description: Type of message being sent
+          example: text
+          enum:
+            - text
+            - image
+            - audio
+            - video
+            - document
+            - location
+            - contacts
+            - template
+            - interactive
+            - reaction
+            - sticker
+        text:
+          $ref: '#/components/schemas/TextMessage'
+        context:
+          $ref: '#/components/schemas/MessageContext'
+    TextMessage:
+      type: object
+      required:
+        - body
+      properties:
+        body:
+          type: string
+          description: Text content of the message
+          example: Hello, this is a test message!
+          maxLength: 4096
+        preview_url:
+          type: boolean
+          description: Whether to show URL preview
+          default: false
+          example: false
+    MessageContext:
+      type: object
+      properties:
+        message_id:
+          type: string
+          description: ID of message being replied to
+          example: >
+            wamid.HBgLMTY3NzE4NDM4NjAVAgARGBI5QTRCMEM4RjA2NzY4RTlBNAA=
+    SettingsRequest:
+      type: object
+      description: Request to update phone number settings
+      properties:
+        calling:
+          $ref: '#/components/schemas/CallingSettings'
+    CallingSettings:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Enable or disable calling feature
+          example: enabled
+          enum:
+            - enabled
+            - disabled
+        call_icon_visibility:
+          type: string
+          description: Control visibility of the call icon
+          example: visible
+          enum:
+            - visible
+            - hidden
+    RegisterRequest:
+      type: object
+      required:
+        - messaging_product
+        - pin
+      properties:
+        messaging_product:
+          type: string
+          description: Messaging service used for the request
+          example: whatsapp
+          enum:
+            - whatsapp
+        pin:
+          type: string
+          description: 6-digit PIN for two-step verification
+          example: '123456'
+          pattern: '^[0-9]{6}$'
+    VerifyCodeRequest:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          description: >
+            6-digit verification code received via
+            SMS or voice
+          example: '123456'
+          pattern: '^[0-9]{6}$'
+    TwoStepVerificationRequest:
+      type: object
+      required:
+        - pin
+      properties:
+        pin:
+          type: string
+          description: 6-digit PIN for two-step verification
+          example: '123456'
+          pattern: '^[0-9]{6}$'
+    PhoneNumberStatusUpdateRequest:
+      type: object
+      description: >
+        Request to update phone number status
+        and configuration
+      properties:
+        connection_status:
+          $ref: '#/components/schemas/WhatsAppBusinessAccountToNumberStatus'
+        webhook_url:
+          type: string
+          format: uri
+          description: >
+            Webhook URL for receiving message
+            notifications
+          example: https://your-domain.com/webhook
+        whatsapp_business_api_data:
+          $ref: '#/components/schemas/WhatsAppBusinessApiData'
+        pin:
+          type: string
+          description: >
+            Two-step verification PIN (can be empty
+            string)
+          example: '123456'
+        search_visibility:
+          $ref: '#/components/schemas/WAAPIBusinessGlobalSearchStateStatus'
+        webhook_configuration:
+          $ref: '#/components/schemas/WebhookConfiguration'
+        new_display_name:
+          type: string
+          description: >
+            New display name for name verification
+            request
+          example: My Business Name
+          maxLength: 75
+          minLength: 2
+        username:
+          type: string
+          description: >
+            Username for the WhatsApp Business
+            Account
+          example: mybusiness
+    WhatsAppBusinessApiData:
+      type: object
+      description: WhatsApp Business API configuration data
+      properties:
+        pin:
+          type: string
+          description: >
+            Two-step verification PIN (can be empty
+            string)
+          example: '123456'
+        show_security_notifications:
+          type: boolean
+          description: Whether to show security notifications
+          example: true
+        notify_user_change_number:
+          type: boolean
+          description: >
+            Whether to notify users when changing
+            number
+          example: false
+    WebhookConfiguration:
+      type: object
+      description: Webhook configuration settings
+      required:
+        - override_callback_uri
+      properties:
+        override_callback_uri:
+          type: string
+          format: uri
+          description: >
+            Override callback URI for webhook
+            notifications (can be empty string)
+          example: https://your-domain.com/webhook/override
+        verify_token:
+          type: string
+          description: Token used to verify webhook requests
+          example: YOUR_VERIFY_TOKEN
+    WhatsAppBusinessAccountToNumberStatus:
+      type: string
+      description: >
+        Connection status between WhatsApp
+        Business Account and phone number
+      example: CONNECTED
+      enum:
+        - CONNECTED
+        - DISCONNECTED
+        - PENDING
+        - FLAGGED
+        - RESTRICTED
+        - RATE_LIMITED
+        - MESSAGING_LIMIT_TIER_0
+        - MESSAGING_LIMIT_TIER_1
+        - MESSAGING_LIMIT_TIER_2
+        - MESSAGING_LIMIT_TIER_3
+        - MESSAGING_LIMIT_TIER_4
+    WAAPIBusinessGlobalSearchStateStatus:
+      type: string
+      description: >
+        Search visibility status for the
+        WhatsApp Business Account
+      example: VISIBLE
+      enum:
+        - VISIBLE
+        - HIDDEN
+    MessageResponse:
+      type: object
+      description: Response from sending a message
+      required:
+        - messaging_product
+        - contacts
+        - messages
+      properties:
+        messaging_product:
+          type: string
+          description: Messaging service
+          example: whatsapp
+          enum:
+            - whatsapp
+        contacts:
+          type: array
+          description: Contact information
+          items:
+            $ref: '#/components/schemas/ContactResponse'
+        messages:
+          type: array
+          description: Message information
+          items:
+            $ref: '#/components/schemas/MessageResponseItem'
+    ContactResponse:
+      type: object
+      required:
+        - input
+      properties:
+        input:
+          type: string
+          description: Input phone number
+          example: '+1234567890'
+        wa_id:
+          type: string
+          description: WhatsApp ID
+          example: '1234567890'
+    MessageResponseItem:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: Message ID
+          example: >
+            wamid.HBgLMTY3NzE4NDM4NjAVAgARGBI5QTRCMEM4RjA2NzY4RTlBNAA=
+    SuccessResponse:
+      type: object
+      description: Generic success response
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+          description: Operation success status
+          example: true
+    GraphAPIError:
+      type: object
+      description: Standard Graph API error response
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - type
+            - code
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid parameter
+            type:
+              type: string
+              description: Error category type
+              example: OAuthException
+            code:
+              type: integer
+              description: Numeric error code
+              example: 100
+            error_subcode:
+              type: integer
+              description: >
+                More specific error subcode when
+                available
+              example: 33
+            fbtrace_id:
+              type: string
+              description: >
+                Unique identifier for debugging and
+                support requests with Meta
+              example: AXsgnV2Cm3ZMGF3dF_cfYIn
+            is_transient:
+              type: boolean
+              description: >
+                Indicates whether this error is
+                temporary and the request should be
+                retried
+              example: false
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

@@ -9,6 +9,7 @@
 import type { KyInstance, Options as KyOptions } from "ky";
 import ky from "ky";
 import BusinessProfile from "./BusinessProfile/index.js";
+import ConversationalAutomation from "./ConversationalAutomation/index.js";
 import Media from "./Media/index.js";
 import Message from "./Message/index.js";
 import PhoneNumbers from "./PhoneNumbers/index.js";
@@ -55,6 +56,8 @@ export default class Client {
   /** Business-Profile APIs */
   public businessProfile: BusinessProfile;
 
+  public conversationalAutomation: ConversationalAutomation;
+
   /** Media APIs */
   public media: Media;
 
@@ -95,6 +98,9 @@ export default class Client {
     });
 
     this.businessProfile = new BusinessProfile(this._transport);
+    this.conversationalAutomation = new ConversationalAutomation(
+      this._transport,
+    );
     this.media = new Media(this._transport);
     this.message = new Message(this._transport);
     this.phoneNumbers = new PhoneNumbers(this._transport);

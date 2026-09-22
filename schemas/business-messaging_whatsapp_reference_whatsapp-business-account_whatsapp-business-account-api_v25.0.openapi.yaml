@@ -1,0 +1,569 @@
+---
+openapi: 3.1.0
+info:
+  title: WhatsApp Business Account API
+  version: v25.0
+  description: |
+    API for managing WhatsApp Business Account details and configuration.
+    This endpoint allows businesses to retrieve and manage their WhatsApp Business Account
+    information, including account details, status, and configuration settings. This is
+    essential for managing WhatsApp Business messaging capabilities and account lifecycle.
+  termsOfService: https://developers.facebook.com/terms
+  contact:
+    name: WhatsApp Business Messaging Team
+    url: https://developers.facebook.com/support
+  license:
+    name: Meta Platform Terms
+    url: https://developers.facebook.com/terms
+servers:
+  - 
+    url: https://graph.facebook.com
+    description: Production Graph API server
+tags:
+  - 
+    name: WhatsApp Business Account
+    description: >
+      APIs for managing WhatsApp Business
+      Account details and configuration
+paths:
+  /{Version}/{WABA-ID}:
+    get:
+      responses:
+        200:
+          description: >
+            Successfully retrieved WhatsApp Business
+            Account details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsAppBusinessAccount'
+              examples:
+                verified_account:
+                  summary: >
+                    Verified WhatsApp Business Account with
+                    full details
+                  value:
+                    id: '1234567890123456'
+                    name: My Business WhatsApp Account
+                    timezone_id: '1'
+                    message_template_namespace: ba30dd89_2ebd_41e4_b805_f2c05ae04cc9
+                    account_review_status: APPROVED
+                    business_verification_status: VERIFIED
+                    country: US
+                    ownership_type: SELF
+                    primary_business_location: US
+                basic_account:
+                  summary: >
+                    Basic WhatsApp Business Account with
+                    minimal details
+                  value:
+                    id: '2345678901234567'
+                    name: Test Business Account
+                    timezone_id: '1'
+                    account_review_status: PENDING
+                    business_verification_status: NOT_VERIFIED
+        400:
+          description: 'Bad Request - Invalid parameters or malformed request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: 'Invalid parameter: whatsapp_business_account_id must be a valid numeric string'
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions or access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to
+                    access this WhatsApp Business Account
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  error_user_title: Permission Denied
+                  error_user_msg: >
+                    Your app doesn't have permission to
+                    access this resource
+        404:
+          description: 'Not Found - WhatsApp Business Account ID does not exist or is not accessible'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: WhatsApp Business Account not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description: 'Unprocessable Entity - Request parameters are valid but cannot be processed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    The requested fields are not available
+                    for this account
+                  type: GraphMethodException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: 'Internal Server Error - Unexpected server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please
+                    retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Get WhatsApp Business Account Details
+      description: |
+        Retrieve comprehensive details about a WhatsApp Business Account, including its
+        configuration, status, and settings.
+        
+        **Rate Limiting:**
+        Standard Graph API rate limits apply. Use appropriate retry logic with exponential backoff.
+        
+        **Caching:**
+        Account details can be cached for moderate periods, but verification status may change.
+        Implement appropriate cache invalidation strategies.
+      operationId: getWhatsAppBusinessAccountDetails
+      tags:
+        - WhatsApp Business Account
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: WABA-ID
+          in: path
+          description: |
+            Your WhatsApp Business Account ID. This ID is provided when you create the account
+            and can be found in your WhatsApp Manager or through business management APIs.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+        - 
+          name: fields
+          in: query
+          description: |
+            Comma-separated list of fields to include in the response. If not specified,
+            default fields will be returned (id, name). Available fields: id, name, timezone_id,
+            message_template_namespace, account_review_status, business_verification_status,
+            country, ownership_type, primary_business_location
+          required: false
+          schema:
+            type: string
+          example: >
+            id,name,timezone_id,account_review_status
+    post:
+      responses:
+        200:
+          description: >
+            Successfully updated WhatsApp Business
+            Account
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+              example:
+                success: true
+        400:
+          description: 'Bad Request - Invalid parameters or malformed request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: 'Invalid parameter: name must be a non-empty string'
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions or access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to
+                    modify this WhatsApp Business Account
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  error_user_title: Permission Denied
+                  error_user_msg: >
+                    Your app doesn't have permission to
+                    modify this resource
+        404:
+          description: 'Not Found - WhatsApp Business Account ID does not exist or is not accessible'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: WhatsApp Business Account not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description: 'Unprocessable Entity - Request parameters are valid but cannot be processed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    The account cannot be updated at this
+                    time
+                  type: GraphMethodException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: 'Internal Server Error - Unexpected server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please
+                    retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Update WhatsApp Business Account
+      description: |
+        Update configuration and settings for a WhatsApp Business Account.
+        
+        **Rate Limiting:**
+        Standard Graph API rate limits apply. Use appropriate retry logic with exponential backoff.
+      operationId: updateWhatsAppBusinessAccount
+      tags:
+        - WhatsApp Business Account
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: WABA-ID
+          in: path
+          description: |
+            Your WhatsApp Business Account ID. This ID is provided when you create the account
+            and can be found in your WhatsApp Manager or through business management APIs.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: >
+                    Updated name for the WhatsApp Business
+                    Account
+                  example: Updated Business Name
+                  maxLength: 100
+                  minLength: 1
+                timezone_id:
+                  type: string
+                  description: >
+                    Updated timezone identifier for the
+                    WhatsApp Business Account
+                  example: '2'
+            examples:
+              update_name:
+                summary: Update account name
+                value:
+                  name: Updated Business Name
+              update_timezone:
+                summary: Update timezone
+                value:
+                  timezone_id: '2'
+        required: true
+components:
+  schemas:
+    WhatsAppBusinessAccount:
+      type: object
+      description: >
+        WhatsApp Business Account details and
+        configuration
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          description: >
+            Unique identifier for the WhatsApp
+            Business Account
+          example: '1234567890123456'
+        name:
+          type: string
+          description: >
+            Human-readable name of the WhatsApp
+            Business Account
+          example: My Business WhatsApp Account
+          maxLength: 100
+          minLength: 1
+        timezone_id:
+          type: string
+          description: >
+            Timezone identifier for the WhatsApp
+            Business Account
+          example: '1'
+        message_template_namespace:
+          type: string
+          description: >
+            Message template namespace for the
+            WhatsApp Business Account
+          example: ba30dd89_2ebd_41e4_b805_f2c05ae04cc9
+        account_review_status:
+          $ref: '#/components/schemas/WhatsAppBusinessAccountReviewStatus'
+        business_verification_status:
+          $ref: '#/components/schemas/WhatsAppBusinessAccountVerificationStatus'
+        country:
+          type: string
+          description: >
+            Country code for the WhatsApp Business
+            Account
+          example: US
+        ownership_type:
+          $ref: '#/components/schemas/WhatsAppBusinessAccountOwnershipType'
+        primary_business_location:
+          type: string
+          description: >
+            Primary business location for the
+            WhatsApp Business Account
+          example: US
+    WhatsAppBusinessAccountReviewStatus:
+      type: string
+      description: >
+        Review status of the WhatsApp Business
+        Account
+      example: APPROVED
+      enum:
+        - APPROVED
+        - DEFERRED
+        - PENDING
+        - REJECTED
+    WhatsAppBusinessAccountVerificationStatus:
+      type: string
+      description: >
+        Business verification status of the
+        WhatsApp Business Account
+      example: VERIFIED
+      enum:
+        - EXPIRED
+        - FAILED
+        - INELIGIBLE
+        - NOT_VERIFIED
+        - PENDING
+        - PENDING_NEED_MORE_INFO
+        - PENDING_SUBMISSION
+        - REJECTED
+        - REVOKED
+        - VERIFIED
+    WhatsAppBusinessAccountOwnershipType:
+      type: string
+      description: >
+        Ownership type of the WhatsApp Business
+        Account
+      example: SELF
+      enum:
+        - CLIENT_OWNED
+        - ON_BEHALF_OF
+        - SELF
+    GraphAPIError:
+      type: object
+      description: Standard Graph API error response
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - type
+            - code
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid parameter
+            type:
+              type: string
+              description: Error category type
+              example: OAuthException
+            code:
+              type: integer
+              description: Numeric error code
+              example: 100
+            error_subcode:
+              type: integer
+              description: >
+                More specific error subcode when
+                available
+              example: 33
+            fbtrace_id:
+              type: string
+              description: >
+                Unique identifier for debugging and
+                support requests with Meta
+              example: AXsgnV2Cm3ZMGF3dF_cfYIn
+            is_transient:
+              type: boolean
+              description: >
+                Indicates whether this error is
+                temporary and the request should be
+                retried
+              example: false
+            error_user_title:
+              type: string
+              description: >
+                User-friendly error title for display
+                purposes
+              example: Permission Denied
+            error_user_msg:
+              type: string
+              description: >
+                User-friendly error message for display
+                purposes
+              example: >
+                Your app doesn't have permission to
+                access this resource
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

@@ -1,0 +1,1488 @@
+---
+openapi: 3.1.0
+info:
+  title: 'WhatsApp Cloud API - Message Template API'
+  version: v25.0
+  description: |
+    Create, retrieve, update, and delete message templates for WhatsApp Business.
+    Message templates are pre-approved message formats required for business-initiated
+    conversations outside the 24-hour customer service window.
+  termsOfService: https://developers.facebook.com/terms
+  contact:
+    name: WhatsApp Business Messaging Team
+    url: https://developers.facebook.com/support
+  license:
+    name: Meta Platform Terms
+    url: https://developers.facebook.com/terms
+servers:
+  - 
+    url: https://graph.facebook.com
+    description: Production Graph API server
+tags:
+  - 
+    name: Templates
+    description: >
+      APIs for managing WhatsApp Business
+      message templates
+paths:
+  /{Version}/{WABA-ID}/message_templates:
+    get:
+      responses:
+        200:
+          description: Successfully retrieved message templates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageTemplatesResponse'
+              examples:
+                templates_list:
+                  summary: List of message templates
+                  value:
+                    data:
+                      0:
+                        id: '1234567890123456'
+                        name: hello_world
+                        status: APPROVED
+                        category: UTILITY
+                        language: en_US
+                        parameter_format: NAMED
+                        message_send_ttl_seconds: 86400
+                        is_primary_device_delivery_only: false
+                        quality_score:
+                          score: GREEN
+                          date: 1705312200
+                        source: manual
+                        components:
+                          0:
+                            type: HEADER
+                            format: TEXT
+                            text: 'Hello {{1}}'
+                          1:
+                            type: BODY
+                            text: 'Welcome to our service, {{1}}!'
+                          2:
+                            type: FOOTER
+                            text: Reply STOP to unsubscribe
+                      1:
+                        id: '2345678901234567'
+                        name: order_update
+                        status: APPROVED
+                        category: UTILITY
+                        sub_category: ORDER_STATUS
+                        language: en_US
+                        quality_score:
+                          score: GREEN
+                          date: 1705312200
+                        source: manual
+                    paging:
+                      cursors:
+                        after: QVFIUjJ5WjBpMGpJWXprYzVYaVhabW9PVks4ZD0
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid parameter
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Insufficient permissions to access
+                    templates
+                  type: OAuthException
+                  code: 200
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: WhatsApp Business Account not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: An unexpected error occurred
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: List Message Templates
+      description: |
+        Retrieve message templates for a WhatsApp Business Account. Returns paginated
+        results with template details including status, category, components, and quality scores.
+      operationId: listMessageTemplates
+      tags:
+        - Templates
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: Graph API version
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: WABA-ID
+          in: path
+          description: WhatsApp Business Account ID
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+        - 
+          name: fields
+          in: query
+          description: |
+            Comma-separated list of fields to include in the response.
+            Available fields: id, ad_account_id, ad_adset_id, ad_campaign_id, ad_id,
+            bid_spec, category, components, correct_category, cta_url_link_tracking_opted_out,
+            degrees_of_freedom_spec, display_format, health_status, is_primary_device_delivery_only,
+            is_sms_fallback_enabled, language, last_updated_time, library_template_name,
+            message_send_ttl_seconds, name, parameter_format, previous_category, quality_score,
+            rejected_reason, source, status, sub_category
+          required: false
+          schema:
+            type: string
+          example: >
+            id,name,status,category,language,components,quality_score
+        - 
+          name: limit
+          in: query
+          description: >
+            Maximum number of templates to return
+            per page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+          example: 25
+        - 
+          name: after
+          in: query
+          description: Cursor for next page of results
+          required: false
+          schema:
+            type: string
+        - 
+          name: before
+          in: query
+          description: Cursor for previous page of results
+          required: false
+          schema:
+            type: string
+    post:
+      responses:
+        200:
+          description: Template created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTemplateResponse'
+              examples:
+                marketing_template:
+                  summary: >
+                    Marketing template with quick reply
+                    buttons
+                  value:
+                    id: '1234567890123456'
+                    status: PENDING
+                    category: MARKETING
+                authentication_template:
+                  summary: Authentication template response
+                  value:
+                    id: '2345678901234567'
+                    status: PENDING
+                    category: AUTHENTICATION
+                utility_template:
+                  summary: Utility template response
+                  value:
+                    id: '3456789012345678'
+                    status: PENDING
+                    category: UTILITY
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: 'Invalid parameter: name must contain only lowercase alphanumeric characters and underscores'
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Insufficient permissions to create
+                    templates
+                  type: OAuthException
+                  code: 200
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: An unexpected error occurred
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Create Message Template
+      description: |
+        Create a new message template for a WhatsApp Business Account. Templates must be
+        approved before they can be used to send messages.
+      operationId: createMessageTemplate
+      tags:
+        - Templates
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: Graph API version
+          required: true
+          schema:
+            type: string
+          example: v25.0
+        - 
+          name: WABA-ID
+          in: path
+          description: WhatsApp Business Account ID
+          required: true
+          schema:
+            type: string
+          example: '1234567890123456'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - language
+                - category
+              properties:
+                name:
+                  type: string
+                  description: >
+                    Template name (lowercase alphanumeric
+                    and underscores only)
+                  example: order_confirmation
+                language:
+                  type: string
+                  description: Template language code
+                  example: en_US
+                category:
+                  $ref: '#/components/schemas/WhatsAppBusinessHSMTag'
+                parameter_format:
+                  $ref: '#/components/schemas/BusinessMessagingHSMParameterFormat'
+                components:
+                  type: array
+                  description: Template components
+                  items:
+                    type: object
+                allow_category_change:
+                  type: boolean
+                  description: >
+                    Allow Meta to reassign the template
+                    category
+                  example: true
+                cta_url_link_tracking_opted_out:
+                  type: boolean
+                  description: Opt out of CTA URL link tracking
+                  example: false
+                message_send_ttl_seconds:
+                  type: integer
+                  description: >
+                    Time-to-live for messages using this
+                    template
+                  example: 86400
+                sub_category:
+                  $ref: '#/components/schemas/WhatsAppBusinessHSMTagSubCategory'
+                display_format:
+                  $ref: '#/components/schemas/WhatsAppBusinessMessageDisplayFormat'
+                library_template_name:
+                  type: string
+                  description: Name of the library template to clone
+                library_template_button_inputs:
+                  type: array
+                  description: >
+                    Button inputs for library template
+                    cloning
+                  items:
+                    type: object
+                library_template_body_inputs:
+                  type: object
+                  description: Body inputs for library template cloning
+                is_primary_device_delivery_only:
+                  type: boolean
+                  description: Restrict to primary device delivery only
+                  example: false
+                send_type:
+                  $ref: '#/components/schemas/WhatsAppBusinessMarketingMessagesHSMSendType'
+            examples:
+              marketing_with_quick_reply:
+                summary: >
+                  Marketing template with text header and
+                  quick reply buttons
+                value:
+                  name: seasonal_promotion
+                  language: en
+                  category: MARKETING
+                  components:
+                    0:
+                      type: HEADER
+                      format: TEXT
+                      text: 'Our {{1}} is on!'
+                      example:
+                        header_text:
+                          - Summer Sale
+                    1:
+                      type: BODY
+                      text: 'Shop now through {{1}} and use code {{2}} to get {{3}} off.'
+                      example:
+                        body_text:
+                          0:
+                            0: 25OFF
+                            1: 25%
+                    2:
+                      type: FOOTER
+                      text: >
+                        Use the buttons below to manage your
+                        subscriptions
+                    3:
+                      type: BUTTONS
+                      buttons:
+                        0:
+                          type: QUICK_REPLY
+                          text: Unsubscribe from Promos
+                        1:
+                          type: QUICK_REPLY
+                          text: Unsubscribe from All
+              authentication_otp_copy_code:
+                summary: >
+                  Authentication template with OTP copy
+                  code button
+                value:
+                  name: authentication_code_copy_code
+                  language: en_US
+                  category: AUTHENTICATION
+                  components:
+                    0:
+                      type: BODY
+                      add_security_recommendation: true
+                    1:
+                      type: FOOTER
+                      code_expiration_minutes: 10
+                    2:
+                      type: BUTTONS
+                      buttons:
+                        0:
+                          type: OTP
+                          otp_type: COPY_CODE
+                          text: Copy Code
+              authentication_otp_one_tap:
+                summary: >
+                  Authentication template with OTP one-tap
+                  autofill button
+                value:
+                  name: authentication_code_autofill
+                  language: en_US
+                  category: AUTHENTICATION
+                  components:
+                    0:
+                      type: BODY
+                      add_security_recommendation: true
+                    1:
+                      type: FOOTER
+                      code_expiration_minutes: 10
+                    2:
+                      type: BUTTONS
+                      buttons:
+                        0:
+                          type: OTP
+                          otp_type: ONE_TAP
+                          text: Copy Code
+                          autofill_text: Autofill
+                          package_name: com.example.myapp
+                          signature_hash: K8a%2FAINcGX7
+              flow_template_by_id:
+                summary: Flow template by Flow ID
+                value:
+                  name: flow_offer
+                  language: en_US
+                  category: MARKETING
+                  components:
+                    0:
+                      type: BODY
+                      text: Check out this new offer
+                    1:
+                      type: BUTTONS
+                      buttons:
+                        0:
+                          type: FLOW
+                          text: Check out this offer!
+                          flow_id: '1234567890'
+                          flow_action: navigate
+                          navigate_screen: WELCOME_SCREEN
+              utility_with_document_header:
+                summary: >
+                  Utility template with document header
+                  and call-to-action buttons
+                value:
+                  name: order_confirmation
+                  language: en_US
+                  category: UTILITY
+                  components:
+                    0:
+                      type: HEADER
+                      format: DOCUMENT
+                      example:
+                        header_handle:
+                          - 4::YXBwbGljYXRpb24vcGRm:ARZVv...
+                    1:
+                      type: BODY
+                      text: 'Thank you for your order, {{1}}! Your order number is {{2}}.'
+                      example:
+                        body_text:
+                          0:
+                            - 860198-230332
+                    2:
+                      type: BUTTONS
+                      buttons:
+                        0:
+                          type: PHONE_NUMBER
+                          text: Call
+                          phone_number: '16467043595'
+                        1:
+                          type: URL
+                          text: Contact Support
+                          url: https://www.example.com/support
+        required: true
+    delete:
+      responses:
+        200:
+          description: Templates deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              example:
+                success: true
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid parameter
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: An unexpected error occurred
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Delete Message Templates
+      description: |
+        Delete message templates from a WhatsApp Business Account. Can delete by name
+        (all languages), by specific template ID, or by multiple template IDs.
+      operationId: deleteMessageTemplates
+      tags:
+        - Templates
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: Graph API version
+          required: true
+          schema:
+            type: string
+          example: v25.0
+        - 
+          name: WABA-ID
+          in: path
+          description: WhatsApp Business Account ID
+          required: true
+          schema:
+            type: string
+          example: '1234567890123456'
+        - 
+          name: name
+          in: query
+          description: >
+            Template name to delete (deletes all
+            languages if hsm_id not specified)
+          required: false
+          schema:
+            type: string
+          example: hello_world
+        - 
+          name: hsm_id
+          in: query
+          description: >
+            Specific template ID to delete (used
+            with name for single-language deletion)
+          required: false
+          schema:
+            type: string
+          example: '1234567890123456'
+        - 
+          name: hsm_ids
+          in: query
+          description: >
+            JSON array of template IDs to delete
+            (max 100)
+          required: false
+          schema:
+            type: string
+          example: '["1234567890123456","2345678901234567"]'
+  /{Version}/{TEMPLATE_ID}:
+    get:
+      responses:
+        200:
+          description: Successfully retrieved message template
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageTemplate'
+              examples:
+                approved_template:
+                  summary: Approved marketing template
+                  value:
+                    id: '1234567890123456'
+                    name: seasonal_promotion
+                    status: APPROVED
+                    category: MARKETING
+                    language: en_US
+                    parameter_format: NAMED
+                    message_send_ttl_seconds: 86400
+                    is_primary_device_delivery_only: false
+                    is_sms_fallback_enabled: false
+                    last_updated_time: 1705312200
+                    source: manual
+                    quality_score:
+                      score: GREEN
+                      date: 1705312200
+                    components:
+                      0:
+                        type: BODY
+                        text: 'Hi {{1}}, check out our seasonal sale!'
+                rejected_template:
+                  summary: Rejected template
+                  value:
+                    id: '2345678901234567'
+                    name: bad_template
+                    status: REJECTED
+                    category: MARKETING
+                    language: en_US
+                    rejected_reason: PROMOTIONAL
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid parameter
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Template not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: An unexpected error occurred
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Get Message Template by ID
+      description: |
+        Retrieve a specific message template by its ID with all available fields.
+      operationId: getMessageTemplateById
+      tags:
+        - Templates
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: Graph API version
+          required: true
+          schema:
+            type: string
+          example: v25.0
+        - 
+          name: TEMPLATE_ID
+          in: path
+          description: Message template ID
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+        - 
+          name: fields
+          in: query
+          description: |
+            Comma-separated list of fields to include in the response.
+            Available fields: id, ad_account_id, ad_adset_id, ad_campaign_id, ad_id,
+            bid_spec, category, components, correct_category, cta_url_link_tracking_opted_out,
+            degrees_of_freedom_spec, display_format, health_status, is_primary_device_delivery_only,
+            is_sms_fallback_enabled, language, last_updated_time, library_template_name,
+            message_send_ttl_seconds, name, parameter_format, previous_category, quality_score,
+            rejected_reason, source, status, sub_category
+          required: false
+          schema:
+            type: string
+          example: >
+            id,name,status,category,language,components
+    post:
+      responses:
+        200:
+          description: Template updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              example:
+                success: true
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid parameter
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: An unexpected error occurred
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Edit Message Template
+      description: |
+        Update an existing message template. Only approved or rejected templates can be edited.
+      operationId: editMessageTemplate
+      tags:
+        - Templates
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: Graph API version
+          required: true
+          schema:
+            type: string
+          example: v25.0
+        - 
+          name: TEMPLATE_ID
+          in: path
+          description: Message template ID to edit
+          required: true
+          schema:
+            type: string
+          example: '1234567890123456'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                components:
+                  type: array
+                  description: Updated template components
+                  items:
+                    type: object
+                category:
+                  $ref: '#/components/schemas/WhatsAppBusinessHSMTag'
+                parameter_format:
+                  $ref: '#/components/schemas/BusinessMessagingHSMParameterFormat'
+                allow_category_change:
+                  type: boolean
+                  description: >
+                    Allow Meta to reassign the template
+                    category
+                cta_url_link_tracking_opted_out:
+                  type: boolean
+                  description: Opt out of CTA URL link tracking
+                message_send_ttl_seconds:
+                  type: integer
+                  description: >
+                    Time-to-live for messages using this
+                    template
+                sub_category:
+                  $ref: '#/components/schemas/WhatsAppBusinessHSMTagSubCategory'
+                display_format:
+                  $ref: '#/components/schemas/WhatsAppBusinessMessageDisplayFormat'
+                is_primary_device_delivery_only:
+                  type: boolean
+                  description: Restrict to primary device delivery only
+            examples:
+              edit_rejected_template:
+                summary: >
+                  Edit a rejected template with updated
+                  components
+                value:
+                  category: MARKETING
+                  components:
+                    0:
+                      type: HEADER
+                      format: TEXT
+                      text: Fall Sale
+                    1:
+                      type: BODY
+                      text: 'Hi {{1}}, our Fall Sale is on! Use code {{2}} for {{3}} off.'
+                      example:
+                        body_text:
+                          0:
+                            0: 25OFF
+                            1: 25%
+                    2:
+                      type: FOOTER
+                      text: Not interested? Tap Stop Promotions
+                    3:
+                      type: BUTTONS
+                      buttons:
+                        0:
+                          type: QUICK_REPLY
+                          text: Stop promotions
+        required: true
+components:
+  schemas:
+    MessageTemplate:
+      type: object
+      description: WhatsApp Business message template (HSM)
+      properties:
+        id:
+          type: string
+          description: >
+            Unique identifier for the message
+            template
+          example: '1234567890123456'
+        ad_account_id:
+          type: string
+          description: >
+            Associated ad account ID for
+            click-to-WhatsApp ad templates
+          example: '9876543210987654'
+        ad_adset_id:
+          type: string
+          description: Associated ad set ID
+          example: '1111111111111111'
+        ad_campaign_id:
+          type: string
+          description: Associated ad campaign ID
+          example: '2222222222222222'
+        ad_id:
+          type: string
+          description: Associated ad group ID
+          example: '3333333333333333'
+        bid_spec:
+          type: object
+          description: >
+            Bid specification for marketing message
+            templates
+          properties:
+            bid_strategy:
+              type: string
+              description: Bid strategy for the template
+            bid_amount:
+              type: integer
+              description: Bid amount in currency minor units
+        category:
+          $ref: '#/components/schemas/WhatsAppBusinessHSMTag'
+        components:
+          type: array
+          description: >
+            Template components (header, body,
+            footer, buttons)
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Component type
+                enum:
+                  - BODY
+                  - BUTTONS
+                  - CAROUSEL
+                  - FOOTER
+                  - HEADER
+                  - LIMITED_TIME_OFFER
+              text:
+                type: string
+                description: Text content of the component
+              format:
+                type: string
+                description: Format of the header component
+                enum:
+                  - DOCUMENT
+                  - IMAGE
+                  - LOCATION
+                  - TEXT
+                  - VIDEO
+              buttons:
+                type: array
+                description: Button components
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      description: Button type
+                      enum:
+                        - CATALOG
+                        - COPY_CODE
+                        - FLOW
+                        - MPM
+                        - OTP
+                        - PHONE_NUMBER
+                        - QUICK_REPLY
+                        - URL
+                    text:
+                      type: string
+                      description: Button label text
+                    url:
+                      type: string
+                      description: URL for URL buttons
+                    phone_number:
+                      type: string
+                      description: Phone number for call buttons
+                    otp_type:
+                      type: string
+                      description: >
+                        OTP button type for authentication
+                        templates
+                      enum:
+                        - COPY_CODE
+                        - ONE_TAP
+                        - ZERO_TAP
+                    autofill_text:
+                      type: string
+                      description: >
+                        Autofill button text for one-tap OTP
+                        buttons
+                    package_name:
+                      type: string
+                      description: >
+                        Android package name for one-tap OTP
+                        buttons
+                    signature_hash:
+                      type: string
+                      description: >
+                        Android app signature hash for one-tap
+                        OTP buttons
+                    flow_id:
+                      type: string
+                      description: Flow ID for flow buttons
+                    flow_name:
+                      type: string
+                      description: >
+                        Flow name for flow buttons (alternative
+                        to flow_id)
+                    flow_json:
+                      type: string
+                      description: >
+                        Inline flow JSON definition for flow
+                        buttons
+                    flow_action:
+                      type: string
+                      description: Flow action type
+                      enum:
+                        - data_exchange
+                        - navigate
+                    navigate_screen:
+                      type: string
+                      description: >
+                        Screen ID to navigate to for flow
+                        buttons
+              add_security_recommendation:
+                type: boolean
+                description: >
+                  Whether to add security recommendation
+                  text to authentication templates
+              code_expiration_minutes:
+                type: integer
+                description: >
+                  OTP code expiration time in minutes for
+                  authentication templates
+              example:
+                type: object
+                description: Example values for template parameters
+                properties:
+                  header_text:
+                    type: array
+                    description: >
+                      Example values for header text
+                      parameters
+                    items:
+                      type: string
+                  header_handle:
+                    type: array
+                    description: >
+                      Media handle IDs for header media
+                      examples
+                    items:
+                      type: string
+                  body_text:
+                    type: array
+                    description: Example values for body text parameters
+                    items:
+                      type: array
+                      items:
+                        type: string
+        correct_category:
+          $ref: '#/components/schemas/WhatsAppBusinessHSMTag'
+        cta_url_link_tracking_opted_out:
+          type: boolean
+          description: >
+            Whether CTA URL link tracking is opted
+            out
+          example: false
+        degrees_of_freedom_spec:
+          type: object
+          description: >
+            Marketing message creative degrees of
+            freedom specification
+        display_format:
+          $ref: '#/components/schemas/WhatsAppBusinessMessageDisplayFormat'
+        health_status:
+          type: object
+          description: >
+            Health status information for the
+            template
+          properties:
+            can_send_message:
+              type: string
+              description: >
+                Whether messages can be sent using this
+                template
+        is_primary_device_delivery_only:
+          type: boolean
+          description: >
+            Whether this template is restricted to
+            primary device delivery only
+          example: false
+        is_sms_fallback_enabled:
+          type: boolean
+          description: >
+            Whether SMS fallback is enabled for this
+            template
+          example: false
+        language:
+          type: string
+          description: Language code of the template
+          example: en_US
+        last_updated_time:
+          type: integer
+          format: int64
+          description: >
+            Unix timestamp when the template was
+            last updated
+          example: 1705312200
+        library_template_name:
+          type: string
+          description: >
+            Name of the library template this was
+            created from
+          example: welcome_message
+        message_send_ttl_seconds:
+          type: integer
+          format: int64
+          description: >
+            Time-to-live in seconds for messages
+            sent using this template
+          example: 86400
+        name:
+          type: string
+          description: Name of the template
+          example: hello_world
+        parameter_format:
+          $ref: '#/components/schemas/BusinessMessagingHSMParameterFormat'
+        previous_category:
+          $ref: '#/components/schemas/WhatsAppBusinessHSMTag'
+        quality_score:
+          type: object
+          description: >
+            Quality score information for the
+            template
+          properties:
+            score:
+              $ref: '#/components/schemas/WhatsAppBusinessHSMQualityScore'
+            reason:
+              type: string
+              description: Reason for the current quality score
+            reasons:
+              type: array
+              description: >
+                List of reasons affecting the quality
+                score
+              items:
+                type: string
+            date:
+              type: integer
+              format: int64
+              description: >
+                Unix timestamp of the quality score
+                evaluation
+        rejected_reason:
+          $ref: '#/components/schemas/WhatsAppBusinessHSMRejectionReason'
+        source:
+          $ref: '#/components/schemas/WhatsAppBusinessHSMSource'
+        status:
+          $ref: '#/components/schemas/WhatsAppBusinessHSMStatus'
+        sub_category:
+          $ref: '#/components/schemas/WhatsAppBusinessHSMTagSubCategory'
+    WhatsAppBusinessHSMTag:
+      type: string
+      description: Template category
+      example: MARKETING
+      enum:
+        - AUTHENTICATION
+        - FREE_SERVICE
+        - MARKETING
+        - UTILITY
+    WhatsAppBusinessHSMStatus:
+      type: string
+      description: Current status of the message template
+      example: APPROVED
+      enum:
+        - APPROVED
+        - ARCHIVED
+        - DELETED
+        - DISABLED
+        - IN_APPEAL
+        - LIMIT_EXCEEDED
+        - PAUSED
+        - PENDING
+        - PENDING_DELETION
+        - REJECTED
+    WhatsAppBusinessHSMTagSubCategory:
+      type: string
+      description: >
+        Template sub-category for utility
+        templates
+      example: ORDER_STATUS
+      enum:
+        - BOOKING_STATUS
+        - CALL_PERMISSIONS_REQUEST
+        - FLIGHT_DELAY_AND_GATE_CHANGE_ALERT
+        - FRAUD_ALERT
+        - ORDER_DETAILS
+        - ORDER_STATUS
+        - RICH_ORDER_STATUS
+    BusinessMessagingHSMParameterFormat:
+      type: string
+      description: Parameter format for the template
+      example: NAMED
+      enum:
+        - NAMED
+        - POSITIONAL
+    WhatsAppBusinessHSMQualityScore:
+      type: string
+      description: Quality score rating for the template
+      example: GREEN
+      enum:
+        - GREEN
+        - RED
+        - UNKNOWN
+        - YELLOW
+    WhatsAppBusinessHSMRejectionReason:
+      type: string
+      description: Reason the template was rejected
+      example: NONE
+      enum:
+        - ABUSIVE_CONTENT
+        - CATEGORY_NOT_AVAILABLE
+        - INCORRECT_CATEGORY
+        - INVALID_FORMAT
+        - NONE
+        - PROMOTIONAL
+        - SCAM
+        - TAG_CONTENT_MISMATCH
+    WhatsAppBusinessHSMSource:
+      type: string
+      description: How the template was created
+      example: manual
+      enum:
+        - auto_generated
+        - manual
+    WhatsAppBusinessMessageDisplayFormat:
+      type: string
+      description: Display format for the template
+      example: ORDER_DETAILS
+      enum:
+        - ORDER_DETAILS
+    WhatsAppBusinessMarketingMessagesHSMSendType:
+      type: string
+      description: >
+        Send type for marketing message
+        templates
+      example: direct
+      enum:
+        - campaign
+        - direct
+    MessageTemplatesResponse:
+      type: object
+      description: >
+        Response containing list of message
+        templates with pagination
+      properties:
+        data:
+          type: array
+          description: Array of message templates
+          items:
+            $ref: '#/components/schemas/MessageTemplate'
+        paging:
+          $ref: '#/components/schemas/CursorPaging'
+    CursorPaging:
+      type: object
+      description: Cursor-based pagination information
+      properties:
+        cursors:
+          type: object
+          properties:
+            before:
+              type: string
+              description: Cursor pointing to the start of the page
+              example: QVFIUmx1WTBpMGpJWXprYzVYaVhabW9PVVhF
+            after:
+              type: string
+              description: Cursor pointing to the end of the page
+              example: QVFIUjJ5M2wwdmtONVFHbDZAMVQ4OGJBQUFBQQ
+        next:
+          type: string
+          description: URL for the next page of results
+        previous:
+          type: string
+          description: URL for the previous page of results
+    SuccessResponse:
+      type: object
+      description: Generic success response
+      properties:
+        success:
+          type: boolean
+          description: Whether the operation was successful
+          example: true
+    CreateTemplateResponse:
+      type: object
+      description: >
+        Response after creating a message
+        template
+      properties:
+        id:
+          type: string
+          description: ID of the created template
+          example: '1234567890123456'
+        status:
+          $ref: '#/components/schemas/WhatsAppBusinessHSMStatus'
+        category:
+          $ref: '#/components/schemas/WhatsAppBusinessHSMTag'
+    GraphAPIError:
+      type: object
+      description: Standard Graph API error response
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - type
+            - code
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid parameter
+            type:
+              type: string
+              description: Error category type
+              example: OAuthException
+            code:
+              type: integer
+              description: Numeric error code
+              example: 100
+            error_subcode:
+              type: integer
+              description: More specific error subcode
+            fbtrace_id:
+              type: string
+              description: Unique identifier for debugging
+              example: AXsgnV2Cm3ZMGF3dF_cfYIn
+            is_transient:
+              type: boolean
+              description: Whether this error is temporary
+              example: false
+            error_user_title:
+              type: string
+              description: User-friendly error title
+            error_user_msg:
+              type: string
+              description: User-friendly error message
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]

@@ -1,0 +1,694 @@
+---
+openapi: 3.1.0
+info:
+  title: "WhatsApp Business Account - Subscribed Apps API"
+  version: v25.0
+  description: |
+    API for managing app subscriptions to WhatsApp Business Account webhooks and retrieving
+    subscription details. This endpoint allows apps to subscribe to, unsubscribe from, and
+    query webhook subscriptions for WhatsApp Business Accounts.
+  termsOfService: https://developers.facebook.com/terms
+  contact:
+    name: WhatsApp Business Messaging Team
+    url: https://developers.facebook.com/support
+  license:
+    name: Meta Platform Terms
+    url: https://developers.facebook.com/terms
+servers:
+  - url: https://graph.facebook.com
+    description: Production Graph API server
+tags:
+  - name: Webhook Subscriptions
+    description: >
+      APIs for managing WhatsApp Business Account webhook subscriptions
+paths:
+  /{Version}/{WABA-ID}/subscribed_apps:
+    get:
+      responses:
+        200:
+          description: >
+            Successfully retrieved list of subscribed applications
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscribedAppsResponse"
+              examples:
+                multiple_subscriptions:
+                  summary: Multiple apps subscribed to WABA
+                  value:
+                    data:
+                      0:
+                        whatsapp_business_api_data:
+                          id: "1234567890123456"
+                          name: Business Messaging App
+                          link: >
+                            https://www.facebook.com/games/?app_id=1234567890123456
+                      1:
+                        whatsapp_business_api_data:
+                          id: "2345678901234567"
+                          name: Customer Support Bot
+                          link: >
+                            https://www.facebook.com/games/?app_id=2345678901234567
+                no_subscriptions:
+                  summary: No apps subscribed to WABA
+                  value:
+                    data: []
+        400:
+          description: "Bad Request - Invalid parameters or malformed request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAPIError"
+              example:
+                error:
+                  message:
+                    "Invalid parameter: WABA-ID must be a valid numeric string"
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: "Unauthorized - Invalid or missing access token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAPIError"
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: "Forbidden - Insufficient permissions or access denied"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAPIError"
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to access this WhatsApp
+                    Business Account
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  error_user_title: Permission Denied
+                  error_user_msg: >
+                    Your app doesn't have permission to access this resource
+        404:
+          description: "Not Found - WABA ID does not exist or is not accessible"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAPIError"
+              example:
+                error:
+                  message: WhatsApp Business Account not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description:
+            "Unprocessable Entity - Request parameters are valid but cannot be
+            processed"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAPIError"
+              example:
+                error:
+                  message: >
+                    The requested fields are not available for this subscription
+                  type: GraphMethodException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: "Internal Server Error - Unexpected server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAPIError"
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Get All Subscriptions for a WABA
+      description: |
+        Retrieve a list of all applications currently subscribed to webhook events
+        for the specified WhatsApp Business Account.
+
+        **Rate Limiting:**
+        Standard Graph API rate limits apply. Use appropriate retry logic with exponential backoff.
+
+        **Caching:**
+        Subscription data can be cached for short periods, but may change when apps
+        subscribe or unsubscribe. Implement appropriate cache invalidation strategies.
+      operationId: getAllSubscriptionsForAWaba
+      tags:
+        - Webhook Subscriptions
+      parameters:
+        - name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the client software making the
+            request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - name: WABA-ID
+          in: path
+          description: |
+            WhatsApp Business Account ID. This ID can be found in your WhatsApp Manager
+            or through business management APIs.
+          required: true
+          schema:
+            type: string
+            pattern: "^[0-9]+$"
+          example: "1234567890123456"
+        - name: fields
+          in: query
+          description: |
+            Comma-separated list of fields to include in the response. If not specified,
+            default fields will be returned. Available fields: id, name, link
+          required: false
+          schema:
+            type: string
+          example: id,name,link
+    post:
+      responses:
+        200:
+          description: Successfully subscribed to WABA webhooks
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscriptionResponse"
+              examples:
+                basic_subscription_success:
+                  summary: Basic subscription successful
+                  value:
+                    success: true
+                custom_callback_success:
+                  summary: Custom callback subscription successful
+                  value:
+                    success: true
+                    data:
+                      0:
+                        override_callback_uri: >
+                          https://your-webhook-endpoint.com/webhook
+                        whatsapp_business_api_data:
+                          id: "1234567890123456"
+                          name: Business Messaging App
+                          link: >
+                            https://www.facebook.com/games/?app_id=1234567890123456
+        400:
+          description: "Bad Request - Invalid parameters or malformed request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAPIError"
+              example:
+                error:
+                  message: Invalid callback URI format
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: "Unauthorized - Invalid or missing access token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAPIError"
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: "Forbidden - Insufficient permissions or access denied"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAPIError"
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to subscribe to this
+                    WhatsApp Business Account
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  error_user_title: Permission Denied
+                  error_user_msg: >
+                    Your app doesn't have permission to access this resource
+        404:
+          description: "Not Found - WABA ID does not exist or is not accessible"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAPIError"
+              example:
+                error:
+                  message: WhatsApp Business Account not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description:
+            "Unprocessable Entity - Request parameters are valid but cannot be
+            processed"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAPIError"
+              example:
+                error:
+                  message: >
+                    Webhook callback URL is not reachable or invalid
+                  type: GraphMethodException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: "Internal Server Error - Unexpected server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAPIError"
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Subscribe to WABA Webhooks
+      description: |
+        Subscribe your application to webhook events for the specified WhatsApp Business Account.
+        This enables your app to receive real-time notifications for events such as message
+        deliveries, status updates, and other WABA activities.
+
+        **Rate Limiting:**
+        Standard Graph API rate limits apply. Subscription operations may have additional
+        throttling to prevent abuse.
+
+        **Security:**
+        Always use HTTPS endpoints for webhook callbacks. Verify webhook authenticity
+        using the provided verification tokens and signature validation.
+      operationId: subscribeToWabaWebhooks
+      tags:
+        - Webhook Subscriptions
+      parameters:
+        - name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the client software making the
+            request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - name: WABA-ID
+          in: path
+          description: |
+            WhatsApp Business Account ID. This ID can be found in your WhatsApp Manager
+            or through business management APIs.
+          required: true
+          schema:
+            type: string
+            pattern: "^[0-9]+$"
+          example: "1234567890123456"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubscriptionRequest"
+            examples:
+              basic_subscription:
+                summary: >
+                  Basic subscription without custom configuration
+                value: {}
+              custom_callback:
+                summary: Subscription with custom callback URL
+                value:
+                  override_callback_uri: >
+                    https://your-webhook-endpoint.com/webhook
+                  verify_token: YOUR_VERIFY_TOKEN_PLACEHOLDER
+        description: >
+          Optional configuration for webhook subscription
+        required: false
+    delete:
+      responses:
+        200:
+          description: >
+            Successfully unsubscribed from WABA webhooks
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscriptionResponse"
+              examples:
+                unsubscribe_success:
+                  summary: Unsubscription successful
+                  value:
+                    success: true
+        400:
+          description: "Bad Request - Invalid parameters or malformed request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAPIError"
+              example:
+                error:
+                  message:
+                    "Invalid parameter: WABA-ID must be a valid numeric string"
+                  type: OAuthException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: "Unauthorized - Invalid or missing access token"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAPIError"
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: "Forbidden - Insufficient permissions or access denied"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAPIError"
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to unsubscribe from this
+                    WhatsApp Business Account
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  error_user_title: Permission Denied
+                  error_user_msg: >
+                    Your app doesn't have permission to access this resource
+        404:
+          description:
+            "Not Found - WABA ID does not exist or subscription not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAPIError"
+              example:
+                error:
+                  message: >
+                    WhatsApp Business Account not found or not subscribed
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description:
+            "Unprocessable Entity - Request parameters are valid but cannot be
+            processed"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAPIError"
+              example:
+                error:
+                  message:
+                    "Cannot unsubscribe: subscription is required for active
+                    integrations"
+                  type: GraphMethodException
+                  code: 100
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: "Internal Server Error - Unexpected server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAPIError"
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Unsubscribe from WABA Webhooks
+      description: |
+        Unsubscribe your application from webhook events for the specified WhatsApp Business Account.
+        This will stop your app from receiving webhook notifications for this WABA.
+
+        **Rate Limiting:**
+        Standard Graph API rate limits apply. Unsubscription operations are typically
+        processed immediately.
+
+        **Important:**
+        Unsubscribing will immediately stop all webhook deliveries for this WABA.
+        Ensure your application can handle the cessation of webhook events gracefully.
+      operationId: unsubscribeFromWabaWebhooks
+      tags:
+        - Webhook Subscriptions
+      parameters:
+        - name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the client software making the
+            request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - name: WABA-ID
+          in: path
+          description: |
+            WhatsApp Business Account ID. This ID can be found in your WhatsApp Manager
+            or through business management APIs.
+          required: true
+          schema:
+            type: string
+            pattern: "^[0-9]+$"
+          example: "1234567890123456"
+components:
+  schemas:
+    WhatsAppBusinessApiData:
+      type: object
+      description: >
+        Application subscription data for WhatsApp Business Account
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          description: >
+            Unique identifier for the subscribed application
+          example: "1234567890123456"
+        name:
+          type: string
+          description: Name of the subscribed application
+          example: Business Messaging App
+        link:
+          type: string
+          description: URL link to the application
+          example: >
+            https://www.facebook.com/games/?app_id=1234567890123456
+    SubscribedApp:
+      type: object
+      description: Subscribed application details
+      required:
+        - whatsapp_business_api_data
+      properties:
+        whatsapp_business_api_data:
+          $ref: "#/components/schemas/WhatsAppBusinessApiData"
+        override_callback_uri:
+          type: string
+          description: >
+            Custom webhook callback URL for this subscription
+          example: >
+            https://your-webhook-endpoint.com/webhook
+    SubscribedAppsResponse:
+      type: object
+      description: >
+        Response containing list of subscribed applications
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          description: Array of subscribed applications
+          items:
+            $ref: "#/components/schemas/SubscribedApp"
+    SubscriptionRequest:
+      type: object
+      description: >
+        Request body for subscribing to WABA webhooks
+      properties:
+        override_callback_uri:
+          type: string
+          description: >
+            Custom webhook callback URL to override app default
+          example: >
+            https://your-webhook-endpoint.com/webhook
+        verify_token:
+          type: string
+          description: Verification token for webhook security
+          example: YOUR_VERIFY_TOKEN_PLACEHOLDER
+    SubscriptionResponse:
+      type: object
+      description: >
+        Response after successful subscription operation
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+          description: >
+            Indicates whether the subscription operation was successful
+          example: true
+        data:
+          type: array
+          description: Array containing subscription details
+          items:
+            $ref: "#/components/schemas/SubscribedApp"
+    GraphAPIError:
+      type: object
+      description: Standard Graph API error response
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - type
+            - code
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid parameter
+            type:
+              type: string
+              description: Error category type
+              example: OAuthException
+            code:
+              type: integer
+              description: Numeric error code
+              example: 100
+            error_subcode:
+              type: integer
+              description: >
+                More specific error subcode when available
+              example: 33
+            fbtrace_id:
+              type: string
+              description: >
+                Unique identifier for debugging and support requests with Meta
+              example: AXsgnV2Cm3ZMGF3dF_cfYIn
+            is_transient:
+              type: boolean
+              description: >
+                Indicates whether this error is temporary and the request should
+                be retried
+              example: false
+            error_user_title:
+              type: string
+              description: >
+                User-friendly error title for display purposes
+              example: Permission Denied
+            error_user_msg:
+              type: string
+              description: >
+                User-friendly error message for display purposes
+              example: >
+                Your app doesn't have permission to access this resource
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []

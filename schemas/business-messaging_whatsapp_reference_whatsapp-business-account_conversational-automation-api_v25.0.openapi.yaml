@@ -1,0 +1,442 @@
+---
+openapi: 3.1.0
+info:
+  title: 'WhatsApp Business Account - Conversational Automation API'
+  version: v25.0
+  description: |
+    API for managing conversational automation settings for WhatsApp Business Account phone numbers.
+    This endpoint allows businesses to configure automated conversation features including
+    welcome messages, conversation prompts (ice breakers), and bot commands for their
+    WhatsApp Business phone numbers.
+  termsOfService: https://developers.facebook.com/terms
+  contact:
+    name: WhatsApp Business Messaging Team
+    url: https://developers.facebook.com/support
+  license:
+    name: Meta Platform Terms
+    url: https://developers.facebook.com/terms
+servers:
+  - 
+    url: https://graph.facebook.com
+    description: Production Graph API server
+tags:
+  - 
+    name: Conversational Automation
+    description: >
+      APIs for managing conversational
+      automation settings and bot
+      configurations
+paths:
+  /{Version}/{Phone-Number-ID}/conversational_automation:
+    post:
+      responses:
+        200:
+          description: >
+            Successfully configured conversational
+            automation settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversationalAutomationResponse'
+              examples:
+                success_response:
+                  summary: Successful configuration
+                  value:
+                    success: true
+        400:
+          description: 'Bad Request - Invalid parameters or malformed request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              examples:
+                invalid_command_name:
+                  summary: Invalid command name format
+                  value:
+                    error:
+                      message: >
+                        Invalid command name format. Command
+                        names must contain only alphanumeric
+                        characters and underscores
+                      type: OAuthException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                too_many_prompts:
+                  summary: Exceeded maximum prompts limit
+                  value:
+                    error:
+                      message: >
+                        Too many prompts provided. Maximum
+                        allowed is 3
+                      type: OAuthException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                prompt_too_long:
+                  summary: Prompt text exceeds character limit
+                  value:
+                    error:
+                      message: >
+                        Prompt text exceeds maximum length of 80
+                        characters
+                      type: OAuthException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        401:
+          description: 'Unauthorized - Invalid or missing access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: Invalid OAuth access token
+                  type: OAuthException
+                  code: 190
+                  error_subcode: 463
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        403:
+          description: 'Forbidden - Insufficient permissions or access denied'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    Your app doesn't have permission to
+                    manage conversational automation for
+                    this phone number
+                  type: OAuthException
+                  code: 200
+                  error_subcode: 1349174
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  error_user_title: Permission Denied
+                  error_user_msg: >
+                    Your app doesn't have permission to
+                    access this resource
+        404:
+          description: 'Not Found - Phone number ID does not exist or is not accessible'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: WhatsApp Business phone number not found
+                  type: GraphMethodException
+                  code: 803
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        422:
+          description: 'Unprocessable Entity - Request parameters are valid but cannot be processed'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              examples:
+                phone_not_verified:
+                  summary: Phone number not verified
+                  value:
+                    error:
+                      message: >
+                        Phone number must be verified before
+                        configuring conversational automation
+                      type: GraphMethodException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                duplicate_command:
+                  summary: Duplicate command names
+                  value:
+                    error:
+                      message: 'Command names must be unique. Duplicate command name found: help'
+                      type: GraphMethodException
+                      code: 100
+                      fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+        500:
+          description: 'Internal Server Error - Unexpected server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphAPIError'
+              example:
+                error:
+                  message: >
+                    An unexpected error occurred. Please
+                    retry your request
+                  type: GraphMethodException
+                  code: 2
+                  fbtrace_id: AXsgnV2Cm3ZMGF3dF_cfYIn
+                  is_transient: true
+      summary: Configure Conversational Automation
+      description: |
+        Configure conversational automation settings for a WhatsApp Business Account phone number,
+        including welcome messages, conversation prompts (ice breakers), and bot commands.
+        
+        **Rate Limiting:**
+        Standard Graph API rate limits apply. Use appropriate retry logic with exponential backoff.
+        
+        
+        **Validation:**
+        - Command names must be unique within the same phone number
+        - Prompts and command descriptions must comply with WhatsApp Business policies
+        - Maximum limits are enforced for prompts and commands
+      operationId: configureConversationalAutomation
+      tags:
+        - Conversational Automation
+      parameters:
+        - 
+          name: User-Agent
+          in: header
+          description: >
+            The user agent string identifying the
+            client software making the request.
+          required: false
+          schema:
+            type: string
+            default: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            example: >
+              Meta-Business-Messaging-OpenAPI/1.0.0;spec=2025-10-21
+            pattern: '^[a-zA-Z0-9\-_]+\/[0-9]+\.[0-9]+\.[0-9]+(;[a-zA-Z0-9\-=\.]+)?(\s+[a-zA-Z0-9\-_]+\/[0-9\-\.]+)?$'
+        - 
+          name: Authorization
+          in: header
+          description: |
+            Bearer token for API authentication. This should be a valid access token obtained through the appropriate OAuth flow or system user token.
+          required: true
+          schema:
+            type: string
+            example: Bearer EAABwzLixnjYBOzYmNMJJGfHq9DgNh...
+            pattern: '^Bearer\s+[A-Za-z0-9\-_.]+.*$'
+        - 
+          name: Version
+          in: path
+          description: |
+            Graph API version to use for this request. Determines the API behavior and available features.
+          required: true
+          schema:
+            type: string
+            pattern: '^v[0-9]+\.[0-9]+$'
+          example: v25.0
+        - 
+          name: Phone-Number-ID
+          in: path
+          description: |
+            Your WhatsApp Business phone number ID. This ID represents the phone number
+            entity and can be obtained from your WhatsApp Business Account phone numbers list.
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '1234567890123456'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConversationalAutomationRequest'
+            examples:
+              enable_welcome_with_prompts:
+                summary: >
+                  Enable welcome message with conversation
+                  prompts
+                value:
+                  enable_welcome_message: true
+                  prompts:
+                    0: How can I help you today?
+                    1: What product are you interested in?
+                  commands: [ ]
+              setup_bot_commands:
+                summary: >
+                  Configure bot commands for customer
+                  service
+                value:
+                  enable_welcome_message: false
+                  prompts: [ ]
+                  commands:
+                    0:
+                      command_name: help
+                      command_description: Get help with your order
+                    1:
+                      command_name: status
+                      command_description: Check your order status
+                    2:
+                      command_name: support
+                      command_description: Contact customer support
+              full_automation_setup:
+                summary: >
+                  Complete automation setup with all
+                  features
+                value:
+                  enable_welcome_message: true
+                  prompts:
+                    0: Welcome! How can I assist you?
+                    1: Are you looking for product information?
+                    2: Do you need help with an existing order?
+                  commands:
+                    0:
+                      command_name: catalog
+                      command_description: View our product catalog
+                    1:
+                      command_name: hours
+                      command_description: Check our business hours
+                    2:
+                      command_name: location
+                      command_description: Find our store locations
+              disable_automation:
+                summary: Disable all automation features
+                value:
+                  enable_welcome_message: false
+                  prompts: [ ]
+                  commands: [ ]
+        required: true
+components:
+  schemas:
+    ConversationalAutomationRequest:
+      type: object
+      description: >
+        Request payload for configuring
+        conversational automation settings
+      properties:
+        enable_welcome_message:
+          type: boolean
+          description: >
+            Whether to enable welcome messages for
+            new conversations
+          default: false
+          example: true
+        prompts:
+          type: array
+          description: >
+            List of conversation prompts (ice
+            breakers) to help guide customer
+            interactions
+          default: [ ]
+          example:
+            0: How can I help you today?
+            1: What product are you interested in?
+            2: Do you need support?
+          maxItems: 3
+          items:
+            type: string
+            description: Individual conversation prompt text
+            example: How can I help you today?
+            maxLength: 80
+        commands:
+          type: array
+          description: >
+            List of bot commands for automated
+            responses
+          default: [ ]
+          example:
+            0:
+              command_name: help
+              command_description: Get help with your order
+            1:
+              command_name: status
+              command_description: Check your order status
+          maxItems: 30
+          items:
+            $ref: '#/components/schemas/BotCommand'
+    BotCommand:
+      type: object
+      description: >
+        Bot command configuration for automated
+        responses
+      required:
+        - command_name
+        - command_description
+      properties:
+        command_name:
+          type: string
+          description: >
+            Name of the bot command (without leading
+            slash)
+          example: help
+          maxLength: 30
+          pattern: '^[a-zA-Z0-9_]+$'
+        command_description:
+          type: string
+          description: Description of what the command does
+          example: Get help with your order
+          maxLength: 256
+    ConversationalAutomationResponse:
+      type: object
+      description: >
+        Response after successfully configuring
+        conversational automation
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+          description: >
+            Indicates whether the automation
+            configuration was successful
+          example: true
+    GraphAPIError:
+      type: object
+      description: Standard Graph API error response
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - message
+            - type
+            - code
+          properties:
+            message:
+              type: string
+              description: Human-readable error message
+              example: Invalid parameter
+            type:
+              type: string
+              description: Error category type
+              example: OAuthException
+            code:
+              type: integer
+              description: Numeric error code
+              example: 100
+            error_subcode:
+              type: integer
+              description: >
+                More specific error subcode when
+                available
+              example: 33
+            fbtrace_id:
+              type: string
+              description: >
+                Unique identifier for debugging and
+                support requests with Meta
+              example: AXsgnV2Cm3ZMGF3dF_cfYIn
+            is_transient:
+              type: boolean
+              description: >
+                Indicates whether this error is
+                temporary and the request should be
+                retried
+              example: false
+            error_user_title:
+              type: string
+              description: >
+                User-friendly error title for display
+                purposes
+              example: Permission Denied
+            error_user_msg:
+              type: string
+              description: >
+                User-friendly error message for display
+                purposes
+              example: >
+                Your app doesn't have permission to
+                access this resource
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: |
+        System user access token with whatsapp_business_management permission. Format: Bearer YOUR_SYSTEM_USER_ACCESS_TOKEN
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - 
+    bearerAuth: [ ]
